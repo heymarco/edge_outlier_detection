@@ -1,20 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="" />
+    <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/nonfederated_matrices.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data_.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/experiment.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/outliers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pipelines.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/multivariate_gaussian.py" beforeDir="false" afterPath="$PROJECT_DIR$/multivariate_gaussian.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1ZtpkP6Hg9OL4xlvvI1qhgcyfqx" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -42,14 +72,18 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="380" y="268" key="com.intellij.ide.util.TipDialog" timestamp="1585740243695">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state x="507" y="317" key="com.intellij.ide.util.TipDialog" timestamp="1589449098766">
+      <screen x="0" y="23" width="1920" height="988" />
     </state>
+    <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1588660507567" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1585740243695" />
-    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1585668391220" />
-    <state x="745" y="133" key="search.everywhere.popup" timestamp="1585670609405">
-      <screen x="0" y="23" width="1440" height="827" />
+    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1585895234459" />
+    <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.988@0.23.1920.988" timestamp="1589449098766" />
+    <state x="745" y="132" width="670" height="676" key="search.everywhere.popup" timestamp="1588759629151">
+      <screen x="0" y="23" width="1440" height="822" />
     </state>
+    <state x="745" y="132" width="670" height="676" key="search.everywhere.popup/0.23.1440.822@0.23.1440.822" timestamp="1588759629151" />
+    <state x="745" y="132" key="search.everywhere.popup/0.23.1440.823@0.23.1440.823" timestamp="1585756208648" />
     <state x="745" y="133" key="search.everywhere.popup/0.23.1440.827@0.23.1440.827" timestamp="1585670609405" />
   </component>
 </project>

@@ -3,27 +3,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-num_outliers = 10
+num_outliers = 100
 ratio_data_outlier = 50
 num_valid = num_outliers*ratio_data_outlier
 num_data = num_valid+num_outliers
 
 dims = 3
-mean = [0 for _ in range(dims)]
-cov = [[1, 0.0, 0.0],
-       [0.0, 1, 0.1],
-       [0.0, 0.0, 1]]
+mean = [1 for _ in range(dims)]
+cov = [[1, 0, 0],
+       [0, 1, 0],
+       [0, 0, 1]]
 
-def create_outliers(n, dim):
-    outliers = []
-    for _ in range(n):
-        x = np.random.uniform(size=dim)
-        x = 1.5*x/np.linalg.norm(x)
-        outliers.append(x)
-    return np.array(outliers)
+def create_outliers(n, mean, covariance):
+    dim = len(mean)
+    covariance[0][dim-1] = 0.0
+    covariance[dim-1][0] = 0.0
+    outliers = np.random.multivariate_normal(mean, covariance, size=n)
+    return outliers
 
-gaussian = np.random.uniform(size=(num_valid, dims))                             # (100, 3)
-outlier = create_outliers(num_outliers, dims)
+gaussian = np.random.multivariate_normal(mean, cov, size=num_valid)
+gaussian = np.random.uniform(size=(num_valid, dims))
+outlier = create_outliers(num_outliers, mean, cov)
 print(outlier)
 data = np.vstack((gaussian, outlier))
 labels = [0 for _ in range(num_valid)] + [1 for _ in range(len(outlier))]
@@ -73,7 +73,7 @@ import numpy as np
 dist = np.zeros(len(data))
 for i, x in enumerate(data):
     dist[i] = np.linalg.norm(x-decoded.T[i])
-
+print(dist)
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 
