@@ -2,38 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/local_and_global/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/local_outliers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/metrics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cloud.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FedStream.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Federated Outlier Detection.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hidden Outliers.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LOF CENTRAL.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LOF.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Learning Constant Abnormal Behavior.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Local Outlier Visualization.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seperate Training.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Static.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Untitled.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Untitled1.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Untitled2.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Z_Score.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/centralized_matrices.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_local_outliers.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_local_outliers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/federated_matrices.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/iForest Central.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/matrices.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/multivariate_gaussian.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nonfederated_matrices.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_outliers/evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xStream Central.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xStream Local.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/xStream Static.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/metrics.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

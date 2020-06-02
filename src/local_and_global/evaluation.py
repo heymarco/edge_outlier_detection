@@ -3,13 +3,13 @@ import numpy as np
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
 
-from src.metrics import kappa_m
+from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
 from src.models import create_model, train_federated
 from src.local_outliers.evaluation import retrieve_labels
 
 
-def load__rw(dirname):
+def load_rw(dirname):
     data = []
     directory = os.path.join(os.getcwd(), "data", dirname)
     for root, dirs, files in os.walk(directory):
@@ -97,7 +97,11 @@ def classify(result_global, result_local, contamination=0.01):
 
 def evaluate(labels, ground_truth, contamination):
     kappa = []
+    f1_local = []
+    f1_global = []
     for lbs in labels:
-        kappa.append(kappa_m(lbs, ground_truth, contamination))
-    return np.mean(kappa)
+        kappa.append(kappa_m(lbs, ground_truth, 1-contamination))
+        f1_local.append(f1_score(lbs, ground_truth, relevant_label=1))
+        f1_global.append(f1_score(lbs, ground_truth, relevant_label=2))
+    return np.mean(kappa), np.mean(f1_global), np.mean(f1_local)
 
