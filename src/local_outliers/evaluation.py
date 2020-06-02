@@ -16,7 +16,7 @@ def load_data(dirname):
                 if file.endswith(".csv"):
                     print("Read {}".format(file))
                     d = np.loadtxt(os.path.join(directory, file), skiprows=1, delimiter=",")
-                    if dirname == "xdk":
+                    if dirname == "xdk" or "mhealth":
                         d = d[:, :-1]
                     data.append(d)
         data = np.array(data)
