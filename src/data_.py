@@ -192,3 +192,18 @@ def add_abnormal_devices(data, indices, subspace_size, frac_outlying=0.9):
     data[indices] = relevant_data
     outliers[indices] = relevant_outliers
     return data, outliers
+
+
+def normalize_along_axis(data, axis):
+    maxval = data.max(axis=axis, keepdims=True)
+    minval = data.min(axis=axis, keepdims=True)
+    data = (data-minval)/(maxval-minval)
+    return data
+
+
+def trim_data(data, max_length=10000):
+    min_length = min([len(d) for d in data])
+    indices = np.random.choice(np.arange(min_length), min(min_length, max_length))
+    data = np.array([d[indices] for d in data])
+    return data
+

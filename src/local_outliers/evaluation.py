@@ -4,7 +4,7 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
 
 from xstream.python.Chains import Chains
-from src.experiment import create_model
+from src.models import create_model
 
 
 def load_data(dirname):
@@ -22,20 +22,6 @@ def load_data(dirname):
         data = np.array(data)
     else:
         data = np.load(os.path.join(os.getcwd(), "data", "synth", "10_1000_100_1.0_1.0_0.01_0.5_0.2_local_d.npy"))
-    return data
-
-
-def trim_data(data, max_length=10000):
-    min_length = min([len(d) for d in data])
-    indices = np.random.choice(np.arange(min_length), min(min_length, max_length))
-    trimmed_data = np.array([d[indices] for d in data])
-    return trimmed_data
-
-
-def normalize_along_axis(data, axis):
-    maxval = data.max(axis=axis, keepdims=True)
-    minval = data.min(axis=axis, keepdims=True)
-    data = (data-minval)/(maxval-minval)
     return data
 
 
