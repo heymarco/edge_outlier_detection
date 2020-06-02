@@ -1,26 +1,76 @@
 import numpy as np
 
-from src.data_ import create_data, alter_device_data, add_outliers, add_hidden_outliers
+from src.data_ import *
 from src.utils import normalize
+
+
+def dataset_dummy(num_devices, n, dims, subspace_frac=0.1,
+                  frac_outlying_devices=0.1, frac_outlying_data=0.7,
+                  gamma=0.0, delta=0.0):
+    data = np.random.uniform(low=0, high=1, size=dims)
+    data = np.expand_dims(data, axis=0)
+    data = np.repeat(data, n, axis=0)
+    data = np.expand_dims(data, axis=0)
+    data = np.repeat(data, num_devices, axis=0)
+    out = np.empty(shape=data.shape)
+    out.fill(False)
+    return data, out
+
+
+def dataset_abnormal_devices(num_devices, n, dims, subspace_frac=0.1,
+                             frac_outlying_devices=0.1, frac_outlying_data=0.7,
+                             gamma=0.0, delta=0.0):
+    data = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
+    print(subspace_frac)
+    outlying_devices = [i for i in range(int(frac_outlying_devices*num_devices))]
+    data, is_outlier = add_abnormal_devices(data,
+                                            indices=outlying_devices,
+                                            subspace_size=int(dims * subspace_frac),
+                                            frac_outlying=frac_outlying_data)
+    return data, is_outlier
 
 
 def dataset_outliers(num_devices, n, dims, subspace_frac=0.1,
                      frac_outlying_devices=0.1, frac_outlying_data=0.1,
                      gamma=0.0, delta=0.0):
-    data, params = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
+    data = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
     outlying_devices = [i for i in range(int(frac_outlying_devices*num_devices))]
     data, is_outlier = add_outliers(data,
                                     indices=outlying_devices,
                                     subspace_size=int(dims * subspace_frac),
-                                    frac_outlying=frac_outlying_data,
-                                    params=params)
+                                    frac_outlying=frac_outlying_data)
+    return data, is_outlier
+
+
+def dataset_global_outliers(num_devices, n, dims, subspace_frac=0.1,
+                     frac_outlying_devices=0.1, frac_outlying_data=0.1,
+                     gamma=0.0, delta=0.0):
+    data = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
+    outlying_devices = [i for i in range(int(frac_outlying_devices*num_devices))]
+    print(subspace_frac)
+    data, is_outlier = add_global_outliers(data,
+                                           indices=outlying_devices,
+                                           subspace_size=int(dims * subspace_frac),
+                                           frac_outlying=frac_outlying_data)
+    return data, is_outlier
+
+
+def dataset_local_outliers(num_devices, n, dims, subspace_frac=0.1,
+                           frac_outlying_devices=0.1, frac_outlying_data=0.1,
+                           gamma=0.0, delta=0.0):
+    data = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
+    outlying_devices = [i for i in range(int(frac_outlying_devices*num_devices))]
+    data, is_outlier = add_local_outliers(data,
+                                          indices=outlying_devices,
+                                          subspace_size=int(dims * subspace_frac),
+                                          frac_outlying=frac_outlying_data)
     return data, is_outlier
 
 
 def dataset_hidden_outliers(num_devices, n, dims, subspace_frac=0.1,
                             frac_outlying_devices=0.1, frac_outlying_data=0.1,
                             gamma=0.0, delta=0.0):
-    data, params = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
+    data = create_data(num_devices, n, dims, gamma=gamma, delta=delta)
     outlying_devices = np.array([i for i in range(int(num_devices*frac_outlying_devices))])
     data, is_outlier = add_hidden_outliers(data,
                                            indices=outlying_devices,

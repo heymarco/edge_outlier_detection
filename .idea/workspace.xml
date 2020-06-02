@@ -2,14 +2,83 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/nonfederated_matrices.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data_.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/experiment.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/outliers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pipelines.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_local_outliers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/outliers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/outliers.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/multivariate_gaussian.py" beforeDir="false" afterPath="$PROJECT_DIR$/multivariate_gaussian.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Generator.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Data Generator.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Outlier Detection.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/LICENSE-MIT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/NOTICE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/python/Chains.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/python/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/python/StreamhashProjection.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/python/synDataNoisy.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmuxstream-core-master/python/test_xstream.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_10.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_11.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_20.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_27.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_29.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_30.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_31.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_32.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_36.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_4.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_41.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_42.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_43.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_44.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_45.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_46.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_47.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_48.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_49.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_50.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_51.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_52.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_53.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_54.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_55.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_56.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_57.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_58.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_59.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_6.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_60.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_61.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_62.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_63.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_64.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_65.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_66.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_67.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_68.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_69.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_70.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_71.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_72.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_73.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_74.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_75.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_76.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_77.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_78.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_79.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_80.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pmsm_temperature_data/profile_id_81.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/synth/100_100_100_0.2_0.05_0.03_0.5_0.5_d.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/synth/100_100_100_0.2_0.05_0.03_0.5_0.5_o.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/data_different_params.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/figures/data_different_params.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data_.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/experiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pipelines.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipelines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xStream Central.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/xStream Central.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,16 +103,18 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/data" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/data" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -72,13 +143,21 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="507" y="317" key="com.intellij.ide.util.TipDialog" timestamp="1589449098766">
-      <screen x="0" y="23" width="1920" height="988" />
+    <state x="184" y="99" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589815780187">
+      <screen x="0" y="23" width="1440" height="828" />
+    </state>
+    <state x="184" y="99" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.828@0.23.1440.828" timestamp="1589815780187" />
+    <state x="380" y="268" key="com.intellij.ide.util.TipDialog" timestamp="1591085958510">
+      <screen x="0" y="23" width="1440" height="826" />
     </state>
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1588660507567" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1585740243695" />
-    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1585895234459" />
+    <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.826@0.23.1440.826" timestamp="1591085958510" />
+    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1591003265978" />
+    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.828@0.23.1440.828" timestamp="1590409315064" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.988@0.23.1920.988" timestamp="1589449098766" />
+    <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.991@0.23.1920.991" timestamp="1590562915743" />
+    <state x="507" y="318" key="com.intellij.ide.util.TipDialog/0.23.1920.994@0.23.1920.994" timestamp="1590479164627" />
     <state x="745" y="132" width="670" height="676" key="search.everywhere.popup" timestamp="1588759629151">
       <screen x="0" y="23" width="1440" height="822" />
     </state>

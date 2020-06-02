@@ -2,3 +2,6 @@
 .idea/
 .ipynb_checkpoints/
 cmuxstream-core-master/cpp/
+*.npy
+*.pyc
+*.csv
