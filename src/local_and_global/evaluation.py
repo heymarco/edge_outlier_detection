@@ -27,18 +27,18 @@ def load_synth(filename):
     return np.load(os.path.join(os.getcwd(), "data", "synth", filename))
 
 
-def create_ensembles(shape, l_name):
+def create_ensembles(shape, l_name, contamination=0.01):
     num_clients = shape[0]
     c = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     l = None
     if l_name == "lof":
-        l = [LocalOutlierFactor(n_neighbors=20, contamination=0.01, novelty=True) for _ in range(num_clients)]
+        l = [LocalOutlierFactor(n_neighbors=20, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "xstream":
         l = [Chains(k=50, nchains=50, depth=10) for _ in range(num_clients)]
     if l_name == "ae":
         l = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     if l_name == "if":
-        l = [IsolationForest(contamination=0.01) for _ in range(num_clients)]
+        l = [IsolationForest(contamination=contamination) for _ in range(num_clients)]
     if not l:
         raise KeyError("No valid local outlier detector name provided.")
     return np.array(c), np.array(l)
@@ -90,6 +90,10 @@ def classify(result_global, result_local, contamination=0.01):
     for i in range(len(result_local)):
         labels_global = retrieve_labels(result_global[i], contamination).flatten()
         labels_local = retrieve_labels(result_local[i], contamination).flatten()
+        # remove candidates for abnormal data partitions
+        labels_global[np.logical_and(labels_global, np.invert(labels_local))] = 0
+        print(np.sum(labels_global))
+        print(np.sum(labels_local))
         classification = np.empty(shape=labels_global.shape)
         classification.fill(0)
         is_global_outlier = np.logical_and(labels_global, labels_local)
