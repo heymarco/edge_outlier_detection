@@ -65,7 +65,7 @@ def train_separated(models, data, epochs=1, batch_size=1, frac_available=1.0):
         for point in data[i]:
             models[i].fit(np.array([point]), np.array([point]),
                           epochs=epochs,
-                          batch_size=1,
+                          batch_size=batch_size,
                           shuffle=False,
                           verbose=0)
     return models
