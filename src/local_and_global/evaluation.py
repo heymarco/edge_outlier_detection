@@ -50,6 +50,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
 
     # federated training
     for _ in range(global_epochs):
+        print(data.shape)
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
 
     # global scores
