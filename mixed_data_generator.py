@@ -39,6 +39,8 @@ data_global, labels_global = dataset_global_outliers(num_devices=num_devices,
 data = np.concatenate((data_local, data_global), axis=1)
 
 # create labels
+labels_local = labels_local.astype(np.int32)
+labels_global = labels_global.astype(np.int32)
 labels_local[labels_local] = 1
 labels_global[labels_global] = 2
 labels = np.concatenate((labels_local, labels_global), axis=1)
@@ -61,5 +63,6 @@ params_str = "{}_{}_{}_{}_{}_{}_{}_{}_mixed".format(num_devices,
                                                     delta)
 dataname = os.path.join(os.getcwd(), "data", "synth", params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", "synth", params_str + "_o")
+print(labels)
 np.save(dataname, data)
 np.save(outname, labels)
