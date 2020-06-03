@@ -4,14 +4,12 @@ from src.data_ import normalize_along_axis, trim_data
 from src.local_outliers.evaluation import *
 from src.utils import setup_machine
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("-data", type=str, choices=["synth", "mhealth", "emotor", "xdk"], nargs="+")
-parser.add_argument("-alg", type=str, choices=["ae", "lof", "xstream", "if"])
-parser.add_argument("-reps", type=int, default=1)
-parser.add_argument("-gpu", type=int)
-
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-data", type=str, choices=["synth", "mhealth", "emotor", "xdk"], nargs="+")
+    parser.add_argument("-alg", type=str, choices=["ae", "lof", "xstream", "if"])
+    parser.add_argument("-reps", type=int, default=1)
+    parser.add_argument("-gpu", type=int)
     args = parser.parse_args()
 
     # Load, trim and normalize data

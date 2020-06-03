@@ -1,7 +1,6 @@
 import json
 import tensorflow as tf
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
 
 
 def load_json(filepath):
@@ -42,7 +41,8 @@ def setup_machine(cuda_device, ram=4096):
     if gpus:
         try:
             tf.config.experimental.set_visible_devices(gpus[CUDA_VISIBLE_DEVICE], 'GPU')
-            tf.config.experimental.set_virtual_device_configuration(gpus[CUDA_VISIBLE_DEVICE], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=ram)])
+            tf.config.experimental.set_virtual_device_configuration(gpus[CUDA_VISIBLE_DEVICE],
+                                                                    [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=ram)])
         except RuntimeError as e:
             print(e)
 

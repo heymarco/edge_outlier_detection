@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/experiment_outlier_distinction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/mnist.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/local_outliers/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_outliers/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_local_outliers.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_local_outliers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_outlier_distinction.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_outlier_distinction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,9 +81,10 @@
     </state>
     <state x="492" y="337" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.826@0.23.1440.826" timestamp="1591108417170" />
     <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.989@0.23.1920.989" timestamp="1591128617585" />
-    <state x="507" y="316" key="com.intellij.ide.util.TipDialog" timestamp="1591127164774">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state x="507" y="315" key="com.intellij.ide.util.TipDialog" timestamp="1591170896778">
+      <screen x="0" y="23" width="1920" height="986" />
     </state>
+    <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.986@0.23.1920.986" timestamp="1591170896778" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1588660507567" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1585740243695" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.826@0.23.1440.826" timestamp="1591085958510" />

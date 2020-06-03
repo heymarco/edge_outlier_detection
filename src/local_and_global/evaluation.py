@@ -27,27 +27,30 @@ def load_synth(filename):
     return np.load(os.path.join(os.getcwd(), "data", "synth", filename))
 
 
-def create_ensemble(shape, l_name):
-    c = create_model(shape[-1], compression_factor=0.4)
+def create_ensembles(shape, l_name):
+    num_clients = shape[0]
+    c = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     l = None
     if l_name == "lof":
-        l = LocalOutlierFactor(n_neighbors=20, contamination=0.01, novelty=True)
+        l = [LocalOutlierFactor(n_neighbors=20, contamination=0.01, novelty=True) for _ in range(num_clients)]
     if l_name == "xstream":
-        l = Chains(k=50, nchains=50, depth=10)
+        l = [Chains(k=50, nchains=50, depth=10) for _ in range(num_clients)]
     if l_name == "ae":
-        l = create_model(shape[-1], compression_factor=0.4)
+        l = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     if l_name == "if":
-        l = IsolationForest(contamination=0.01)
+        l = [IsolationForest(contamination=0.01) for _ in range(num_clients)]
     if not l:
         raise KeyError("No valid local outlier detector name provided.")
     return c, l
 
 
-def train_ensemble(data, ensembles, l_name, global_epochs=10):
-    local_detectors = [ensemble[1] for ensemble in ensembles]
-    collab_detectors = [ensemble[0] for ensemble in ensembles]
+def train_ensembles(data, ensembles, l_name, global_epochs=10):
+    print(ensembles)
+    collab_detectors = ensembles[0]
+    local_detectors = ensembles[1]
 
     # federated training
+    print(collab_detectors)
     for _ in range(global_epochs):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
 
