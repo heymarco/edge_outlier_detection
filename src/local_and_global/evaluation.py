@@ -60,10 +60,13 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
     global_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
 
     # local training
-    if l_name == "lof" or "if" or "xstream":
+    print(l_name)
+    if l_name == "lof" or l_name == "if" or l_name == "xstream":
         [l.fit(data[i]) for i, l in enumerate(local_detectors)]
     if l_name == "ae":
-        [l.fit(data[i], batch_size=32, epochs=10) for i, l in enumerate(local_detectors)]
+        print(len(local_detectors))
+        [l.fit(data[i], data[i], 
+               batch_size=32, epochs=global_epochs) for i, l in enumerate(local_detectors)]
 
     # local scores
     if l_name == "lof":
@@ -98,10 +101,12 @@ def classify(result_global, result_local, contamination=0.01):
 
 
 def evaluate(labels, ground_truth, contamination):
+    ground_truth = ground_truth.flatten()
     kappa = []
     f1_local = []
     f1_global = []
     for lbs in labels:
+        lbs = lbs.flatten()
         kappa.append(kappa_m(lbs, ground_truth, 1-contamination))
         f1_local.append(f1_score(lbs, ground_truth, relevant_label=1))
         f1_global.append(f1_score(lbs, ground_truth, relevant_label=2))
