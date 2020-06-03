@@ -1,6 +1,7 @@
 import argparse
 import os
 from src.local_and_global.evaluation import *
+from src.local_outliers.evaluation import get_frac_local
 from src.data_ import normalize_along_axis, trim_data
 
 
@@ -29,7 +30,8 @@ if __name__ == '__main__':
                     f = normalize_along_axis(f, axis=(0, 1))
                     data[file[:-5]] = f
                 if file.endswith("o.npy"):
-                    out = np.max(f, axis=-1) # get label for data point
+                    out = np.amax(f, axis=-1) # get label for data point
+                    print(np.sum(f > 0)/100)
                     ground_truth[file[:-5]] = out
     print("Finished data loading")
 
@@ -45,13 +47,16 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key]
+        contamination = np.sum(gt > 0)/len(gt.flatten())
+        print("contamination is {}".format(contamination))
         for c_name, l_name in combinations:
-            ensembles = [create_ensembles(d.shape, l_name) for _ in range(reps)]
-            results = [train_ensembles(d, ensembles[i], global_epochs=100, l_name=l_name) for i in range(reps)]
+            ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
+            results = [train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name) for i in range(reps)]
             global_scores = [result[0] for result in results]
             local_scores = [result[1] for result in results]
-            labels = classify(global_scores, local_scores)
-            kappa, f1_global, f1_local = evaluate(labels, gt, contamination=0.01)
+            labels = classify(global_scores, local_scores, contamination=contamination)
+            kappa, f1_global, f1_local = evaluate(labels, gt, contamination=contamination)
+            print(get_frac_local(global_scores, local_scores))
             print("***************")
             print("Evaluation:")
             print("kappa_m = {}".format(kappa))
