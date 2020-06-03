@@ -43,7 +43,7 @@ def create_models(num_devices, dims, compression_factor):
     return models
 
 
-def train_federated(models, data, epochs=1, batch_size=1, frac_available=1.0):
+def train_federated(models, data, epochs=1, batch_size=1, frac_available=1.0, verbose=1):
     num_devices = len(models)
     active_devices = np.random.choice(range(num_devices), int(frac_available * num_devices), replace=False)
     for i in active_devices:
@@ -52,7 +52,7 @@ def train_federated(models, data, epochs=1, batch_size=1, frac_available=1.0):
                           epochs=epochs,
                           batch_size=batch_size,
                           shuffle=False,
-                          verbose=0)
+                          verbose=verbose)
     avg = average_weights(models[active_devices])
     [model.set_weights(avg) for model in models]
     return models

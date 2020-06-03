@@ -30,6 +30,7 @@ if __name__ == '__main__':
                     data[file[:-5]] = f
                 if file.endswith("o.npy"):
                     ground_truth[file[:-5]] = f
+    print("Finished data loading")
 
     # create ensembles
     combinations = [# ("ae", "ae"),
@@ -37,6 +38,7 @@ if __name__ == '__main__':
                     ("ae", "if"),
                     # ("ae", "xstream")
     ]
+    print("Executing combinations {}".format(combinations))
 
     # run ensembles on each data set
     for key in data.keys():
