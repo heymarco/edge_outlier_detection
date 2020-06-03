@@ -28,9 +28,9 @@ if __name__ == '__main__':
                 # f = trim_data(f, max_length=10000)
                 if file.endswith("d.npy"):
                     f = normalize_along_axis(f, axis=(0, 1))
-                    data[file[:-5]] = f
+                    data[file[:-6]] = f
                 if file.endswith("o.npy"):
-                    ground_truth[file[:-5]] = f
+                    ground_truth[file[:-6]] = f
     print("Finished data loading")
 
     # create ensembles
@@ -45,9 +45,7 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key]
-        print(gt)
         contamination = np.sum(gt)
-        print("contamination is {}".format(contamination))
         for c_name, l_name in combinations:
             ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
             results = [train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name) for i in range(reps)]
@@ -55,6 +53,9 @@ if __name__ == '__main__':
             local_scores = [result[1] for result in results]
             labels = classify(global_scores, local_scores, contamination=contamination)
             kappa, f1_global, f1_local = evaluate(labels, gt, contamination=contamination)
+            result = np.array([kappa, f1_global, f1_local])
+            fname = "{}_{}_{}".format(key, c_name, l_name)
+            np.save(os.path.join(os.getcwd(), "results", "local_and_global", fname))
             print(get_frac_local(global_scores, local_scores))
             print("***************")
             print("Evaluation:")
