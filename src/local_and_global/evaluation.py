@@ -41,16 +41,14 @@ def create_ensembles(shape, l_name):
         l = [IsolationForest(contamination=0.01) for _ in range(num_clients)]
     if not l:
         raise KeyError("No valid local outlier detector name provided.")
-    return c, l
+    return np.array(c), np.array(l)
 
 
 def train_ensembles(data, ensembles, l_name, global_epochs=10):
-    print(ensembles)
     collab_detectors = ensembles[0]
     local_detectors = ensembles[1]
 
     # federated training
-    print(collab_detectors)
     for _ in range(global_epochs):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
 
