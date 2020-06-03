@@ -25,14 +25,12 @@ if __name__ == '__main__':
         for file in files:
             if file.endswith("d.npy") or file.endswith("o.npy"):
                 f = np.load(os.path.join(directory, file))
-                f = trim_data(f, max_length=10000)
+                # f = trim_data(f, max_length=10000)
                 if file.endswith("d.npy"):
                     f = normalize_along_axis(f, axis=(0, 1))
                     data[file[:-5]] = f
                 if file.endswith("o.npy"):
-                    out = np.amax(f, axis=-1) # get label for data point
-                    print(np.sum(f > 0)/100)
-                    ground_truth[file[:-5]] = out
+                    ground_truth[file[:-5]] = f
     print("Finished data loading")
 
     # create ensembles
@@ -47,7 +45,8 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key]
-        contamination = np.sum(gt > 0)/len(gt.flatten())
+        print(gt)
+        contamination = np.sum(gt)
         print("contamination is {}".format(contamination))
         for c_name, l_name in combinations:
             ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
