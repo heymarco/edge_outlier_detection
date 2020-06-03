@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
 
@@ -7,6 +8,15 @@ from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
 from src.local_outliers.evaluation import retrieve_labels
+
+import matplotlib as mpl
+from matplotlib import gridspec
+import matplotlib.pyplot as plt
+import seaborn as sns
+mpl.rcParams['text.usetex'] = True
+mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
+mpl.rc('font', family='serif')
+from matplotlib.offsetbox import AnchoredText
 
 
 def load_rw(dirname):
@@ -62,8 +72,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
     if l_name == "lof" or l_name == "if" or l_name == "xstream":
         [l.fit(data[i]) for i, l in enumerate(local_detectors)]
     if l_name == "ae":
-        print(len(local_detectors))
-        [l.fit(data[i], data[i], 
+        [l.fit(data[i], data[i],
                batch_size=32, epochs=global_epochs) for i, l in enumerate(local_detectors)]
 
     # local scores
@@ -74,7 +83,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
     if l_name == "if":
         local_scores = -np.array([model.score_samples(data[i]) for i, model in enumerate(local_detectors)])
     if l_name == "ae":
-        predicted = np.array([m.predict(data[i]) for i, m in enumerate(local_detectors)])
+        predicted = np.array([model.predict(data[i]) for i, model in enumerate(local_detectors)])
         diff = predicted - data
         dist = np.linalg.norm(diff, axis=-1)
         local_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
@@ -115,3 +124,49 @@ def evaluate(labels, ground_truth, contamination):
         f1_global.append(f1_score(lbs, ground_truth, relevant_label=2))
     return np.mean(kappa), np.mean(f1_global), np.mean(f1_local)
 
+
+def plot_result():
+    # read from dir
+    directory = os.path.join(os.getcwd(), "results", "numpy", "local_and_global")
+
+    def parse_filename(file):
+        components = file.split("_")
+        c_name = components[-2]
+        l_name = components[-1]
+        num_devices = components[0]
+        return num_devices, c_name, l_name
+
+    results_kappa = {}
+    results_f1_global = {}
+    results_f1_local = {}
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".npy"):
+                num_devices, c_name, l_name = parse_filename(file[:-4])
+                result = np.load(os.path.join(directory, file))
+                key = "{}, {}".format(c_name, l_name)
+                if key not in results_kappa:
+                    results_kappa[key] = {}
+                if key not in results_f1_global:
+                    results_f1_global[key] = {}
+                if key not in results_f1_local:
+                    results_f1_local[key] = {}
+                results_kappa[key][int(num_devices)] = result[0]
+                results_f1_global[key][int(num_devices)] = result[1]
+                results_f1_local[key][int(num_devices)] = result[2]
+
+    df_kappa = pd.DataFrame(results_kappa)
+    df_kappa.sort_index(inplace=True)
+    df_f1_global = pd.DataFrame(results_f1_global).sort_index()
+    df_f1_local = pd.DataFrame(results_f1_local).sort_index()
+
+    fig, axes = plt.subplots(1, 3)
+    sns.lineplot(data=df_kappa, ax=axes[0])
+    sns.lineplot(data=df_f1_global, ax=axes[1])
+    sns.lineplot(data=df_f1_local, ax=axes[2])
+    plt.xlabel("k")
+    axes[0].set_ylabel("$\kappa_m$")
+    axes[1].set_ylabel("$f1_{global}$")
+    axes[2].set_ylabel("$f1_{local}$")
+    plt.tight_layout()
+    plt.show()
