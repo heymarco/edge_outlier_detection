@@ -45,17 +45,18 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key]
-        contamination = np.sum(gt)
+        contamination = np.sum(gt > 0)/len(gt.flatten())
+        print("Contamination is {}".format(contamination))
         for c_name, l_name in combinations:
             ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
-            results = [train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name) for i in range(reps)]
+            results = [train_ensembles(d, ensembles[i], global_epochs=3, l_name=l_name) for i in range(reps)]
             global_scores = [result[0] for result in results]
             local_scores = [result[1] for result in results]
             labels = classify(global_scores, local_scores, contamination=contamination)
             kappa, f1_global, f1_local = evaluate(labels, gt, contamination=contamination)
             result = np.array([kappa, f1_global, f1_local])
             fname = "{}_{}_{}".format(key, c_name, l_name)
-            np.save(os.path.join(os.getcwd(), "results", "local_and_global", fname))
+            np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), result)
             print(get_frac_local(global_scores, local_scores))
             print("***************")
             print("Evaluation:")

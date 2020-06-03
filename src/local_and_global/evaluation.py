@@ -5,7 +5,7 @@ from sklearn.ensemble import IsolationForest
 
 from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
-from src.models import create_model, train_federated
+from src.models import create_model, create_models, train_federated
 from src.local_outliers.evaluation import retrieve_labels
 
 
@@ -29,7 +29,7 @@ def load_synth(filename):
 
 def create_ensembles(shape, l_name, contamination=0.01):
     num_clients = shape[0]
-    c = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
+    c = create_models(num_clients, shape[-1], compression_factor=0.4)
     l = None
     if l_name == "lof":
         l = [LocalOutlierFactor(n_neighbors=20, contamination=contamination, novelty=True) for _ in range(num_clients)]
@@ -50,17 +50,15 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
 
     # federated training
     for _ in range(global_epochs):
-        print(data.shape)
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
 
     # global scores
     predicted = np.array([m.predict(data[i]) for i, m in enumerate(collab_detectors)])
     diff = predicted - data
     dist = np.linalg.norm(diff, axis=-1)
-    global_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
+    global_scores = dist.flatten()
 
     # local training
-    print(l_name)
     if l_name == "lof" or l_name == "if" or l_name == "xstream":
         [l.fit(data[i]) for i, l in enumerate(local_detectors)]
     if l_name == "ae":
@@ -88,12 +86,13 @@ def classify(result_global, result_local, contamination=0.01):
     assert len(result_local) == len(result_global)
     labels = []
     for i in range(len(result_local)):
+        print("shape of global result: {}".format(result_global[i].shape))
+        print("shape of local result: {}".format(result_local[i].shape))
         labels_global = retrieve_labels(result_global[i], contamination).flatten()
         labels_local = retrieve_labels(result_local[i], contamination).flatten()
+        print(result_local[i].shape)
         # remove candidates for abnormal data partitions
         labels_global[np.logical_and(labels_global, np.invert(labels_local))] = 0
-        print(np.sum(labels_global))
-        print(np.sum(labels_local))
         classification = np.empty(shape=labels_global.shape)
         classification.fill(0)
         is_global_outlier = np.logical_and(labels_global, labels_local)

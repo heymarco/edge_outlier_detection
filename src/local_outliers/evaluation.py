@@ -109,6 +109,7 @@ def retrieve_labels(results, contamination=0.01):
         thresh = np.percentile(results, percent)
         return results > thresh
     else:
+        print("ndim > 1")
         thresh = np.percentile(results, percent, axis=1, keepdims=True)
         thresh = np.repeat(thresh, results.shape[-1], axis=-1)
         return (results > thresh).flatten()
