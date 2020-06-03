@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.stats import truncnorm
+from scipy.stats import truncnorm, zscore
 import math
 import random
 
@@ -9,7 +9,8 @@ from src.utils import normalize
 def create_data(num_devices, n, dims, gamma, delta):
 
     def create_blueprint(size):
-        return np.random.uniform(low=-1, high=1, size=size)
+        return np.zeros(size)
+        # return np.random.uniform(low=-1, high=1, size=size)
 
     def create_deviation(size, dev):
         return np.random.normal(size=size)*dev
@@ -133,8 +134,8 @@ def add_global_outliers(data, indices, subspace_size, frac_outlying=0.03):
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
         sign = np.random.choice([-1, 1], subspace_size, replace=True)
-        a = np.random.uniform(low=3.0, high=3.5, size=subspace_size)*sign
-        b = np.random.uniform(low=3.5, high=10.0, size=subspace_size)*sign
+        a = np.random.uniform(low=3.0, high=3.3, size=subspace_size)*sign
+        b = np.random.uniform(low=3.3, high=3.8, size=subspace_size)*sign
         ab = np.sort(np.vstack((a, b)).T)
         a, b = ab.T[0], ab.T[1]
         out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
@@ -145,7 +146,6 @@ def add_global_outliers(data, indices, subspace_size, frac_outlying=0.03):
     mean = np.mean(data, axis=(0, 1))
     std = np.std(data, axis=(0, 1))
     mean_param = np.array([mean, std])
-    print(mean_param)
     outliers = np.empty(shape=data.shape, dtype=bool)
     outliers.fill(False)
 
@@ -200,6 +200,11 @@ def normalize_along_axis(data, axis):
     minval = data.min(axis=axis, keepdims=True)
     data = (data-minval)/(maxval-minval)
     return data
+
+
+def z_score_normalization_along_axis(data, axis):
+    z_score = zscore(data, axis=axis)
+    print(z_score)
 
 
 def trim_data(data, max_length=10000):

@@ -106,9 +106,11 @@ def fit_predict_if_local(data, contamination=0.01):
 def retrieve_labels(results, contamination=0.01):
     percent = (1-contamination)*100
     if results.ndim == 1:
+        # global
         thresh = np.percentile(results, percent)
         return results > thresh
     else:
+        # local
         thresh = np.percentile(results, percent, axis=1, keepdims=True)
         thresh = np.repeat(thresh, results.shape[-1], axis=-1)
         return (results > thresh).flatten()

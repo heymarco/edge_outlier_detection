@@ -2,14 +2,15 @@ import os
 import math
 import numpy as np
 from src.pipelines import dataset_local_outliers, dataset_global_outliers
+from src.data_ import z_score_normalization_along_axis
 
 # configuration
-num_devices = 10
-num_data = 1000
-dims = 100
-subspace_frac = 1.0
+num_devices = 2
+num_data = 2
+dims = 2
+subspace_frac = 0.2
 frac_outlying_devices = 1.0
-frac_outlying_data = 0.01
+frac_outlying_data = 0.25
 
 # create local outliers
 gamma = 0.5
@@ -66,5 +67,4 @@ outname = os.path.join(os.getcwd(), "data", "synth", params_str + "_o")
 np.save(dataname, data)
 np.save(outname, np.amax(labels, axis=-1))
 
-print(labels)
 print("Num outliers = {}".format((np.sum(np.amax(labels, axis=-1))/dims)))
