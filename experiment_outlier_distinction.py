@@ -30,7 +30,6 @@ if __name__ == '__main__':
                     data[file[:-5]] = f
                 if file.endswith("o.npy"):
                     out = np.max(f, axis=-1) # get label for data point
-                    print(out)
                     ground_truth[file[:-5]] = out
     print("Finished data loading")
 
@@ -48,7 +47,7 @@ if __name__ == '__main__':
         gt = ground_truth[key]
         for c_name, l_name in combinations:
             ensembles = [create_ensembles(d.shape, l_name) for _ in range(reps)]
-            results = [train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name) for i in range(reps)]
+            results = [train_ensembles(d, ensembles[i], global_epochs=100, l_name=l_name) for i in range(reps)]
             global_scores = [result[0] for result in results]
             local_scores = [result[1] for result in results]
             labels = classify(global_scores, local_scores)

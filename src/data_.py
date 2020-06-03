@@ -79,6 +79,7 @@ def add_hidden_outliers(data, indices, subspace_size, frac_outlying=0.05):
         outliers[i][outlier_indices, :subspace_size] = True
     return data, outliers
 
+
 def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
     outliers = np.empty(shape=data.shape, dtype=bool)
     outliers.fill(False)

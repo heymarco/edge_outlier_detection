@@ -41,16 +41,16 @@ data = np.concatenate((data_local, data_global), axis=1)
 # create labels
 labels_local = labels_local.astype(np.int32)
 labels_global = labels_global.astype(np.int32)
-labels_local[labels_local] = 1
-labels_global[labels_global] = 2
+labels_local[labels_local > 0] = 1
+labels_global[labels_global > 0] = 2
 labels = np.concatenate((labels_local, labels_global), axis=1)
 
 # shuffle
-for i in range(len(data)):
-    shuffled_indices = np.arange(num_data)
-    np.random.shuffle(shuffled_indices)
-    data[i] = data[i][shuffled_indices]
-    labels[i] = labels[i][shuffled_indices]
+# for i in range(len(data)):
+#     shuffled_indices = np.arange(num_data)
+#     np.random.shuffle(shuffled_indices)
+#     data[i] = data[i][shuffled_indices]
+#     labels[i] = labels[i][shuffled_indices]
 
 # write to file
 params_str = "{}_{}_{}_{}_{}_{}_{}_{}_mixed".format(num_devices,
@@ -63,6 +63,8 @@ params_str = "{}_{}_{}_{}_{}_{}_{}_{}_mixed".format(num_devices,
                                                     delta)
 dataname = os.path.join(os.getcwd(), "data", "synth", params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", "synth", params_str + "_o")
-print(labels)
 np.save(dataname, data)
 np.save(outname, labels)
+
+print(labels)
+print("Num outliers = {}".format((np.sum(labels > 0)/dims)))
