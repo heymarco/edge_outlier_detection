@@ -19,24 +19,6 @@ mpl.rc('font', family='serif')
 from matplotlib.offsetbox import AnchoredText
 
 
-def load_rw(dirname):
-    data = []
-    directory = os.path.join(os.getcwd(), "data", dirname)
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".csv"):
-                print("Read {}".format(file))
-                d = np.loadtxt(os.path.join(directory, file), skiprows=1, delimiter=",")
-                if dirname == "xdk":
-                    d = d[:, :-1]
-                    data.append(d)
-    return np.array(data)
-
-
-def load_synth(filename):
-    return np.load(os.path.join(os.getcwd(), "data", "synth", filename))
-
-
 def create_ensembles(shape, l_name, contamination=0.01):
     num_clients = shape[0]
     c = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
@@ -134,39 +116,38 @@ def plot_result():
         c_name = components[-2]
         l_name = components[-1]
         num_devices = components[0]
-        return num_devices, c_name, l_name
+        frac = components[3]
+        return num_devices, frac, c_name, l_name
 
-    results_kappa = {}
-    results_f1_global = {}
-    results_f1_local = {}
+    res = []
     for root, dirs, files in os.walk(directory):
         for file in files:
             if file.endswith(".npy"):
-                num_devices, c_name, l_name = parse_filename(file[:-4])
+                print(file)
+                num_devices, frac, c_name, l_name = parse_filename(file[:-4])
                 result = np.load(os.path.join(directory, file))
-                key = "{}, {}".format(c_name, l_name)
-                if key not in results_kappa:
-                    results_kappa[key] = {}
-                if key not in results_f1_global:
-                    results_f1_global[key] = {}
-                if key not in results_f1_local:
-                    results_f1_local[key] = {}
-                results_kappa[key][int(num_devices)] = result[0]
-                results_f1_global[key][int(num_devices)] = result[1]
-                results_f1_local[key][int(num_devices)] = result[2]
+                new_res = [float(num_devices),
+                           float(frac), "{}/{}".format(c_name, l_name),
+                           result[0],
+                           "$\kappa_m$"]
+                res.append(new_res)
+                new_res = [float(num_devices),
+                           float(frac), "{}/{}".format(c_name, l_name),
+                           result[1],
+                           "$f1_{global}$"]
+                res.append(new_res)
+                new_res = [float(num_devices),
+                           float(frac), "{}/{}".format(c_name, l_name),
+                           result[2],
+                           "$f1_{local}$"]
+                res.append(new_res)
 
-    df_kappa = pd.DataFrame(results_kappa)
-    df_kappa.sort_index(inplace=True)
-    df_f1_global = pd.DataFrame(results_f1_global).sort_index()
-    df_f1_local = pd.DataFrame(results_f1_local).sort_index()
+    df = pd.DataFrame(res, columns=["num_devices", "frac", "ensemble", "value", "type"])
+    print(df)
+    g = sns.FacetGrid(df, col="type", hue="ensemble",
+                      palette=sns.color_palette("cubehelix", 4))
+    g.map(sns.lineplot, "frac", "value")
+    g.add_legend(loc="upper right")
 
-    fig, axes = plt.subplots(1, 3)
-    sns.lineplot(data=df_kappa, ax=axes[0])
-    sns.lineplot(data=df_f1_global, ax=axes[1])
-    sns.lineplot(data=df_f1_local, ax=axes[2])
-    plt.xlabel("k")
-    axes[0].set_ylabel("$\kappa_m$")
-    axes[1].set_ylabel("$f1_{global}$")
-    axes[2].set_ylabel("$f1_{local}$")
     plt.tight_layout()
     plt.show()

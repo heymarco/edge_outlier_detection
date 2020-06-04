@@ -9,8 +9,8 @@ from src.utils import normalize
 def create_data(num_devices, n, dims, gamma, delta):
 
     def create_blueprint(size):
-        return np.zeros(size)
-        # return np.random.uniform(low=-1, high=1, size=size)
+        bp = np.random.uniform(low=-1, high=1, size=size)
+        return zscore(bp)
 
     def create_deviation(size, dev):
         return np.random.normal(size=size)*dev
@@ -102,8 +102,8 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
         subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
-        a = np.random.uniform(low=3.0, high=3.3, size=subspace_size) * sign[subspace]
-        b = np.random.uniform(low=3.3, high=3.8, size=subspace_size) * sign[subspace]
+        a = 3 * sign[subspace]
+        b = 3.8 * sign[subspace]
         ab = np.sort(np.vstack((a, b)).T)
         a, b = ab.T[0], ab.T[1]
         out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
@@ -134,8 +134,8 @@ def add_global_outliers(data, indices, subspace_size, frac_outlying=0.03):
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
         sign = np.random.choice([-1, 1], subspace_size, replace=True)
-        a = np.random.uniform(low=3.0, high=3.3, size=subspace_size)*sign
-        b = np.random.uniform(low=3.3, high=3.8, size=subspace_size)*sign
+        a = 3.3*sign
+        b = 3.8*sign
         ab = np.sort(np.vstack((a, b)).T)
         a, b = ab.T[0], ab.T[1]
         out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
