@@ -57,6 +57,7 @@ def train_federated(models, data, epochs=1, batch_size=32, frac_available=1.0, v
                     verbose=verbose)
             
     avg = average_weights(models[active_devices])
+    print(avg)
     [model.set_weights(avg) for model in models]
     return models
 

@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
+from scipy.stats import mannwhitneyu
 
 from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
@@ -77,11 +78,9 @@ def score(result_global, result_local):
     scores = []
     for i in range(len(result_local)):
         rl = result_local[i]
-        print(rl.shape)
         rg = np.reshape(result_global[i], newshape=rl.shape)
-        print(rg.shape)
-        rg = np.reshape(result_global[i], newshape=rl.shape)
-        s = np.mean(rg-rl, axis=1)
+        s = np.array([mannwhitneyu(rl[i], rg[i]) for i in range(len(rl))])
+        # print(s)
         scores.append(s)
     return np.mean(np.array(scores), axis=0)
 
@@ -95,7 +94,7 @@ def evaluate(scores, ground_truth):
 
 def plot_result():
     # read from dir
-    directory = os.path.join(os.getcwd(), "results", "numpy", "local_and_global")
+    directory = os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions")
 
     def parse_filename(file):
         components = file.split("_")
@@ -116,7 +115,6 @@ def plot_result():
     for root, dirs, files in os.walk(directory):
         for file in files:
             if file.endswith(".npy"):
-                print(file)
                 num_devices, frac, c_name, l_name, contamination = parse_filename(file[:-4])
                 result = np.load(os.path.join(directory, file))
                 c = names[c_name]

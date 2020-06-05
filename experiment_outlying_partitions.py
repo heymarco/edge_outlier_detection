@@ -51,8 +51,6 @@ if __name__ == '__main__':
             local_result = [result[1] for result in results]
             scores = score(global_result, local_result)
             score_inliers, score_outliers = evaluate(scores, ground_truth[key])
-            print(score_inliers)
-            print(score_outliers)
             result = np.array([score_inliers, score_outliers])
             fname = "{}_{}_{}".format(key, c_name, l_name)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions", fname), result)
