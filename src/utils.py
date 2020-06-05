@@ -11,7 +11,7 @@ def load_json(filepath):
 def normalize(array_like):
     min_val = array_like.min()
     max_val = array_like.max()
-    return (array_like-min_val)/(max_val-min_val)
+    return (array_like - min_val) / (max_val - min_val)
 
 
 def parse_filename(name):
@@ -32,7 +32,7 @@ def parse_filename(name):
 
 def sliding_window(index, window_size):
     assert index >= window_size, "start index must be >= than window_size"
-    return np.arange(index-window_size, index)
+    return np.arange(index - window_size, index)
 
 
 def setup_machine(cuda_device, ram=4096):
@@ -42,7 +42,30 @@ def setup_machine(cuda_device, ram=4096):
         try:
             tf.config.experimental.set_visible_devices(gpus[CUDA_VISIBLE_DEVICE], 'GPU')
             tf.config.experimental.set_virtual_device_configuration(gpus[CUDA_VISIBLE_DEVICE],
-                                                                    [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=ram)])
+                                                                    [tf.config.experimental.VirtualDeviceConfiguration(
+                                                                        memory_limit=ram)])
         except RuntimeError as e:
             print(e)
+
+
+def levenshtein(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein(s2, s1)
+
+    # len(s1) >= len(s2)
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[
+                             j + 1] + 1  # j+1 instead of j since previous_row and current_row are one character longer
+            deletions = current_row[j] + 1  # than s2
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+
+    return previous_row[-1]
 
