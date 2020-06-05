@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
-from scipy.stats import mannwhitneyu
+from scipy.stats import mannwhitneyu, zscore
 
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
@@ -78,10 +78,7 @@ def score(result_global, result_local):
     for i in range(len(result_local)):
         rl = result_local[i]
         rg = np.reshape(result_global[i], newshape=rl.shape)
-        sorted_indices_rl = np.argsort(rl, axis=-1)
-        sorted_indices_rg = np.argsort(rg, axis=-1)
-        s = np.array([levenshtein(sorted_indices_rg[i], sorted_indices_rl[i]) for i in range(len(rl))])
-        s = s/
+        s = np.array([mannwhitneyu(zscore(rl[i]), zscore(rg[i])) for i in range(len(rl))])
         scores.append(s)
     return np.mean(np.array(scores), axis=0)
 
