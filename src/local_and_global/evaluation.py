@@ -6,7 +6,7 @@ from sklearn.ensemble import IsolationForest
 
 from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
-from src.models import create_model, train_federated
+from src.models import create_model, create_models, train_federated
 from src.local_outliers.evaluation import retrieve_labels
 
 import matplotlib as mpl
@@ -21,12 +21,12 @@ from matplotlib.offsetbox import AnchoredText
 
 def create_ensembles(shape, l_name, contamination=0.01):
     num_clients = shape[0]
-    c = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
+    c = create_models(num_clients, shape[-1], compression_factor=0.4)
     l = None
     if l_name == "lof":
         l = [LocalOutlierFactor(n_neighbors=20, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "xstream":
-        l = [Chains(k=50, nchains=50, depth=10) for _ in range(num_clients)]
+        l = [Chains(k=50, nchains=10, depth=10) for _ in range(num_clients)]
     if l_name == "ae":
         l = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     if l_name == "if":
@@ -45,13 +45,13 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
 
     # global scores
-    predicted = np.array([m.predict(data[i]) for i, m in enumerate(collab_detectors)])
+    predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
     diff = predicted - data
     dist = np.linalg.norm(diff, axis=-1)
-    global_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
+    global_scores = dist.flatten()
 
+    print("Fitting {}".format(l_name))
     # local training
-    print(l_name)
     if l_name == "lof" or l_name == "if" or l_name == "xstream":
         [l.fit(data[i]) for i, l in enumerate(local_detectors)]
     if l_name == "ae":
@@ -81,9 +81,9 @@ def classify(result_global, result_local, contamination=0.01):
         labels_global = retrieve_labels(result_global[i], contamination).flatten()
         labels_local = retrieve_labels(result_local[i], contamination).flatten()
         # remove candidates for abnormal data partitions
-        # labels_global[np.logical_and(labels_global, np.invert(labels_local))] = 0
-        print(np.sum(labels_global))
-        print(np.sum(labels_local))
+        labels_global[np.logical_and(labels_global, np.invert(labels_local))] = 0
+        print("Number of global outliers: {}".format(np.sum(np.logical_and(labels_global, labels_local))))
+        print("Number of local outliers: {}".format(np.sum(np.logical_and(labels_local, np.invert(labels_global)))))
         classification = np.empty(shape=labels_global.shape)
         classification.fill(0)
         is_global_outlier = np.logical_and(labels_global, labels_local)
@@ -96,6 +96,7 @@ def classify(result_global, result_local, contamination=0.01):
 
 def evaluate(labels, ground_truth, contamination):
     ground_truth = ground_truth.flatten()
+    print("Sum of correct: {}".format(np.sum(np.logical_and(labels > 0, ground_truth > 0))))
     kappa = []
     f1_local = []
     f1_global = []
@@ -104,7 +105,7 @@ def evaluate(labels, ground_truth, contamination):
         kappa.append(kappa_m(lbs, ground_truth, 1-contamination))
         f1_local.append(f1_score(lbs, ground_truth, relevant_label=1))
         f1_global.append(f1_score(lbs, ground_truth, relevant_label=2))
-    return np.mean(kappa), np.mean(f1_global), np.mean(f1_local)
+    return np.nanmean(kappa), np.nanmean(f1_global), np.nanmean(f1_local)
 
 
 def plot_result():

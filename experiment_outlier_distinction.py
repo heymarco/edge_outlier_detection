@@ -2,7 +2,7 @@ import argparse
 import os
 from src.local_and_global.evaluation import *
 from src.local_outliers.evaluation import get_frac_local
-from src.data_ import normalize_along_axis, trim_data
+from src.data_ import normalize_along_axis, z_score_normalization_along_axis, trim_data
 
 
 if __name__ == '__main__':
@@ -25,7 +25,6 @@ if __name__ == '__main__':
         for file in files:
             if file.endswith("d.npy") or file.endswith("o.npy"):
                 f = np.load(os.path.join(directory, file))
-                # f = trim_data(f, max_length=10000)
                 if file.endswith("d.npy"):
                     f = normalize_along_axis(f, axis=(0, 1))
                     data[file[:-6]] = f
@@ -34,10 +33,10 @@ if __name__ == '__main__':
     print("Finished data loading")
 
     # create ensembles
-    combinations = [("ae", "ae"),
+    combinations = [# ("ae", "ae"),
                     # ("ae", "lof"),
                     # ("ae", "if"),
-                    # ("ae", "xstream")
+                    ("ae", "xstream")
     ]
     print("Executing combinations {}".format(combinations))
 
@@ -45,7 +44,7 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key]
-        contamination = np.sum(gt)
+        contamination = np.sum(gt > 0)/len(gt.flatten())
         for c_name, l_name in combinations:
             ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
             results = [train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name) for i in range(reps)]
@@ -55,7 +54,7 @@ if __name__ == '__main__':
             kappa, f1_global, f1_local = evaluate(labels, gt, contamination=contamination)
             result = np.array([kappa, f1_global, f1_local])
             fname = "{}_{}_{}".format(key, c_name, l_name)
-            np.save(os.path.join(os.getcwd(), "results", "local_and_global", fname))
+            np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), result)
             print(get_frac_local(global_scores, local_scores))
             print("***************")
             print("Evaluation:")

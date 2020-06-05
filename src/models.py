@@ -13,17 +13,20 @@ from tensorflow.keras.models import Model
 
 def create_model(dims, compression_factor):
     initializer = tf.keras.initializers.GlorotUniform()
+    bias_initializer = tf.keras.initializers.Zeros()
 
     encoding_dim = int(dims*compression_factor)
     input_img = Input(shape=(dims,))
     encoded = Dense(encoding_dim,
                     activation='relu',
                     kernel_regularizer=tf.keras.regularizers.l2(),
-                    kernel_initializer=initializer)(input_img)
+                    kernel_initializer=initializer, 
+                    bias_initializer=bias_initializer)(input_img)
     decoded = Dense(dims, activation='sigmoid',
                     kernel_regularizer=tf.keras.regularizers.l2(),
                     activity_regularizer=tf.keras.regularizers.l1(10e-5),
-                    kernel_initializer=initializer)(encoded)
+                    kernel_initializer=initializer, 
+                    bias_initializer=bias_initializer)(encoded)
     autoencoder = Model(input_img, decoded)
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
     return autoencoder
