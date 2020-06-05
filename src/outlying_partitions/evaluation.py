@@ -5,10 +5,9 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
 from scipy.stats import mannwhitneyu
 
-from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
-from src.local_outliers.evaluation import retrieve_labels
+from src.utils import levenshtein
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -79,8 +78,10 @@ def score(result_global, result_local):
     for i in range(len(result_local)):
         rl = result_local[i]
         rg = np.reshape(result_global[i], newshape=rl.shape)
-        s = np.array([mannwhitneyu(rl[i], rg[i]) for i in range(len(rl))])
-        # print(s)
+        sorted_indices_rl = np.argsort(rl, axis=-1)
+        sorted_indices_rg = np.argsort(rg, axis=-1)
+        s = np.array([levenshtein(sorted_indices_rg[i], sorted_indices_rl[i]) for i in range(len(rl))])
+        s = s/
         scores.append(s)
     return np.mean(np.array(scores), axis=0)
 
@@ -137,7 +138,7 @@ def plot_result():
     d = {'color': sns.color_palette("cubehelix", 4), "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble", "Value", "Type"])
     df = df.sort_values(by=["Type", "Contamination"])
-    g = sns.FacetGrid(df, col="Ensemble", hue="Type", hue_kws=d)
+    g = sns.FacetGrid(df, col="Ensemble", row="Type", hue_kws=d)
     g.map(plt.plot, "Contamination", "Value").add_legend()
 
     plt.tight_layout()
