@@ -76,22 +76,24 @@ def fit_predict_autoencoder_global(data, compression_factor=0.8):
 def fit_predict_lof_global(data, contamination=0.01):
     data = np.reshape(data,
                       newshape=(data.shape[0] * data.shape[1], data.shape[2]))
-    clf = LocalOutlierFactor(n_neighbors=10, contamination=contamination, novelty=True)
+    print(data)
+    clf = LocalOutlierFactor(n_neighbors=10, contamination=contamination, novelty=False)
     clf.fit(data)
     return -clf.negative_outlier_factor_
 
 
 def fit_predict_lof_local(data, contamination=0.01):
-    models = [LocalOutlierFactor(n_neighbors=10, contamination=contamination, novelty=True) for _ in
+    models = [LocalOutlierFactor(n_neighbors=10, contamination=contamination) for _ in
               range(data.shape[0])]
     [model.fit(data[i]) for i, model in enumerate(models)]
-    return np.array([-model.negative_outlier_factor_ for i, model in enumerate(models)])
+    return -np.array([model.negative_outlier_factor_ for i, model in enumerate(models)])
 
 
 # Isolation Forests
 def fit_predict_if_global(data, contamination=0.01):
     data = np.reshape(data,
                       newshape=(data.shape[0] * data.shape[1], data.shape[2]))
+    print(data)
     forest = IsolationForest(contamination=contamination)
     forest.fit(data)
     return -forest.score_samples(data)

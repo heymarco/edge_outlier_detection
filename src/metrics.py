@@ -11,9 +11,6 @@ def precision(labels, ground_truth, relevant_label):
     ground_truth = ground_truth == relevant_label
     tp = np.logical_and(labels, ground_truth)
     fp = np.logical_and(labels, np.invert(ground_truth))
-    if relevant_label == 2:
-        print("precision")
-        print("sum tp:  {}".format(np.sum(tp)))
     return np.sum(tp)/(np.sum(tp)+np.sum(fp))
 
 
@@ -22,10 +19,6 @@ def recall(labels, ground_truth, relevant_label):
     ground_truth = ground_truth == relevant_label
     tp = np.logical_and(labels, ground_truth)
     sum_outliers = np.sum(ground_truth)
-    if relevant_label == 2:
-        print("recall")
-        print("sum tp:  {}".format(np.sum(tp)))
-        print("sum out: {}".format(sum_outliers))
     return np.sum(tp)/sum_outliers
 
 

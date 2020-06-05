@@ -195,21 +195,21 @@ def add_abnormal_devices(data, indices, subspace_size, frac_outlying=0.9):
     return data, outliers
 
 
-def normalize_along_axis(data, axis):
+def normalize_along_axis(data, axis, minimum=0.2, maximum=0.8):
     maxval = data.max(axis=axis, keepdims=True)
     minval = data.min(axis=axis, keepdims=True)
     data = (data-minval)/(maxval-minval)
+    data = data*(maximum-minimum)+minimum
     return data
 
 
 def z_score_normalization_along_axis(data, axis):
-    z_score = zscore(data, axis=axis)
-    print(z_score)
+    return zscore(data, axis=axis)
 
 
 def trim_data(data, max_length=10000):
     min_length = min([len(d) for d in data])
-    indices = np.random.choice(np.arange(min_length), min(min_length, max_length))
-    data = np.array([d[indices] for d in data])
+    max_length = min(min_length, max_length)
+    data = np.array([d[:max_length] for d in data])
     return data
 

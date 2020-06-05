@@ -54,6 +54,11 @@ if __name__ == '__main__':
         save_result(results_local, name="{}_local_{}_{}".format(data_name, repetitions, alg))
 
         frac_local = get_frac_local(result_global=results_global, result_local=results_local)
+
+        f = open(os.path.join(os.getcwd(), "results", "numpy", "local_outliers", "summary.txt"), "a")
+        f.write("The fraction of local outliers for {} on {} is {}\n".format(alg, data_name, frac_local))
+        f.close()
+
         print("The fraction of local outliers for {} is {}".format(data_name, frac_local))
 
 
