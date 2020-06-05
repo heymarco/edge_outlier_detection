@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
-from scipy.stats import mannwhitneyu, zscore
+from scipy.stats import spearmanr, zscore
 
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
@@ -78,7 +78,8 @@ def score(result_global, result_local):
     for i in range(len(result_local)):
         rl = result_local[i]
         rg = np.reshape(result_global[i], newshape=rl.shape)
-        s = np.array([mannwhitneyu(zscore(rl[i]), zscore(rg[i])) for i in range(len(rl))])
+        s = np.array([spearmanr(rl[i], rg[i])[0] for i in range(len(rl))])
+        print(s)
         scores.append(s)
     return np.mean(np.array(scores), axis=0)
 
@@ -135,7 +136,7 @@ def plot_result():
     d = {'color': sns.color_palette("cubehelix", 4), "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble", "Value", "Type"])
     df = df.sort_values(by=["Type", "Contamination"])
-    g = sns.FacetGrid(df, col="Ensemble", row="Type", hue_kws=d)
+    g = sns.FacetGrid(df, col="Ensemble", hue="Type", hue_kws=d)
     g.map(plt.plot, "Contamination", "Value").add_legend()
 
     plt.tight_layout()
