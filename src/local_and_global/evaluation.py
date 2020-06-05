@@ -119,6 +119,12 @@ def plot_result():
         frac = components[3]
         return num_devices, frac, c_name, l_name
 
+    names = {
+        "ae": "AE",
+        "if": "IF",
+        "xstream": "xStream",
+        "lof": "LOF"
+    }
     res = []
     for root, dirs, files in os.walk(directory):
         for file in files:
@@ -126,28 +132,29 @@ def plot_result():
                 print(file)
                 num_devices, frac, c_name, l_name = parse_filename(file[:-4])
                 result = np.load(os.path.join(directory, file))
+                c = names[c_name]
+                l = names[l_name]
                 new_res = [float(num_devices),
-                           float(frac), "{}/{}".format(c_name, l_name),
+                           float(frac), "{}/{}".format(c, l),
                            result[0],
                            "$\kappa_m$"]
                 res.append(new_res)
                 new_res = [float(num_devices),
-                           float(frac), "{}/{}".format(c_name, l_name),
+                           float(frac), "{}/{}".format(c, l),
                            result[1],
-                           "$f1_{global}$"]
+                           "f1$_{global}$"]
                 res.append(new_res)
                 new_res = [float(num_devices),
-                           float(frac), "{}/{}".format(c_name, l_name),
+                           float(frac), "{}/{}".format(c, l),
                            result[2],
-                           "$f1_{local}$"]
+                           "f1$_{local}$"]
                 res.append(new_res)
 
-    df = pd.DataFrame(res, columns=["num_devices", "frac", "ensemble", "value", "type"])
-    print(df)
-    g = sns.FacetGrid(df, col="type", hue="ensemble",
-                      palette=sns.color_palette("cubehelix", 4))
-    g.map(sns.lineplot, "frac", "value")
-    g.add_legend(loc="upper right")
+    d = {'color': sns.color_palette("cubehelix", 4), "marker": ["o", "*", "v", "x"]}
+    df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Ensemble", "Value", "Measure"])
+    df = df.sort_values(by=["Measure", "Subspace frac"])
+    g = sns.FacetGrid(df, col="Measure", hue="Ensemble", hue_kws=d)
+    g.map(plt.plot, "Subspace frac", "Value").add_legend()
 
     plt.tight_layout()
     plt.show()

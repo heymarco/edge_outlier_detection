@@ -13,7 +13,7 @@ def create_data(num_devices, n, dims, gamma, delta):
         return zscore(bp)
 
     def create_deviation(size, dev):
-        return np.random.normal(size=size)*dev
+        return zscore(np.random.uniform(low=-1, high=1, size=size))*dev
 
     def create_gaussian_noise(size, snr=0.2):
         return np.random.normal(size=size)*snr
@@ -98,18 +98,33 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
     sign = np.ones(shape=mean_gtz.shape)
     sign[mean_gtz] = -1
 
-    def to_outlier(p, param, sign):
-        subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
+    def to_outlier(p, device_index):
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
-        a = 3 * sign[subspace]
-        b = 3.8 * sign[subspace]
-        ab = np.sort(np.vstack((a, b)).T)
-        a, b = ab.T[0], ab.T[1]
-        out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
-        p[subspace] = out
+        other_device = device_index
+        while other_device == device_index:
+            other_device = np.random.choice(np.arange(data.shape[0]))
+            print(other_device)
+        random_point_index = np.random.choice(np.arange(data.shape[1]))
+        random_point = data[other_device][random_point_index]
+        subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
+        p[subspace] = random_point[subspace]
         o[subspace] = True
         return p, o
+
+    # def to_outlier(p, param, sign):
+    #     subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
+    #     o = np.empty(shape=p.shape, dtype=bool)
+    #     o.fill(False)
+    #     a = np.sqrt(np.random.uniform(3.0, 3.1, size=sign[subspace].shape))*sign[subspace]
+    #     b = np.sqrt(np.random.uniform(3.2, 3.3, size=sign[subspace].shape))*sign[subspace]
+    #     ab = np.sort(np.vstack((a, b)).T)
+    #     a, b = ab.T[0], ab.T[1]
+    #     print(param[1][subspace])
+    #     out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
+    #     p[subspace] = out
+    #     o[subspace] = True
+    #     return p, o
 
     for i, points in enumerate(data_with_outliers):
         param = np.array([mean_outlier_data[i], std_outlier_data[i]])
@@ -118,7 +133,8 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
         o_indices = np.random.choice(range(len(points)), num_out, replace=False)
 
         for j in o_indices:
-            point, o = to_outlier(points[j], param, sign_point)
+            point, o = to_outlier(points[j], indices[i])
+            # point, o = to_outlier(points[j], param, sign_point)
             points[j] = point
             relevant_outliers[i][j] = o
         data_with_outliers[i] = points
@@ -134,11 +150,14 @@ def add_global_outliers(data, indices, subspace_size, frac_outlying=0.03):
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
         sign = np.random.choice([-1, 1], subspace_size, replace=True)
-        a = 3.3*sign
-        b = 3.8*sign
+        a = 3*sign
+        b = 3.5*sign
         ab = np.sort(np.vstack((a, b)).T)
         a, b = ab.T[0], ab.T[1]
-        out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
+        mean = param[0][subspace]
+        std = param[1][subspace]
+        out = mean + np.random.uniform(a, b, size=p[subspace].shape)*std
+        # out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
         p[subspace] = out
         o[subspace] = True
         return p, o
