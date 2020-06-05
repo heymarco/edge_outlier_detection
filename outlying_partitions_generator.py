@@ -2,7 +2,7 @@ import os
 import argparse
 
 import numpy as np
-from src.data_ import add_global_outliers, add_local_outliers, create_data
+from src.data_ import create_data
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
