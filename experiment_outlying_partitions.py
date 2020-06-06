@@ -54,3 +54,4 @@ if __name__ == '__main__':
             result = np.array([score_inliers, score_outliers])
             fname = "{}_{}_{}".format(key, c_name, l_name)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions", fname), result)
+        del d[key]

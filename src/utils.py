@@ -1,6 +1,7 @@
 import json
 import tensorflow as tf
 import numpy as np
+import seaborn as sns
 
 
 def load_json(filepath):
@@ -69,3 +70,5 @@ def levenshtein(s1, s2):
 
     return previous_row[-1]
 
+
+color_palette = sns.color_palette("cubehelix", 4)
