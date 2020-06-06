@@ -7,7 +7,7 @@ from scipy.stats import spearmanr, zscore
 
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
-from src.utils import levenshtein
+from src.utils import color_palette
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -123,21 +123,23 @@ def plot_result():
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[0],
-                           "Inlier partition"]
+                           "Partition w/ inliers"]
                 res.append(new_res)
                 new_res = [float(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[1],
-                           "Outlier partition"]
+                           "Partition w/ outliers"]
                 res.append(new_res)
 
-    d = {'color': sns.color_palette("cubehelix", 4), "marker": ["o", "*", "v", "x"]}
-    df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble", "Value", "Type"])
-    df = df.sort_values(by=["Type", "Contamination"])
+    mpl.rc('font', **{"size": 12})
+    d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
+    df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
+                                    "$Corr_{S}(OS_{local}, OS_{global})$", "Type"])
+    df = df.sort_values(by=["Ensemble", "Contamination"])
     g = sns.FacetGrid(df, col="Ensemble", hue="Type", hue_kws=d)
-    g.map(plt.plot, "Contamination", "Value").add_legend()
+    g.map(plt.plot, "Contamination", "$Corr_{S}(OS_{local}, OS_{global})$").add_legend()
 
-    plt.tight_layout()
+    # plt.tight_layout()
     plt.show()

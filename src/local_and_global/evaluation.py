@@ -8,6 +8,7 @@ from src.metrics import kappa_m, f1_score
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
 from src.local_outliers.evaluation import retrieve_labels
+from src.utils import color_palette
 
 import matplotlib as mpl
 from matplotlib import gridspec
@@ -151,11 +152,10 @@ def plot_result():
                            "f1$_{local}$"]
                 res.append(new_res)
 
-    d = {'color': sns.color_palette("cubehelix", 4), "marker": ["o", "*", "v", "x"]}
-    df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Ensemble", "Value", "Measure"])
-    df = df.sort_values(by=["Measure", "Subspace frac"])
+    d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
+    df = pd.DataFrame(res, columns=["\# Devices", "Subspace fraction", "Ensemble", "Value", "Measure"])
+    df = df.sort_values(by=["Ensemble", "Measure", "Subspace fraction"])
     g = sns.FacetGrid(df, col="Measure", hue="Ensemble", hue_kws=d)
-    g.map(plt.plot, "Subspace frac", "Value").add_legend()
+    g.map(plt.plot, "Subspace fraction", "Value").add_legend()
 
-    plt.tight_layout()
     plt.show()
