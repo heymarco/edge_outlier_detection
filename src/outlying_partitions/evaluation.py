@@ -79,7 +79,6 @@ def score(result_global, result_local):
         rl = result_local[i]
         rg = np.reshape(result_global[i], newshape=rl.shape)
         s = np.array([spearmanr(rl[i], rg[i])[0] for i in range(len(rl))])
-        print(s)
         scores.append(s)
     return np.mean(np.array(scores), axis=0)
 
@@ -118,28 +117,36 @@ def plot_result():
                 result = np.load(os.path.join(directory, file))
                 c = names[c_name]
                 l = names[l_name]
-                new_res = [float(num_devices),
+                new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[0],
-                           "Partition w/ inliers"]
+                           "All Partitions"]
                 res.append(new_res)
-                new_res = [float(num_devices),
+                new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[1],
+                           "Partition w/ inliers"]
+                res.append(new_res)
+                new_res = [int(num_devices),
+                           float(frac),
+                           float(contamination),
+                           "{}/{}".format(c, l),
+                           result[2],
                            "Partition w/ outliers"]
                 res.append(new_res)
 
     mpl.rc('font', **{"size": 12})
     d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
-    df = pd.DataFrame(res, columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
-                                    "$Corr_{S}(OS_{local}, OS_{global})$", "Type"])
+    df = pd.DataFrame(res,
+                      columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
+                                    "mean $OS^{C}$", "Type"])
     df = df.sort_values(by=["Ensemble", "Contamination"])
-    g = sns.FacetGrid(df, col="Ensemble", hue="Type", hue_kws=d)
-    g.map(plt.plot, "Contamination", "$Corr_{S}(OS_{local}, OS_{global})$").add_legend()
+    g = sns.FacetGrid(df, col="Ensemble", row="\# Devices", hue="Type", hue_kws=d, margin_titles=True)
+    g.map(plt.plot, "Contamination", "mean $OS^{C}$").add_legend()
 
     # plt.tight_layout()
     plt.show()
