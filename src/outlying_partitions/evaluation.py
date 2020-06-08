@@ -67,6 +67,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
         predicted = np.array([model.predict(data[i]) for i, model in enumerate(local_detectors)])
         diff = predicted - data
         dist = np.linalg.norm(diff, axis=-1)
+        print(dist)
         local_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
 
     return global_scores, local_scores
@@ -78,17 +79,18 @@ def score(result_global, result_local):
     for i in range(len(result_local)):
         rl = result_local[i]
         rg = np.reshape(result_global[i], newshape=rl.shape)
-        s = np.array([spearmanr(rl[i], rg[i])[0] for i in range(len(rl))])
-        print(s)
+        s = zscore(rg-rl)
+        s = np.linalg.norm(s, axis=-1)
         scores.append(s)
     return np.mean(np.array(scores), axis=0)
 
 
 def evaluate(scores, ground_truth):
     is_candidate = ground_truth.any(axis=1)
+    mean_score = np.mean(scores)
     mean_score_normal = np.mean(scores[np.invert(is_candidate)])
     mean_score_outlying = np.mean(scores[is_candidate])
-    return mean_score_normal, mean_score_outlying
+    return mean_score, mean_score_normal, mean_score_outlying
 
 
 def plot_result():

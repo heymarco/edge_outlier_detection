@@ -1,4 +1,5 @@
 import argparse
+import gc
 
 from src.outlying_partitions.evaluation import *
 from src.data_ import normalize_along_axis
@@ -33,9 +34,9 @@ if __name__ == '__main__':
 
     # create ensembles
     combinations = [("ae", "ae"),
-                    # ("ae", "lof"),
-                    # ("ae", "if"),
-                    # ("ae", "xstream")
+                    ("ae", "lof"),
+                    ("ae", "if"),
+                    ("ae", "xstream")
     ]
     print("Executing combinations {}".format(combinations))
 
@@ -46,12 +47,15 @@ if __name__ == '__main__':
         contamination = np.sum(gt > 0)/len(gt.flatten())
         for c_name, l_name in combinations:
             ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
-            results = [train_ensembles(d, ensembles[i], global_epochs=10, l_name=l_name) for i in range(reps)]
+            results = [train_ensembles(d, ensembles[i], global_epochs=6, l_name=l_name) for i in range(reps)]
             global_result = [result[0] for result in results]
             local_result = [result[1] for result in results]
             scores = score(global_result, local_result)
-            score_inliers, score_outliers = evaluate(scores, ground_truth[key])
-            result = np.array([score_inliers, score_outliers])
+            mean_score, score_inliers, score_outliers = evaluate(scores, ground_truth[key])
+            result = np.array([mean_score, score_inliers, score_outliers])
             fname = "{}_{}_{}".format(key, c_name, l_name)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions", fname), result)
-        del d[key]
+        # remove unneeded data
+        data[key] = None
+        ground_truth[key] = None
+        gc.collect()
