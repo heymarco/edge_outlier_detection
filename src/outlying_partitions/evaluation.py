@@ -78,16 +78,19 @@ def score(result_global, result_local):
     for i in range(len(result_local)):
         rl = result_local[i]
         rg = np.reshape(result_global[i], newshape=rl.shape)
-        s = np.array([spearmanr(rl[i], rg[i])[0] for i in range(len(rl))])
-        scores.append(s)
+        score_global = np.linalg.norm(rg, axis=-1)
+        score_local = np.linalg.norm(rl, axis=-1)
+        scores.append([score_global, score_local])
     return np.mean(np.array(scores), axis=0)
 
 
 def evaluate(scores, ground_truth):
     is_candidate = ground_truth.any(axis=1)
-    mean_score_normal = np.mean(scores[np.invert(is_candidate)])
-    mean_score_outlying = np.mean(scores[is_candidate])
-    return mean_score_normal, mean_score_outlying
+    assert scores.ndim == 2
+    mean_score_global = np.mean(scores, axis=0)[0]
+    mean_score_outlying = np.mean(scores[0][is_candidate])
+    mean_score_local = np.mean(scores[1])
+    return mean_score_global, mean_score_outlying, mean_score_local
 
 
 def plot_result():
