@@ -9,7 +9,7 @@ if __name__ == '__main__':
     parser.add_argument("-data", type=str, choices=["synth", "mhealth", "emotor", "xdk"], nargs="+")
     parser.add_argument("-alg", type=str, choices=["ae", "lof", "xstream", "if"])
     parser.add_argument("-reps", type=int, default=1)
-    parser.add_argument("-gpu", type=int)
+    parser.add_argument("-gpu", type=int, default=0)
     args = parser.parse_args()
 
     # Load, trim and normalize data

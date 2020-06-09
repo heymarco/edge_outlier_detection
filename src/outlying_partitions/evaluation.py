@@ -120,36 +120,30 @@ def plot_result():
                 result = np.load(os.path.join(directory, file))
                 c = names[c_name]
                 l = names[l_name]
+                print(result)
                 new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[0],
-                           "All Partitions"]
+                           "Inlier"]
                 res.append(new_res)
                 new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[1],
-                           "Partition w/ inliers"]
-                res.append(new_res)
-                new_res = [int(num_devices),
-                           float(frac),
-                           float(contamination),
-                           "{}/{}".format(c, l),
-                           result[2],
-                           "Partition w/ outliers"]
+                           "Outlier"]
                 res.append(new_res)
 
-    mpl.rc('font', **{"size": 12})
+    mpl.rc('font', **{"size": 13})
     d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res,
                       columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
-                                    "mean $OS^{C}$", "Type"])
-    df = df.sort_values(by=["Ensemble", "Contamination"])
-    g = sns.FacetGrid(df, col="Ensemble", row="\# Devices", hue="Type", hue_kws=d, margin_titles=True)
-    g.map(plt.plot, "Contamination", "mean $OS^{C}$").add_legend()
+                                    "$\Delta$", "Type"])
+    df = df.sort_values(by=["\# Devices", "Contamination"])
+    g = sns.FacetGrid(df, col="\# Devices", hue="Type", hue_kws=d, margin_titles=True)
+    g.map(plt.plot, "Contamination", "$\Delta$").add_legend()
 
     # plt.tight_layout()
     plt.show()
