@@ -21,8 +21,22 @@ def create_ensembles(shape, l_name, contamination=0.01):
     num_clients = shape[0]
     c = create_models(num_clients, shape[-1], compression_factor=0.4)
     l = None
-    if l_name == "lof":
-        l = [LocalOutlierFactor(n_neighbors=20, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof1":
+        l = [LocalOutlierFactor(n_neighbors=1, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof2":
+        l = [LocalOutlierFactor(n_neighbors=2, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof4":
+        l = [LocalOutlierFactor(n_neighbors=4, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof8":
+        l = [LocalOutlierFactor(n_neighbors=8, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof16":
+        l = [LocalOutlierFactor(n_neighbors=16, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof32":
+        l = [LocalOutlierFactor(n_neighbors=32, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof64":
+        l = [LocalOutlierFactor(n_neighbors=64, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof100":
+        l = [LocalOutlierFactor(n_neighbors=100, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "xstream":
         l = [Chains(k=50, nchains=10, depth=10) for _ in range(num_clients)]
     if l_name == "ae":
@@ -122,36 +136,30 @@ def plot_result():
                 result = np.load(os.path.join(directory, file))
                 c = names[c_name]
                 l = names[l_name]
+                print(result)
                 new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[0],
-                           "All Partitions"]
+                           "Inlier"]
                 res.append(new_res)
                 new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
                            result[1],
-                           "Partition w/ inliers"]
-                res.append(new_res)
-                new_res = [int(num_devices),
-                           float(frac),
-                           float(contamination),
-                           "{}/{}".format(c, l),
-                           result[2],
-                           "Partition w/ outliers"]
+                           "Outlier"]
                 res.append(new_res)
 
-    mpl.rc('font', **{"size": 12})
+    mpl.rc('font', **{"size": 13})
     d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res,
                       columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
-                                    "mean $OS^{C}$", "Type"])
-    df = df.sort_values(by=["Ensemble", "Contamination"])
-    g = sns.FacetGrid(df, col="Ensemble", row="\# Devices", hue="Type", hue_kws=d, margin_titles=True)
-    g.map(plt.plot, "Contamination", "mean $OS^{C}$").add_legend()
+                                    "$\Delta$", "Type"])
+    df = df.sort_values(by=["\# Devices", "Contamination"])
+    g = sns.FacetGrid(df, col="\# Devices", hue="Type", hue_kws=d, margin_titles=True)
+    g.map(plt.plot, "Contamination", "$\Delta$").add_legend()
 
     # plt.tight_layout()
     plt.show()

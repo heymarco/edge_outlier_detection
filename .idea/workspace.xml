@@ -4,7 +4,7 @@
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_outlying_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,11 +80,16 @@
     </state>
     <state x="492" y="337" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.826@0.23.1440.826" timestamp="1591108417170" />
     <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.989@0.23.1920.989" timestamp="1591128617585" />
-    <state x="507" y="314" key="com.intellij.ide.util.TipDialog" timestamp="1591612160622">
-      <screen x="0" y="23" width="1920" height="984" />
+    <state x="342" y="23" key="CommitChangelistDialog2" timestamp="1591687531992">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state x="342" y="23" key="CommitChangelistDialog2/0.23.1440.827@0.23.1440.827" timestamp="1591687531992" />
+    <state x="507" y="315" key="com.intellij.ide.util.TipDialog" timestamp="1593070672319">
+      <screen x="0" y="23" width="1920" height="988" />
     </state>
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.986@0.23.1920.986" timestamp="1591170896778" />
+    <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.988@0.23.1920.988" timestamp="1593070672319" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1588660507567" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1585740243695" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.826@0.23.1440.826" timestamp="1591085958510" />

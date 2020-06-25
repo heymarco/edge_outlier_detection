@@ -155,6 +155,7 @@ def plot_result():
     d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res, columns=["\# Devices", "Subspace fraction", "Ensemble", "Value", "Measure"])
     df = df.sort_values(by=["Ensemble", "Measure", "Subspace fraction"])
+    mpl.rc('font', **{"size": 14})
     g = sns.FacetGrid(df, col="Measure", hue="Ensemble", hue_kws=d)
     g.map(plt.plot, "Subspace fraction", "Value").add_legend()
 
