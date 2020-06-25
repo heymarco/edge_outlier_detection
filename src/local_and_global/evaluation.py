@@ -33,6 +33,10 @@ def create_ensembles(shape, l_name, contamination=0.01):
         l = [LocalOutlierFactor(n_neighbors=4, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "lof8":
         l = [LocalOutlierFactor(n_neighbors=8, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof10":
+        l = [LocalOutlierFactor(n_neighbors=10, contamination=contamination, novelty=True) for _ in range(num_clients)]
+    if l_name == "lof20":
+        l = [LocalOutlierFactor(n_neighbors=20, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "lof16":
         l = [LocalOutlierFactor(n_neighbors=16, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "lof32":
@@ -42,7 +46,7 @@ def create_ensembles(shape, l_name, contamination=0.01):
     if l_name == "lof100":
         l = [LocalOutlierFactor(n_neighbors=100, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "xstream":
-        l = [Chains(k=50, nchains=10, depth=10) for _ in range(num_clients)]
+        l = [Chains(k=50, nchains=50, depth=10) for _ in range(num_clients)]
     if l_name == "ae":
         l = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     if l_name == "if":
@@ -69,7 +73,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
 
     print("Fitting {}".format(l_name))
     # local training
-    if l_name == "lof" or l_name == "if" or l_name == "xstream":
+    if l_name.startswith("lof") or l_name == "if" or l_name == "xstream":
         [l.fit(data[i]) for i, l in enumerate(local_detectors)]
     if l_name == "ae":
         [l.fit(data[i], data[i],
