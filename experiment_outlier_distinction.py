@@ -52,8 +52,11 @@ if __name__ == '__main__':
         gt = ground_truth[key]
         contamination = np.sum(gt > 0)/len(gt.flatten())
         for c_name, l_name in combinations:
-            ensembles = [create_ensembles(d.shape, l_name, contamination=contamination) for _ in range(reps)]
-            results = [train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name) for i in range(reps)]
+            results = []
+            for i in range(reps):
+                ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
+                result = train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name)
+                results.append(result)
             global_scores = [result[0] for result in results]
             local_scores = [result[1] for result in results]
             labels = classify(global_scores, local_scores, contamination=contamination)

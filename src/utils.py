@@ -71,4 +71,4 @@ def levenshtein(s1, s2):
     return previous_row[-1]
 
 
-color_palette = sns.color_palette("cubehelix", 4)
+color_palette = sns.color_palette("cubehelix", 10)

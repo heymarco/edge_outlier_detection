@@ -14,6 +14,7 @@ import matplotlib as mpl
 from matplotlib import gridspec
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
@@ -57,7 +58,8 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
 
     # federated training
     for _ in range(global_epochs):
-        collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
+        collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
+                                           frac_available=1.0)
 
     # global scores
     predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
@@ -74,7 +76,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
                batch_size=32, epochs=global_epochs) for i, l in enumerate(local_detectors)]
 
     # local scores
-    if l_name == "lof":
+    if l_name.startswith("lof"):
         local_scores = - np.array([model.negative_outlier_factor_ for i, model in enumerate(local_detectors)])
     if l_name == "xstream":
         local_scores = np.array([-model.score(data[i]) for i, model in enumerate(local_detectors)])
@@ -117,7 +119,7 @@ def evaluate(labels, ground_truth, contamination):
     f1_global = []
     for lbs in labels:
         lbs = lbs.flatten()
-        kappa.append(kappa_m(lbs, ground_truth, 1-contamination))
+        kappa.append(kappa_m(lbs, ground_truth, 1 - contamination))
         f1_local.append(f1_score(lbs, ground_truth, relevant_label=1))
         f1_global.append(f1_score(lbs, ground_truth, relevant_label=2))
     return np.nanmean(kappa), np.nanmean(f1_global), np.nanmean(f1_local)
@@ -149,24 +151,25 @@ def plot_result():
                 num_devices, frac, c_name, l_name = parse_filename(file[:-4])
                 result = np.load(os.path.join(directory, file))
                 c = names[c_name]
-                l = names[l_name]
-                new_res = [float(num_devices),
-                           float(frac), "{}/{}".format(c, l),
-                           result[0],
-                           "$\kappa_m$"]
-                res.append(new_res)
-                new_res = [float(num_devices),
-                           float(frac), "{}/{}".format(c, l),
-                           result[1],
-                           "f1$_{global}$"]
-                res.append(new_res)
-                new_res = [float(num_devices),
-                           float(frac), "{}/{}".format(c, l),
-                           result[2],
-                           "f1$_{local}$"]
-                res.append(new_res)
+                l = l_name
+                if l not in ["lof1", "lof2", "lof4", "lof64"]:
+                    new_res = [float(num_devices),
+                               float(frac), "{}/{}".format(c, l),
+                               result[0],
+                               "$\kappa_m$"]
+                    res.append(new_res)
+                    new_res = [float(num_devices),
+                               float(frac), "{}/{}".format(c, l),
+                               result[1],
+                               "f1$_{global}$"]
+                    res.append(new_res)
+                    new_res = [float(num_devices),
+                               float(frac), "{}/{}".format(c, l),
+                               result[2],
+                               "f1$_{local}$"]
+                    res.append(new_res)
 
-    d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
+    d = {'color': color_palette}  # , "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res, columns=["\# Devices", "Subspace fraction", "Ensemble", "Value", "Measure"])
     df = df.sort_values(by=["Ensemble", "Measure", "Subspace fraction"])
     mpl.rc('font', **{"size": 14})
