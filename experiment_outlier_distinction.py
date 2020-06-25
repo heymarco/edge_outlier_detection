@@ -55,7 +55,7 @@ if __name__ == '__main__':
             results = []
             for i in range(reps):
                 ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
-                result = train_ensembles(d, ensembles[i], global_epochs=30, l_name=l_name)
+                result = train_ensembles(d, ensembles, global_epochs=30, l_name=l_name)
                 results.append(result)
             global_scores = [result[0] for result in results]
             local_scores = [result[1] for result in results]
