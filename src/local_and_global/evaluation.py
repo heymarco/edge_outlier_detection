@@ -145,7 +145,7 @@ def plot_result():
         "ae": "AE",
         "if": "IF",
         "xstream": "xStream",
-        "lof": "LOF"
+        "lof8": "LOF"
     }
     res = []
     for root, dirs, files in os.walk(directory):
@@ -154,9 +154,10 @@ def plot_result():
                 print(file)
                 num_devices, frac, c_name, l_name = parse_filename(file[:-4])
                 result = np.load(os.path.join(directory, file))
-                c = names[c_name]
                 l = l_name
-                if l not in ["lof1", "lof2", "lof4", "lof64"]:
+                if l_name not in ["lof1", "lof2", "lof4", "lof20", "lof10"]:
+                    c = names[c_name]
+                    l = names[l_name]
                     new_res = [float(num_devices),
                                float(frac), "{}/{}".format(c, l),
                                result[0],
@@ -173,7 +174,7 @@ def plot_result():
                                "f1$_{local}$"]
                     res.append(new_res)
 
-    d = {'color': color_palette}  # , "marker": ["o", "*", "v", "x"]}
+    d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res, columns=["\# Devices", "Subspace fraction", "Ensemble", "Value", "Measure"])
     df = df.sort_values(by=["Ensemble", "Measure", "Subspace fraction"])
     mpl.rc('font', **{"size": 14})

@@ -141,18 +141,18 @@ def plot_result():
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
-                           result[0],
+                           np.abs(result[0]),
                            "Inlier"]
                 res.append(new_res)
                 new_res = [int(num_devices),
                            float(frac),
                            float(contamination),
                            "{}/{}".format(c, l),
-                           result[1],
+                           np.abs(result[1]),
                            "Outlier"]
                 res.append(new_res)
 
-    mpl.rc('font', **{"size": 13})
+    mpl.rc('font', **{"size": 14})
     d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
     df = pd.DataFrame(res,
                       columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
