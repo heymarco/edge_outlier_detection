@@ -33,12 +33,12 @@ if __name__ == '__main__':
     print("Finished data loading")
 
     # create ensembles
-    combinations = [# ("ae", "ae"),
-                    # ("ae", "lof8"),
-                    # ("ae", "lof10"),
-                    # ("ae", "lof20"),
-                    # ("ae", "if"),
-                    ("ae", "xstream")
+    combinations = [("ae", "ae"),
+                    ("ae", "lof8"),
+                    ("ae", "lof10"),
+                    ("ae", "lof20"),
+                    ("ae", "if"),
+                    # ("ae", "xstream")
     ]
     print("Executing combinations {}".format(combinations))
 
