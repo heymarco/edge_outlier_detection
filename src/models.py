@@ -7,7 +7,7 @@ from src.data import average_weights
 from src.data import generate_from_blueprint
 
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Dense, Flatten
+from tensorflow.keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, UpSampling2D
 from tensorflow.keras.models import Model
 
 
@@ -32,10 +32,45 @@ def create_model(dims, compression_factor):
     return autoencoder
 
 
+def create_deep_model(dims=(32, 32, 3)):
+    input_img = Input(shape=dims)
+
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_img)
+    x = MaxPooling2D((2, 2), padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    encoded = MaxPooling2D((2, 2), padding='same')(x)
+
+    # at this point the representation is (7, 7, 32)
+
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(encoded)
+    x = UpSampling2D((2, 2))(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    x = UpSampling2D((2, 2))(x)
+    decoded = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
+
+    autoencoder = Model(input_img, decoded)
+    autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+    return autoencoder
+
+
 def create_models(num_devices, dims, compression_factor):
     models = []
     for _ in range(num_devices):
         ae = create_model(dims, compression_factor)
+        models.append(ae)
+    models = np.array(models)
+
+    # SAME WEIGHT INITIALIZATION FOR ALL MODELS
+    initial_weights = models[0].get_weights()
+    [model.set_weights(initial_weights) for model in models]
+
+    return models
+
+
+def create_deep_models(num_devices, dims, compression_factor):
+    models = []
+    for _ in range(num_devices):
+        ae = create_deep_model(dims)
         models.append(ae)
     models = np.array(models)
 
