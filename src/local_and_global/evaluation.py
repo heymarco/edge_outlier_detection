@@ -10,15 +10,13 @@ from src.models import create_model, create_models, train_federated
 from src.local_outliers.evaluation import retrieve_labels
 from src.utils import color_palette
 
-import matplotlib as mpl
-from matplotlib import gridspec
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import matplotlib as mpl
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
-from matplotlib.offsetbox import AnchoredText
 
 
 def create_ensembles(shape, l_name, contamination=0.01):

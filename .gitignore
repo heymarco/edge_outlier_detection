@@ -5,3 +5,4 @@ cmuxstream-core-master/cpp/
 *.npy
 *.pyc
 *.csv
+*.pdf

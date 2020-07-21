@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/experiment_cifar100.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cifar100.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +22,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/cifar100.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectId" id="1ZtpkP6Hg9OL4xlvvI1qhgcyfqx" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -44,6 +48,29 @@
       <recent name="$PROJECT_DIR$/src/local_outliers" />
       <recent name="$PROJECT_DIR$/data" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="experiment_cifar100" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="outliers" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/local/bin/python3.7" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/experiment_cifar100.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -71,10 +98,15 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="99" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589815780187">
-      <screen x="0" y="23" width="1440" height="828" />
+    <state x="245" y="114" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595265490972">
+      <screen x="0" y="23" width="1920" height="989" />
     </state>
+    <state x="245" y="114" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265490972" />
     <state x="184" y="99" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.828@0.23.1440.828" timestamp="1589815780187" />
+    <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog" timestamp="1595265422681">
+      <screen x="0" y="23" width="1920" height="989" />
+    </state>
+    <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265422681" />
     <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1591128617585">
       <screen x="0" y="23" width="1920" height="989" />
     </state>
@@ -84,29 +116,56 @@
       <screen x="0" y="23" width="1440" height="827" />
     </state>
     <state x="342" y="23" key="CommitChangelistDialog2/0.23.1440.827@0.23.1440.827" timestamp="1591687531992" />
-    <state x="507" y="315" key="com.intellij.ide.util.TipDialog" timestamp="1593070672319">
-      <screen x="0" y="23" width="1920" height="988" />
+    <state width="1899" height="249" key="GridCell.Tab.0.bottom" timestamp="1595284284240">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1899" height="249" key="GridCell.Tab.0.bottom/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
+    <state width="1899" height="249" key="GridCell.Tab.0.bottom/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
+    <state width="1899" height="249" key="GridCell.Tab.0.center" timestamp="1595284284239">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1899" height="249" key="GridCell.Tab.0.center/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
+    <state width="1899" height="249" key="GridCell.Tab.0.center/0.23.1440.827@0.23.1440.827" timestamp="1595284284239" />
+    <state width="1899" height="249" key="GridCell.Tab.0.left" timestamp="1595284284239">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1899" height="249" key="GridCell.Tab.0.left/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623566" />
+    <state width="1899" height="249" key="GridCell.Tab.0.left/0.23.1440.827@0.23.1440.827" timestamp="1595284284239" />
+    <state width="1899" height="249" key="GridCell.Tab.0.right" timestamp="1595284284240">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
+    <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
+    <state x="507" y="316" key="com.intellij.ide.util.TipDialog" timestamp="1595337375952">
+      <screen x="0" y="23" width="1920" height="989" />
     </state>
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.986@0.23.1920.986" timestamp="1591170896778" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.988@0.23.1920.988" timestamp="1593070672319" />
+    <state x="507" y="317" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595262946947" />
+    <state x="-1060" y="931" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.991@-1440.670.1440.877" timestamp="1594201577734" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1588660507567" />
-    <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1585740243695" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.826@0.23.1440.826" timestamp="1591085958510" />
-    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1591003265978" />
+    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1594216543779" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.828@0.23.1440.828" timestamp="1590409315064" />
     <state x="507" y="313" key="com.intellij.ide.util.TipDialog/0.23.1920.980@0.23.1920.980" timestamp="1591188947492" />
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/0.23.1920.984@0.23.1920.984" timestamp="1591305275595" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.988@0.23.1920.988" timestamp="1589449098766" />
-    <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.989@0.23.1920.989" timestamp="1591127164774" />
+    <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.989@0.23.1920.989" timestamp="1595337375952" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.991@0.23.1920.991" timestamp="1590562915743" />
     <state x="507" y="318" key="com.intellij.ide.util.TipDialog/0.23.1920.994@0.23.1920.994" timestamp="1590479164627" />
+    <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595344340225">
+      <screen x="0" y="23" width="1920" height="989" />
+    </state>
+    <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.989@0.23.1920.989" timestamp="1595344340225" />
+    <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey" timestamp="1595265424213">
+      <screen x="0" y="23" width="1920" height="989" />
+    </state>
+    <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265424213" />
     <state x="993" y="153" width="894" height="806" key="search.everywhere.popup" timestamp="1591262205350">
       <screen x="0" y="23" width="1920" height="980" />
     </state>
     <state x="745" y="132" width="670" height="676" key="search.everywhere.popup/0.23.1440.822@0.23.1440.822" timestamp="1588759629151" />
-    <state x="745" y="132" key="search.everywhere.popup/0.23.1440.823@0.23.1440.823" timestamp="1585756208648" />
-    <state x="745" y="133" key="search.everywhere.popup/0.23.1440.827@0.23.1440.827" timestamp="1585670609405" />
     <state x="993" y="153" width="894" height="806" key="search.everywhere.popup/0.23.1920.980@0.23.1920.980" timestamp="1591262205350" />
   </component>
 </project>
