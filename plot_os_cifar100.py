@@ -7,16 +7,17 @@ from src.models import create_deep_models, train_federated
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
-
 
 x = np.load("original.npy")
 y = np.load("labels.npy")
 predicted = np.load("predicted.npy")
 
-newshape = (100*450, 28, 28)
+oldshape = x.shape
+newshape = (x.shape[0] * x.shape[1], 28, 28)
 
 x = x.reshape(newshape)
 predicted = predicted.reshape(newshape)
@@ -27,7 +28,7 @@ diff = np.abs(predicted - x)
 
 plt.figure(figsize=(10, 4))
 for i in range(10):
-    plt.subplot(2,5,i+1)
+    plt.subplot(2, 5, i + 1)
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
@@ -35,7 +36,7 @@ for i in range(10):
     plt.imshow(image)
 plt.show()
 
-diff = diff.reshape((100, 450, 28*28))
+diff = diff.reshape((oldshape[0], oldshape[1], 28 * 28))
 dist = np.linalg.norm(diff, axis=-1)
 print(dist.shape)
 global_scores = dist.flatten()
