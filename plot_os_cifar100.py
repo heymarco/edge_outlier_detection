@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from src.cifar100 import create_cifar100_data
+from src.cifar10 import create_cifar10_data
 from src.models import create_deep_models, train_federated
 
 import matplotlib as mpl

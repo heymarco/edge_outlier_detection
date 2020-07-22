@@ -3,7 +3,7 @@ import tensorflow.keras as keras
 import numpy as np
 
 
-def create_cifar100_data(num_clients=100, contamination_local=0.005, contamination_global=0.005, num_outlying_devices=1):
+def create_cifar10_data(num_clients=100, contamination_local=0.005, contamination_global=0.005, num_outlying_devices=1):
     (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 
     x_train = x_train / 255.0
