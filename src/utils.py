@@ -39,12 +39,13 @@ def sliding_window(index, window_size):
 def setup_machine(cuda_device, ram=4096):
     gpus = tf.config.experimental.list_physical_devices('GPU')
     CUDA_VISIBLE_DEVICE = cuda_device
+    print(gpus)
     if gpus:
         try:
             tf.config.experimental.set_visible_devices(gpus[CUDA_VISIBLE_DEVICE], 'GPU')
-            tf.config.experimental.set_virtual_device_configuration(gpus[CUDA_VISIBLE_DEVICE],
-                                                                    [tf.config.experimental.VirtualDeviceConfiguration(
-                                                                        memory_limit=ram)])
+            # tf.config.experimental.set_virtual_device_configuration(gpus[CUDA_VISIBLE_DEVICE],
+            #                                                         [tf.config.experimental.VirtualDeviceConfiguration(
+            #                                                             memory_limit=ram)])
         except RuntimeError as e:
             print(e)
 
