@@ -8,20 +8,22 @@ mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 x = np.load("original.npy")
+y = np.load("labels.npy")
 pred = np.load("predicted.npy")
 
-newshape = (450*100, 32, 32, 3)
+newshape = (450*100, 28, 28)
 
 x = x.reshape(newshape)
 pred = pred.reshape(newshape)
+y = y.flatten()
 
 
-plt.figure(figsize=(10,10))
-for i in range(25):
-    plt.subplot(5,5,i+1)
+plt.figure(figsize=(10, 4))
+for i in range(10):
+    plt.subplot(2,5,i+1)
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
-    i = -i if i > 12 else i
-    plt.imshow(pred[i], cmap=plt.cm.binary)
+    image = pred[y == i][0]
+    plt.imshow(image)
 plt.show()

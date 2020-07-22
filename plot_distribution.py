@@ -13,4 +13,13 @@ y = np.load("labels.npy")
 
 unique_values, unique_counts = np.unique(y, axis=1, return_counts=True)
 
-print(np.unique(y, return_counts=True))
+result = np.zeros(shape=(100, 10))
+labels_and_counts = [np.unique(arr, return_counts=True) for arr in y]
+
+for i in range(len(result)):
+    labels, counts = labels_and_counts[i]
+    for j in range(len(labels)):
+        result[i][labels[j]] = counts[j]
+
+plt.imshow(result.T)
+plt.show()

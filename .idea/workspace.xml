@@ -3,8 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_distribution.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_distribution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_images.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plot_os_cifar100.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_os_cifar100.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cifar10.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data_.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/outliers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outliers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,9 +29,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/cifar10.py" root0="SKIP_INSPECTION" />
-  </component>
   <component name="ProjectId" id="1ZtpkP6Hg9OL4xlvvI1qhgcyfqx" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -38,13 +43,13 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/local_outliers" />
       <recent name="$PROJECT_DIR$/data" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager">
@@ -101,13 +106,18 @@
     </state>
     <state x="245" y="114" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265490972" />
     <state x="184" y="99" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.828@0.23.1440.828" timestamp="1589815780187" />
+    <state x="698" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1595416722519">
+      <screen x="0" y="23" width="1920" height="992" />
+    </state>
+    <state x="698" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416722519" />
     <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog" timestamp="1595265422681">
       <screen x="0" y="23" width="1920" height="989" />
     </state>
     <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265422681" />
-    <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1591128617585">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1595416787958">
+      <screen x="0" y="23" width="1920" height="992" />
     </state>
+    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416787958" />
     <state x="492" y="337" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.826@0.23.1440.826" timestamp="1591108417170" />
     <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.989@0.23.1920.989" timestamp="1591128617585" />
     <state x="342" y="23" key="CommitChangelistDialog2" timestamp="1591687531992">

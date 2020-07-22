@@ -2,8 +2,6 @@ import math
 import random
 import numpy as np
 
-from .data import add_gaussian_noise, normalize
-
 
 def generate_subspace_outliers(blueprint, num_outliers):
     """

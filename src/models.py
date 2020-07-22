@@ -2,9 +2,7 @@ import os
 import math
 import numpy as np
 from sklearn.metrics import roc_curve, auc
-from src.data import create_blueprint, sample_distribution_parameters, add_gaussian_noise, normalize, generate_outliers
-from src.data import average_weights
-from src.data import generate_from_blueprint
+from src.utils import average_weights
 
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, UpSampling2D
@@ -23,6 +21,8 @@ def create_model(dims, compression_factor):
                     kernel_initializer=initializer, 
                     bias_initializer=bias_initializer)(input_img)
     decoded = Dense(dims, activation='sigmoid',
+                    kernel_regularizer=tf.keras.regularizers.l2(),
+                    activity_regularizer=tf.keras.regularizers.l1(10e-5),
                     kernel_initializer=initializer,
                     bias_initializer=bias_initializer)(encoded)
     autoencoder = Model(input_img, decoded)

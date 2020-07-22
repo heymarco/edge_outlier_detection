@@ -2,7 +2,7 @@ import os
 import numpy as np
 
 from src.utils import setup_machine
-from src.cifar10 import create_mnist_data
+from src.data_ import create_mnist_data
 from src.models import create_models, create_deep_models, train_federated
 
 import matplotlib as mpl
@@ -16,7 +16,7 @@ mpl.rc('font', family='serif')
 setup_machine(cuda_device=0)
 
 num_devices = 100
-global_epochs = 5
+global_epochs = 20
 
 x, y = create_mnist_data(num_clients=num_devices)
 

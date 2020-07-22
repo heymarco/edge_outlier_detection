@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from src.cifar10 import create_mnist_data
+from src.data_ import create_mnist_data
 from src.models import create_deep_models, train_federated
 
 import matplotlib as mpl
@@ -16,21 +16,29 @@ x = np.load("original.npy")
 y = np.load("labels.npy")
 predicted = np.load("predicted.npy")
 
-newshape = (100, 450, 28, 28)
+newshape = (100*450, 28, 28)
 
 x = x.reshape(newshape)
 predicted = predicted.reshape(newshape)
+y = y.flatten()
 
 # global scores
 diff = np.abs(predicted - x)
 
-diff = diff.reshape((100, 450, 28*28))
+plt.figure(figsize=(10, 4))
+for i in range(10):
+    plt.subplot(2,5,i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    image = diff[y == i][0]
+    plt.imshow(image)
+plt.show()
 
+diff = diff.reshape((100, 450, 28*28))
 dist = np.linalg.norm(diff, axis=-1)
 print(dist.shape)
 global_scores = dist.flatten()
-
-print(y)
 
 labels = np.arange(100)
 accumulated_result = []

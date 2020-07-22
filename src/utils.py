@@ -73,3 +73,13 @@ def levenshtein(s1, s2):
 
 
 color_palette = sns.color_palette("cubehelix", 4)
+
+
+def average_weights(models):
+    weights = [model.get_weights() for model in models]
+    new_weights = list()
+    for weights_list_tuple in zip(*weights):
+        new_weights.append(
+            np.array([np.array(w).mean(axis=0) for w in zip(*weights_list_tuple)])
+            )
+    return new_weights
