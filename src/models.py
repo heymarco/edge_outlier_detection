@@ -23,9 +23,7 @@ def create_model(dims, compression_factor):
                     kernel_initializer=initializer, 
                     bias_initializer=bias_initializer)(input_img)
     decoded = Dense(dims, activation='sigmoid',
-                    kernel_regularizer=tf.keras.regularizers.l2(),
-                    activity_regularizer=tf.keras.regularizers.l1(10e-5),
-                    kernel_initializer=initializer, 
+                    kernel_initializer=initializer,
                     bias_initializer=bias_initializer)(encoded)
     autoencoder = Model(input_img, decoded)
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')

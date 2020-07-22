@@ -16,27 +16,21 @@ x = np.load("original.npy")
 y = np.load("labels.npy")
 predicted = np.load("predicted.npy")
 
+newshape = (100, 450, 28, 28)
+
+x = x.reshape(newshape)
+predicted = predicted.reshape(newshape)
+
 # global scores
-diff = predicted - x
+diff = np.abs(predicted - x)
 
-newshape = (x.shape[0], x.shape[1], x.shape[2]*x.shape[3]*x.shape[4])
-diff = diff.reshape(newshape)
-
-print(diff)
-
-plt.figure(figsize=(10,10))
-for i in range(25):
-    plt.subplot(5,5,i+1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.grid(False)
-    i = -i if i > 12 else i
-    plt.imshow(np.abs(diff).reshape((x.shape[0]*x.shape[1], 32, 32, 3))[i], cmap=plt.cm.binary)
-plt.show()
-
+diff = diff.reshape((100, 450, 28*28))
 
 dist = np.linalg.norm(diff, axis=-1)
+print(dist.shape)
 global_scores = dist.flatten()
+
+print(y)
 
 labels = np.arange(100)
 accumulated_result = []
