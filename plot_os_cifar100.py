@@ -49,3 +49,9 @@ for value in labels:
 
 plt.bar(np.arange(len(accumulated_result)), accumulated_result)
 plt.show()
+
+os_star = np.mean(dist, axis=-1)
+
+print(os_star)
+sns.distplot(os_star)
+plt.show()

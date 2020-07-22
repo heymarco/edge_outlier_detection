@@ -33,14 +33,8 @@ if __name__ == '__main__':
     print("Finished data loading")
 
     # create ensembles
-    combinations = [("ae", "lof1"),
-                    ("ae", "lof2"),
-                    ("ae", "lof4"),
-                    ("ae", "lof8"),
-                    ("ae", "lof16"),
-                    ("ae", "lof32"),
-                    ("ae", "lof64"),
-                    ("ae", "lof100"),
+    combinations = [("ae", "ae"),
+                    # ("ae", "lof"),
                     # ("ae", "if"),
                     # ("ae", "xstream")
     ]
@@ -54,16 +48,12 @@ if __name__ == '__main__':
         for c_name, l_name in combinations:
             results = []
             for _ in range(reps):
-                ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
-                result = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
+                models = create_models(d.shape[0], d.shape[-1], compression_factor=0.4)
+                result = train_global_detectors(d, models, global_epochs=20)
                 results.append(result)
-            global_result = [result[0] for result in results]
-            local_result = [result[1] for result in results]
-            scores = score(global_result, local_result)
-            result = evaluate(scores, ground_truth[key])
-            result = np.array(list(result))
+            results = np.array(results)
             fname = "{}_{}_{}".format(key, c_name, l_name)
-            np.save(os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions", fname), result)
+            np.save(os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions", fname), results)
         # remove unneeded data
         data[key] = None
         ground_truth[key] = None

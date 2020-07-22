@@ -232,10 +232,9 @@ def trim_data(data, max_length=10000):
 
 
 def create_mnist_data(num_clients=100, contamination_local=0.005, contamination_global=0.005, num_outlying_devices=1):
-    (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+    (x_train, y_train), _ = keras.datasets.fashion_mnist.load_data()
 
     x_train = x_train / 255.0
-    x_test = x_test / 255.0
 
     x_train = np.expand_dims(x_train, axis=-1)
 

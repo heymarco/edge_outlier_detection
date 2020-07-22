@@ -11,7 +11,8 @@ x = np.load("original.npy")
 y = np.load("labels.npy")
 pred = np.load("predicted.npy")
 
-newshape = (450*100, 28, 28)
+oldshape = x.shape
+newshape = (oldshape[0]*oldshape[1], 28, 28)
 
 x = x.reshape(newshape)
 pred = pred.reshape(newshape)

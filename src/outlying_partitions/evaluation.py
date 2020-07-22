@@ -1,9 +1,9 @@
 import os
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
-from scipy.stats import spearmanr, zscore
 
 from xstream.python.Chains import Chains
 from src.models import create_model, create_models, train_federated
@@ -52,16 +52,27 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
     collab_detectors = ensembles[0]
     local_detectors = ensembles[1]
 
+    global_scores = train_global_detectors(data, collab_detectors, global_epochs)
+    local_scores = train_local_detectors(data, local_detectors, global_epochs, l_name)
+
+    return global_scores, local_scores
+
+
+def train_global_detectors(data, collab_detectors, global_epochs):
     # federated training
     for _ in range(global_epochs):
-        collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32, frac_available=1.0)
+        collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
+                                           frac_available=1.0)
 
     # global scores
     predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
     diff = predicted - data
-    dist = np.linalg.norm(diff, axis=-1)
-    global_scores = dist.flatten()
+    global_scores = np.linalg.norm(diff, axis=-1)
+    tf.keras.backend.clear_session()
+    return global_scores
 
+
+def train_local_detectors(data, local_detectors, global_epochs, l_name):
     print("Fitting {}".format(l_name))
     # local training
     if l_name == "lof" or l_name == "if" or l_name == "xstream":
@@ -82,8 +93,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
         diff = predicted - data
         dist = np.linalg.norm(diff, axis=-1)
         local_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
-
-    return global_scores, local_scores
+    return local_scores
 
 
 def score(result_global, result_local):
