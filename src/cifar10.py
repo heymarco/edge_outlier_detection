@@ -3,11 +3,13 @@ import tensorflow.keras as keras
 import numpy as np
 
 
-def create_cifar10_data(num_clients=100, contamination_local=0.005, contamination_global=0.005, num_outlying_devices=1):
-    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+def create_mnist_data(num_clients=100, contamination_local=0.005, contamination_global=0.005, num_outlying_devices=1):
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
     x_train = x_train / 255.0
     x_test = x_test / 255.0
+
+    x_train = np.expand_dims(x_train, axis=-1)
 
     #remove global outlier labels values
     masked_labels = [0]

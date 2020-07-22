@@ -32,7 +32,7 @@ def create_model(dims, compression_factor):
     return autoencoder
 
 
-def create_deep_model(dims=(32, 32, 3)):
+def create_deep_model(dims=(28, 28, 1)):
     input_img = Input(shape=dims)
 
     x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_img)
@@ -46,7 +46,7 @@ def create_deep_model(dims=(32, 32, 3)):
     x = UpSampling2D((2, 2))(x)
     x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
     x = UpSampling2D((2, 2))(x)
-    decoded = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
+    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 
     autoencoder = Model(input_img, decoded)
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
