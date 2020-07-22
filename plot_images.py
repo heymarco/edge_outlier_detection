@@ -22,5 +22,6 @@ for i in range(25):
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
-    plt.imshow(pred[-i], cmap=plt.cm.binary)
+    i = -i if i > 12 else i
+    plt.imshow(pred[i], cmap=plt.cm.binary)
 plt.show()

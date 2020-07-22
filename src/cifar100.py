@@ -4,7 +4,7 @@ import numpy as np
 
 
 def create_cifar100_data(num_clients=100, contamination_local=0.005, contamination_global=0.005, num_outlying_devices=1):
-    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data(label_mode="fine")
+    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 
     x_train = x_train / 255.0
     x_test = x_test / 255.0

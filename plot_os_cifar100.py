@@ -12,30 +12,31 @@ mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 
-num_devices = 100
-global_epochs = 3
-
-x, y = create_cifar100_data(num_clients=num_devices)
-
-np.save("original.npy", x)
-np.save("labels.npy", y)
-
-models = create_deep_models(num_devices=num_devices, dims=(32, 32, 3), compression_factor=0.1)
-
-for epoch in np.arange(global_epochs):
-    models = train_federated(models, epochs=1, data=x)
+x = np.load("original.npy")
+y = np.load("labels.npy")
+predicted = np.load("predicted.npy")
 
 # global scores
-predicted = np.array([model.predict(x[i]) for i, model in enumerate(models)])
 diff = predicted - x
 
 newshape = (x.shape[0], x.shape[1], x.shape[2]*x.shape[3]*x.shape[4])
 diff = diff.reshape(newshape)
 
+print(diff)
+
+plt.figure(figsize=(10,10))
+for i in range(25):
+    plt.subplot(5,5,i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    i = -i if i > 12 else i
+    plt.imshow(np.abs(diff).reshape((x.shape[0]*x.shape[1], 32, 32, 3))[i], cmap=plt.cm.binary)
+plt.show()
+
+
 dist = np.linalg.norm(diff, axis=-1)
 global_scores = dist.flatten()
-
-np.save("predicted.npy", predicted)
 
 labels = np.arange(100)
 accumulated_result = []
