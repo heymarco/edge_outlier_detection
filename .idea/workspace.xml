@@ -2,12 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/data/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/image_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/images_parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/t_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_local_outliers.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_local_outliers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_images.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_outlier_distinction.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_outlier_distinction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_outlying_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_images.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mixed_data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/mixed_data_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outlying_partitions_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/outlying_partitions_generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plot_os_cifar100.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_os_cifar100.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data_.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pipelines.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipelines.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,17 +47,18 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/data" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/local_outliers" />
       <recent name="$PROJECT_DIR$/data" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
   </component>
   <component name="RunManager">
-    <configuration name="experiment_mnist" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <configuration name="experiment_images" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="outliers" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -60,7 +70,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/experiment_mnist.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/experiment_images.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
@@ -109,12 +119,13 @@
       <screen x="0" y="23" width="1920" height="989" />
     </state>
     <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265422681" />
-    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1595416787958">
+    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1595488621503">
       <screen x="0" y="23" width="1920" height="992" />
     </state>
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416787958" />
     <state x="492" y="337" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.826@0.23.1440.826" timestamp="1591108417170" />
     <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.989@0.23.1920.989" timestamp="1591128617585" />
+    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.992@0.23.1920.992" timestamp="1595488621503" />
     <state x="342" y="23" key="CommitChangelistDialog2" timestamp="1591687531992">
       <screen x="0" y="23" width="1440" height="827" />
     </state>
@@ -139,8 +150,8 @@
     </state>
     <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
     <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state x="507" y="316" key="com.intellij.ide.util.TipDialog" timestamp="1595337375952">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state x="507" y="317" key="com.intellij.ide.util.TipDialog" timestamp="1595436070436">
+      <screen x="0" y="23" width="1920" height="992" />
     </state>
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.986@0.23.1920.986" timestamp="1591170896778" />
@@ -156,6 +167,7 @@
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.988@0.23.1920.988" timestamp="1589449098766" />
     <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.989@0.23.1920.989" timestamp="1595337375952" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.991@0.23.1920.991" timestamp="1590562915743" />
+    <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.992@0.23.1920.992" timestamp="1595436070436" />
     <state x="507" y="318" key="com.intellij.ide.util.TipDialog/0.23.1920.994@0.23.1920.994" timestamp="1590479164627" />
     <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595344340225">
       <screen x="0" y="23" width="1920" height="989" />
@@ -165,11 +177,12 @@
       <screen x="0" y="23" width="1920" height="989" />
     </state>
     <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265424213" />
-    <state x="993" y="155" width="894" height="816" key="search.everywhere.popup" timestamp="1595354209677">
-      <screen x="0" y="23" width="1920" height="992" />
+    <state x="993" y="155" width="894" height="818" key="search.everywhere.popup" timestamp="1595428151536">
+      <screen x="0" y="23" width="1920" height="994" />
     </state>
     <state x="745" y="132" width="670" height="676" key="search.everywhere.popup/0.23.1440.822@0.23.1440.822" timestamp="1588759629151" />
     <state x="993" y="153" width="894" height="806" key="search.everywhere.popup/0.23.1920.980@0.23.1920.980" timestamp="1591262205350" />
     <state x="993" y="155" width="894" height="816" key="search.everywhere.popup/0.23.1920.992@0.23.1920.992" timestamp="1595354209677" />
+    <state x="993" y="155" width="894" height="818" key="search.everywhere.popup/0.23.1920.994@0.23.1920.994" timestamp="1595428151536" />
   </component>
 </project>

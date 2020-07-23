@@ -2,7 +2,7 @@ import argparse
 import gc
 
 from src.outlying_partitions.evaluation import *
-from src.data_ import normalize_along_axis
+from src.data.synthetic_data import normalize_along_axis
 
 
 if __name__ == '__main__':

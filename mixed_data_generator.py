@@ -1,14 +1,12 @@
 import os
 import argparse
 
-import math
 import numpy as np
-from src.data_ import add_global_outliers, add_local_outliers, create_data
+from src.data.synthetic_data import add_global_outliers, add_local_outliers, create_data
 
 import matplotlib as mpl
-from matplotlib import gridspec
 import matplotlib.pyplot as plt
-import seaborn as sns
+
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')

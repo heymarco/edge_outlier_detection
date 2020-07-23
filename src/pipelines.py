@@ -1,6 +1,4 @@
-import numpy as np
-
-from src.data_ import *
+from src.data.synthetic_data import *
 from src.utils import normalize
 
 

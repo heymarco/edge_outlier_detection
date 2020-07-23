@@ -1,6 +1,6 @@
 import argparse
 
-from src.data_ import normalize_along_axis, trim_data
+from src.data.synthetic_data import normalize_along_axis, trim_data
 from src.local_outliers.evaluation import *
 from src.utils import setup_machine
 

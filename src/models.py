@@ -83,11 +83,11 @@ def train_federated(models, data, epochs=1, batch_size=32, frac_available=1.0, v
     num_devices = len(models)
     active_devices = np.random.choice(range(num_devices), int(frac_available * num_devices), replace=False)
     for i in active_devices:
-      models[i].fit(data[i], data[i],
-                    epochs=epochs,
-                    batch_size=batch_size,
-                    shuffle=False,
-                    verbose=verbose)
+        models[i].fit(data[i], data[i],
+                      epochs=epochs,
+                      batch_size=batch_size,
+                      shuffle=False,
+                      verbose=verbose)
             
     avg = average_weights(models[active_devices])
     [model.set_weights(avg) for model in models]

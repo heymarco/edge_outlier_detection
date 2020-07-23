@@ -1,12 +1,7 @@
-import os
 import numpy as np
-
-from src.data_ import create_mnist_data
-from src.models import create_deep_models, train_federated
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
@@ -48,10 +43,4 @@ for value in labels:
     accumulated_result.append(mean_score)
 
 plt.bar(np.arange(len(accumulated_result)), accumulated_result)
-plt.show()
-
-os_star = np.mean(dist, axis=-1)
-
-print(os_star)
-sns.distplot(os_star)
 plt.show()

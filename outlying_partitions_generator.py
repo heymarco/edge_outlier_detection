@@ -2,10 +2,10 @@ import os
 import argparse
 
 import numpy as np
-from src.data_ import create_data
+from src.data.synthetic_data import create_data
 
 import matplotlib as mpl
-import matplotlib.pyplot as plt
+
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
