@@ -28,7 +28,7 @@ for i in range(1, 10):
     y_true = y == i
     show = np.logical_and(y_true, label.astype(bool))
     if (np.any(show)):
-        image = pred[show][0]
-        # image = np.abs(pred[show][0] - x[show][0])
+        # image = pred[show][0]
+        image = np.abs(pred[show][0] - x[show][0])
         plt.imshow(image)
 plt.show()
