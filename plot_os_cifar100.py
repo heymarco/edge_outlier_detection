@@ -6,41 +6,53 @@ import matplotlib.pyplot as plt
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
+import seaborn as sns
 
 x = np.load("original.npy")
 y = np.load("labels.npy")
-predicted = np.load("predicted.npy")
+pred = np.load("predicted.npy")
+label = np.load("outliers.npy")
 
 oldshape = x.shape
-newshape = (x.shape[0] * x.shape[1], 28, 28)
+newshape = (oldshape[0]*oldshape[1], 100, 100)
 
 x = x.reshape(newshape)
-predicted = predicted.reshape(newshape)
+pred = pred.reshape(newshape)
 y = y.flatten()
 
-# global scores
-diff = np.abs(predicted - x)
-
-plt.figure(figsize=(10, 4))
-for i in range(10):
-    plt.subplot(2, 5, i + 1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.grid(False)
-    image = diff[y == i][0]
-    plt.imshow(image)
-plt.show()
-
-diff = diff.reshape((oldshape[0], oldshape[1], 28 * 28))
-dist = np.linalg.norm(diff, axis=-1)
-print(dist.shape)
+diff = x - pred
+dist = np.linalg.norm(diff, axis=(-1, -2))
 global_scores = dist.flatten()
 
-labels = np.arange(100)
-accumulated_result = []
-for value in labels:
-    mean_score = np.mean(global_scores[y.flatten() == value])
-    accumulated_result.append(mean_score)
+outliers = global_scores[label.astype(bool)]
+inliers = global_scores[np.invert(label.astype(bool))]
 
-plt.bar(np.arange(len(accumulated_result)), accumulated_result)
+means = []
+for item in np.unique(y):
+    relevant_indices = [i for i in range(len(y)) if y[i] == item]
+    relevant_x = x[relevant_indices]
+    relevant_labels = label[relevant_indices].astype(bool)
+    mean = np.mean(relevant_x)
+    mean_out = np.mean(relevant_x[relevant_labels])
+    means.append((mean, mean_out))
+
+plt.plot(np.arange(len(means)), [m[0] for m in means], "o", color="blue")
+plt.plot(np.arange(len(means)), [m[1] for m in means], "o", color="red")
+plt.show()
+
+
+
+
+outlier_indices = []
+for i in range(len(label)):
+    if label[i]:
+        outlier_indices.append(i)
+
+inlier_indices = []
+for i in range(len(label)):
+    if not label[i]:
+        inlier_indices.append(i)
+
+plt.plot(outlier_indices, outliers, 'o', color="red")
+plt.plot(inlier_indices, inliers, 'o', color="blue", alpha=0.1)
 plt.show()

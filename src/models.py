@@ -33,18 +33,28 @@ def create_model(dims, compression_factor):
 def create_deep_model(dims=(28, 28, 1)):
     input_img = Input(shape=dims)
 
-    x = Conv2D(32, (3, 3), activation='relu', padding='same')(input_img)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same',
+               kernel_regularizer=tf.keras.regularizers.l2(),
+               activity_regularizer=tf.keras.regularizers.l1(10e-5))(input_img)
     x = MaxPooling2D((2, 2), padding='same')(x)
-    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same',
+               kernel_regularizer=tf.keras.regularizers.l2(),
+               activity_regularizer=tf.keras.regularizers.l1(10e-5))(x)
     encoded = MaxPooling2D((2, 2), padding='same')(x)
 
     # at this point the representation is (7, 7, 32)
 
-    x = Conv2D(32, (3, 3), activation='relu', padding='same')(encoded)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same',
+               kernel_regularizer=tf.keras.regularizers.l2(),
+               activity_regularizer=tf.keras.regularizers.l1(10e-5))(encoded)
     x = UpSampling2D((2, 2))(x)
-    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same',
+               kernel_regularizer=tf.keras.regularizers.l2(),
+               activity_regularizer=tf.keras.regularizers.l1(10e-5))(x)
     x = UpSampling2D((2, 2))(x)
-    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
+    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same',
+               kernel_regularizer=tf.keras.regularizers.l2(),
+               activity_regularizer=tf.keras.regularizers.l1(10e-5))(x)
 
     autoencoder = Model(input_img, decoded)
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
