@@ -10,29 +10,21 @@ def get_data(id, num_clients):
         return create_mvtec_data(num_clients=num_clients)
 
 
-def create_shards(data, labels, num_clients, shards_per_client):
+def create_shards(data, num_clients, shards_per_client):
     total_shards = shards_per_client * num_clients
-    shard_size = int(len(labels) / total_shards)
+    shard_size = int(len(data) / total_shards)
     shard_indices = np.arange(total_shards)
-    x_shards = np.array([data[index * shard_size:index * shard_size + shard_size] for index in shard_indices])
-    y_shards = np.array([labels[index * shard_size:index * shard_size + shard_size] for index in shard_indices])
-    return np.array(x_shards), np.array(y_shards)
+    data = np.array([data[index * shard_size:index * shard_size + shard_size] for index in shard_indices])
+    return data
 
 
-def assign_shards(x_shards, y_shards, num_clients, shards_per_user):
-    total_num_shards = len(y_shards)
+def assign_shards(x_shards, num_clients, shards_per_user):
+    total_num_shards = len(x_shards)
     shard_indices = np.arange(total_num_shards)
     np.random.shuffle(shard_indices)
     part_indices = shard_indices.reshape((num_clients, shards_per_user))
-    x_part = np.array([x_shards[shards] for shards in part_indices])
-    y_part = np.array([y_shards[shards] for shards in part_indices])
-    x_oldshape = x_part.shape
-    y_oldshape = y_part.shape
-    x_newshape = (x_oldshape[0], x_oldshape[1] * x_oldshape[2], x_oldshape[3], x_oldshape[4], x_oldshape[5])
-    y_newshape = (y_oldshape[0], y_oldshape[1] * y_oldshape[2])
-    x_part = x_part.reshape(x_newshape)
-    y_part = y_part.reshape(y_newshape)
-    return x_part, y_part
+    x_part = np.array([np.concatenate(x_shards[shards]) for shards in part_indices])
+    return x_part
 
 
 def shuffle(x_in, y_in):
@@ -50,7 +42,6 @@ def add_outlying_partitions(to_x_data, to_y_data,
                             x_outliers, y_outliers,
                             num_outlying_devices):
     outlying_device_labels = np.arange(num_outlying_devices)
-    print(len(y_outliers))
     for device_label in outlying_device_labels:
         num_data = to_x_data.shape[1]
         x_outliers = x_outliers[:num_data]
@@ -109,44 +100,50 @@ def create_mnist_data(num_clients=100, contamination_local=0.005, contamination_
 
 
 def create_mvtec_data(num_clients=10,
-                      contamination_global=0.005, contamination_local=0.005,
+                      contamination_global=0.01, contamination_local=0.005,
                       num_outlying_devices=1, shards_per_client=5):
     x_inlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "inliers.npy"))
     y_inlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "labels_inliers.npy"))
     x_outlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "outliers.npy"))
     y_outlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "labels_outliers.npy"))
 
+    x_inlier = np.expand_dims(x_inlier, axis=-1)
+    x_outlier = np.expand_dims(x_outlier, axis=-1)
+
+    inlier = np.array([[x_inlier[i], y, 0] for i, y in enumerate(y_inlier)])
+    outlier = np.array([[x_outlier[i], y, 1] for i, y in enumerate(y_outlier)])
+
     # add outliers to data set
     num_outliers = int(contamination_global*len(y_inlier))
-    assert num_outliers < len(y_outlier)
-    shuffled_out_indices = np.arange(len(y_outlier))
+    assert num_outliers < len(outlier)
+    shuffled_out_indices = np.arange(len(outlier))
     np.random.shuffle(shuffled_out_indices)
-    x_outlier = x_outlier[shuffled_out_indices]
-    y_outlier = y_outlier[shuffled_out_indices]
-    outliers = (x_outlier[:num_outliers], y_outlier[:num_outliers])
-    x = np.concatenate((x_inlier, outliers[0]))
-    y = np.concatenate((y_inlier, outliers[1]))
+    outlier = outlier[shuffled_out_indices][:num_outliers]
 
-    _, unique = np.unique(y, return_counts=True)
-    print(unique)
-
-    x = np.expand_dims(x, axis=-1)
+    data = np.concatenate((inlier, outlier))
 
     # remove global outlier labels values
     masked_labels = np.arange(num_outlying_devices)
-    inlier_mask = np.invert(np.isin(y, masked_labels)).flatten()
-    x_in_part = x[inlier_mask]
-    y_in_part = y[inlier_mask].flatten()
-    x_out_part = x[np.invert(inlier_mask)]
-    y_out_part = y[np.invert(inlier_mask)].flatten()
+    inlier_mask = np.invert(np.isin(data[:, 1], masked_labels)).flatten()
+    in_partition = data[inlier_mask]
+    out_partition = data[np.invert(inlier_mask)]
 
-    sorted_indices = np.argsort(y_in_part)
-    x_in_part = x_in_part[sorted_indices]
-    y_in_part = y_in_part[sorted_indices]
+    sorted_indices = np.argsort(in_partition[:, 1])
+    in_partition = in_partition[sorted_indices]
 
-    x, y = create_shards(x_in_part, y_in_part, num_clients, shards_per_client)
-    x, y = assign_shards(x, y, num_clients, shards_per_client)
+    data = create_shards(in_partition, num_clients, shards_per_client)
+    data = assign_shards(data, num_clients, shards_per_client)
     # x, y = add_outlying_partitions(x, y, x_out_part, y_out_part, num_outlying_devices)
-    x, y = shuffle(x, y)
+    np.random.shuffle(data)
 
-    return x, y
+    x = np.array(data[:, :, 0])
+    shape = list(x.shape) + list(x[0, 0].shape)
+    x = np.vstack(x.flatten())
+    x = x.reshape(shape)
+    y = data[:, :, 1].flatten()
+    print(x.shape)
+    labels = data[:, :, 2].flatten()
+
+    print(np.sum(labels))
+
+    return x, y, labels

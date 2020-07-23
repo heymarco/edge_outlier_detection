@@ -23,7 +23,7 @@ setup_machine(cuda_device=0)
 num_devices = 10
 global_epochs = 20
 
-x, y = get_data(args.data, num_clients=num_devices)
+x, y, labels = get_data(args.data, num_clients=num_devices)
 
 use_convolutional = True
 
@@ -35,6 +35,7 @@ if not use_convolutional:
 
 np.save("original.npy", x)
 np.save("labels.npy", y)
+np.save("outliers.npy", labels)
 
 if use_convolutional:
     models = create_deep_models(num_devices=num_devices, dims=(oldshape[-3], oldshape[-2], oldshape[-1]),

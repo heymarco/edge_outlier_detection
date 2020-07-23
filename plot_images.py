@@ -12,19 +12,18 @@ y = np.load("labels.npy")
 pred = np.load("predicted.npy")
 
 oldshape = x.shape
-newshape = (oldshape[0]*oldshape[1], 28, 28)
+newshape = (oldshape[0]*oldshape[1], 100, 100)
 
 x = x.reshape(newshape)
 pred = pred.reshape(newshape)
 y = y.flatten()
 
-
 plt.figure(figsize=(10, 4))
-for i in range(10):
+for i in range(1, 10):
     plt.subplot(2,5,i+1)
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
-    image = pred[y == i][0]
+    image = np.abs(pred[y == i][0]-x[y == i][0])
     plt.imshow(image)
 plt.show()
