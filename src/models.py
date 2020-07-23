@@ -22,7 +22,6 @@ def create_model(dims, compression_factor):
                     bias_initializer=bias_initializer)(input_img)
     decoded = Dense(dims, activation='sigmoid',
                     kernel_regularizer=tf.keras.regularizers.l2(),
-                    activity_regularizer=tf.keras.regularizers.l1(10e-5),
                     kernel_initializer=initializer,
                     bias_initializer=bias_initializer)(encoded)
     autoencoder = Model(input_img, decoded)
@@ -34,27 +33,21 @@ def create_deep_model(dims=(28, 28, 1)):
     input_img = Input(shape=dims)
 
     x = Conv2D(32, (3, 3), activation='relu', padding='same',
-               kernel_regularizer=tf.keras.regularizers.l2(),
-               activity_regularizer=tf.keras.regularizers.l1(10e-5))(input_img)
+               kernel_regularizer=tf.keras.regularizers.l2())(input_img)
     x = MaxPooling2D((2, 2), padding='same')(x)
     x = Conv2D(32, (3, 3), activation='relu', padding='same',
-               kernel_regularizer=tf.keras.regularizers.l2(),
-               activity_regularizer=tf.keras.regularizers.l1(10e-5))(x)
+               kernel_regularizer=tf.keras.regularizers.l2())(x)
     encoded = MaxPooling2D((2, 2), padding='same')(x)
 
     # at this point the representation is (7, 7, 32)
 
     x = Conv2D(32, (3, 3), activation='relu', padding='same',
-               kernel_regularizer=tf.keras.regularizers.l2(),
-               activity_regularizer=tf.keras.regularizers.l1(10e-5))(encoded)
+               kernel_regularizer=tf.keras.regularizers.l2())(encoded)
     x = UpSampling2D((2, 2))(x)
     x = Conv2D(32, (3, 3), activation='relu', padding='same',
-               kernel_regularizer=tf.keras.regularizers.l2(),
-               activity_regularizer=tf.keras.regularizers.l1(10e-5))(x)
+               kernel_regularizer=tf.keras.regularizers.l2())(x)
     x = UpSampling2D((2, 2))(x)
-    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same',
-               kernel_regularizer=tf.keras.regularizers.l2(),
-               activity_regularizer=tf.keras.regularizers.l1(10e-5))(x)
+    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 
     autoencoder = Model(input_img, decoded)
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
