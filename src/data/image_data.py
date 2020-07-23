@@ -139,11 +139,8 @@ def create_mvtec_data(num_clients=10,
     x = np.array(data[:, :, 0])
     shape = list(x.shape) + list(x[0, 0].shape)
     x = np.vstack(x.flatten())
-    x = x.reshape(shape)
-    y = data[:, :, 1].flatten()
-    print(x.shape)
-    labels = data[:, :, 2].flatten()
-
-    print(np.sum(labels))
+    x = x.reshape(shape).astype(float)
+    y = data[:, :, 1].flatten().astype(float)
+    labels = data[:, :, 2].flatten().astype(float)
 
     return x, y, labels

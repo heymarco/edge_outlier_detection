@@ -10,6 +10,7 @@ mpl.rc('font', family='serif')
 x = np.load("original.npy")
 y = np.load("labels.npy")
 pred = np.load("predicted.npy")
+label = np.load("outliers.npy")
 
 oldshape = x.shape
 newshape = (oldshape[0]*oldshape[1], 100, 100)
@@ -24,6 +25,9 @@ for i in range(1, 10):
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
-    image = np.abs(pred[y == i][0]-x[y == i][0])
+    y_true = y == i
+    show = np.logical_and(y_true, label.astype(bool))
+    if (np.any(show)):
+        image = pred[show][0]
     plt.imshow(image)
 plt.show()
