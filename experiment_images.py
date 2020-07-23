@@ -37,9 +37,10 @@ np.save("original.npy", x)
 np.save("labels.npy", y)
 
 if use_convolutional:
-    models = create_deep_models(num_devices=num_devices, dims=(oldshape[-3], oldshape[-2], oldshape[-1]),
-                                compression_factor=0.4)
+    print("Use convolutional network")
+    models = create_deep_models(num_devices=num_devices, dims=(oldshape[-3], oldshape[-2], oldshape[-1]), compression_factor=0.4)
 else:
+    print("Use dense network")
     models = create_models(num_devices=num_devices, dims=oldshape[-3]*oldshape[-2], compression_factor=0.4)
 
 for epoch in np.arange(global_epochs):
