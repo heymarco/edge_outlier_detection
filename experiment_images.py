@@ -25,6 +25,8 @@ global_epochs = 20
 
 x, y, labels = get_data(args.data, num_clients=num_devices)
 
+print("Fraction of outliers: {}".format(np.sum(labels)/len(labels)))
+
 use_convolutional = True
 
 oldshape = x.shape
@@ -38,9 +40,10 @@ np.save("labels.npy", y)
 np.save("outliers.npy", labels)
 
 if use_convolutional:
-    models = create_deep_models(num_devices=num_devices, dims=(oldshape[-3], oldshape[-2], oldshape[-1]),
-                                compression_factor=0.4)
+    print("Use convolutional network")
+    models = create_deep_models(num_devices=num_devices, dims=(oldshape[-3], oldshape[-2], oldshape[-1]), compression_factor=0.4)
 else:
+    print("Use dense network")
     models = create_models(num_devices=num_devices, dims=oldshape[-3]*oldshape[-2], compression_factor=0.4)
 
 for epoch in np.arange(global_epochs):
@@ -58,11 +61,9 @@ global_scores = dist.flatten()
 
 np.save("predicted.npy", predicted)
 
-labels = np.arange(100)
-accumulated_result = []
-for value in labels:
-    mean_score = np.mean(global_scores[y.flatten() == value])
-    accumulated_result.append(mean_score)
 
-plt.bar(np.arange(len(accumulated_result)), accumulated_result)
-plt.show()
+print(x.shape)
+print(y.shape)
+print(labels.shape)
+print(predicted.shape)
+
