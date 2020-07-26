@@ -57,9 +57,10 @@ def create_mnist_data(num_clients=10,
     (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
     x_train = x_train / 255.0
     x_train = np.expand_dims(x_train, axis=-1)
+    x_test = np.expand_dims(x_test, axis=-1)
 
     x = np.vstack((x_train, x_test))
-    y = np.vstack((y_train, y_test))
+    y = np.concatenate((y_train, y_test))
 
     outlier_label = 0
     x_inlier = np.array([item for i, item in enumerate(x) if y[i] != outlier_label])
