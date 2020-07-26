@@ -92,11 +92,14 @@ def create_mnist_data(num_clients=100, contamination_local=0.005, contamination_
     add_global_outliers()
     add_local_outliers()
 
-    x_shards, y_shards = create_shards(x, y, num_clients, shards_per_user)
+    x_shards, y_shards = create_shards(x, num_clients, shards_per_user)
     x_part, y_part = assign_shards(x_shards, y_shards, num_clients, shards_per_user)
     x_final, y_final = add_outlying_partitions(x_part, y_part, x_out_part, y_out_part, num_outlying_devices)
     x_final, y_final = shuffle(x_final, y_final)
-    return x_final, y_final
+
+    labels = y_final == global_outlier
+
+    return x_final, y_final, labels
 
 
 def create_mvtec_data(num_clients=10,

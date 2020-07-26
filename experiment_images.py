@@ -25,6 +25,8 @@ global_epochs = 20
 
 x, y, labels = get_data(args.data, num_clients=num_devices)
 
+print("Fraction of outliers: {}".format(np.sum(labels)/len(labels)))
+
 use_convolutional = True
 
 oldshape = x.shape
@@ -59,11 +61,9 @@ global_scores = dist.flatten()
 
 np.save("predicted.npy", predicted)
 
-labels = np.arange(100)
-accumulated_result = []
-for value in labels:
-    mean_score = np.mean(global_scores[y.flatten() == value])
-    accumulated_result.append(mean_score)
 
-plt.bar(np.arange(len(accumulated_result)), accumulated_result)
-plt.show()
+print(x.shape)
+print(y.shape)
+print(labels.shape)
+print(predicted.shape)
+

@@ -5,7 +5,7 @@ from sklearn.metrics import roc_curve, auc
 from src.utils import average_weights
 
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, UpSampling2D
+from tensorflow.keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, UpSampling2D, AveragePooling2D, BatchNormalization
 from tensorflow.keras.models import Model
 
 
@@ -25,7 +25,7 @@ def create_model(dims, compression_factor):
                     kernel_initializer=initializer,
                     bias_initializer=bias_initializer)(encoded)
     autoencoder = Model(input_img, decoded)
-    autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+    autoencoder.compile(optimizer='adam', loss="binary_crossentropy")
     return autoencoder
 
 
@@ -33,20 +33,24 @@ def create_deep_model(dims=(28, 28, 1)):
     input_img = Input(shape=dims)
 
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(input_img)
+    x = BatchNormalization()(x)
     x = MaxPooling2D((2, 2), padding='same')(x)
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+    x = BatchNormalization()(x)
     encoded = MaxPooling2D((2, 2), padding='same')(x)
 
-    # at this point the representation is (25, 25, 8)
+    # at this point the representation is (128, 128, 8)
 
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
+    x = BatchNormalization()(x)
     x = UpSampling2D((2, 2))(x)
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+    x = BatchNormalization()(x)
     x = UpSampling2D((2, 2))(x)
     decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 
     autoencoder = Model(input_img, decoded)
-    autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+    autoencoder.compile(optimizer='adam', loss="binary_crossentropy")
     return autoencoder
 
 
