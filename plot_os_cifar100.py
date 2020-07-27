@@ -14,7 +14,7 @@ pred = np.load("predicted.npy")
 label = np.load("outliers.npy")
 
 oldshape = x.shape
-newshape = (oldshape[0]*oldshape[1], 128, 128)
+newshape = (oldshape[0]*oldshape[1], 28, 28)
 
 x = x.reshape(newshape)
 pred = pred.reshape(newshape)
