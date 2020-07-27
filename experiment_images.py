@@ -23,11 +23,11 @@ setup_machine(cuda_device=0)
 num_devices = 10
 global_epochs = 20
 
+use_convolutional = True
+
 x, y, labels = get_data(args.data, num_clients=num_devices)
 
 print("Fraction of outliers: {}".format(np.sum(labels)/len(labels)))
-
-use_convolutional = True
 
 oldshape = x.shape
 newshape = (x.shape[0], x.shape[1], x.shape[2] * x.shape[3] * x.shape[4])

@@ -1,6 +1,17 @@
 import os
 import numpy as np
+import tensorflow as tf
 import tensorflow.keras as keras
+
+
+def augment(image):
+    original_shape = image.shape
+    image = tf.image.resize_with_crop_or_pad(image, 34, 34) # Add 6 pixels of padding
+    image = tf.image.random_crop(image, size=[28, 28, 1]) # Random crop back to 28x28
+    image = tf.image.random_brightness(image, max_delta=0.2) # Random brightness
+    image = tf.image.random_contrast(image, lower=0.2, upper=0.5)
+    image = tf.image.random_flip_left_right(image)
+    return image
 
 
 def get_data(id, num_clients):
@@ -52,15 +63,17 @@ def add_outlying_partitions(to_x_data, to_y_data,
 
 
 def create_mnist_data(num_clients=10,
-                      contamination_global=0.01, contamination_local=0.005,
-                      num_outlying_devices=1, shards_per_client=5):
+                      contamination_global=0.001, contamination_local=0.005,
+                      num_outlying_devices=0, shards_per_client=5):
     (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
-    x_train = x_train / 255.0
     x_train = np.expand_dims(x_train, axis=-1)
     x_test = np.expand_dims(x_test, axis=-1)
 
-    x = np.vstack((x_train, x_test))
+    x = np.vstack((x_train, x_test)) / 255.0
     y = np.concatenate((y_train, y_test))
+
+    for i in np.arange(len(x)):
+        x[i] = augment(x[i])
 
     outlier_label = 0
     x_inlier = np.array([item for i, item in enumerate(x) if y[i] != outlier_label])
@@ -69,10 +82,11 @@ def create_mnist_data(num_clients=10,
     y_outlier = np.array([item for item in y if item == outlier_label])
 
     inlier = np.array([[item, y_inlier[i], 0] for i, item in enumerate(x_inlier)])
-    outlier = np.array([[item, y_outlier[i], 0] for i, item in enumerate(x_outlier)])
+    outlier = np.array([[item, y_outlier[i], 1] for i, item in enumerate(x_outlier)])
 
     # add outliers to data set
     num_outliers = int(contamination_global * len(y_inlier))
+    print(num_outliers)
     assert num_outliers < len(outlier)
     shuffled_out_indices = np.arange(len(outlier))
     np.random.shuffle(shuffled_out_indices)
@@ -81,7 +95,7 @@ def create_mnist_data(num_clients=10,
     data = np.concatenate((inlier, outlier))
 
     # remove global outlier labels values
-    masked_labels = np.arange(num_outlying_devices)
+    masked_labels = np.arange(1, num_outlying_devices+1)
     inlier_mask = np.invert(np.isin(data[:, 1], masked_labels)).flatten()
     in_partition = data[inlier_mask]
 
@@ -105,7 +119,7 @@ def create_mnist_data(num_clients=10,
 
 def create_mvtec_data(num_clients=10,
                       contamination_global=0.01, contamination_local=0.005,
-                      num_outlying_devices=1, shards_per_client=5):
+                      num_outlying_devices=0, shards_per_client=5):
     x_inlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "inliers.npy"))
     y_inlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "labels_inliers.npy"))
     x_outlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "outliers.npy"))
@@ -113,6 +127,11 @@ def create_mvtec_data(num_clients=10,
 
     x_inlier = np.expand_dims(x_inlier, axis=-1)
     x_outlier = np.expand_dims(x_outlier, axis=-1)
+
+    for i in np.arange(len(x_inlier)):
+        x_inlier[i] = augment(x_inlier[i])
+    for i in np.arange(len(x_outlier)):
+        x_outlier[i] = augment(x_outlier[i])
 
     inlier = np.array([[x_inlier[i], y, 0] for i, y in enumerate(y_inlier)])
     outlier = np.array([[x_outlier[i], y, 1] for i, y in enumerate(y_outlier)])
