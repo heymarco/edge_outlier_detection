@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_outlier_distinction.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_outlier_distinction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mixed_data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/mixed_data_generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_os_cifar100.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_os_cifar100.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/image_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/image_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/synthetic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,9 +161,10 @@
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.991@0.23.1920.991" timestamp="1590562915743" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.992@0.23.1920.992" timestamp="1595436070436" />
     <state x="507" y="318" key="com.intellij.ide.util.TipDialog/0.23.1920.994@0.23.1920.994" timestamp="1590479164627" />
-    <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595344340225">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state x="763" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595854357131">
+      <screen x="0" y="23" width="1920" height="980" />
     </state>
+    <state x="763" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.980@0.23.1920.980" timestamp="1595854357131" />
     <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.989@0.23.1920.989" timestamp="1595344340225" />
     <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey" timestamp="1595265424213">
       <screen x="0" y="23" width="1920" height="989" />

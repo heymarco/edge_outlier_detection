@@ -2,6 +2,8 @@ import os
 import numpy as np
 import tensorflow.keras as keras
 
+import matplotlib.pyplot as plt
+
 
 def get_data(id, num_clients):
     if id == "mnist":
@@ -54,7 +56,8 @@ def add_outlying_partitions(to_x_data, to_y_data,
 def create_mnist_data(num_clients=10,
                       contamination_global=0.01, contamination_local=0.005,
                       num_outlying_devices=1, shards_per_client=5):
-    (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+    # (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
     x_train = x_train / 255.0
     x_train = np.expand_dims(x_train, axis=-1)
     x_test = np.expand_dims(x_test, axis=-1)
@@ -62,35 +65,30 @@ def create_mnist_data(num_clients=10,
     x = np.vstack((x_train, x_test))
     y = np.concatenate((y_train, y_test))
 
-    outlier_label = 0
-    x_inlier = np.array([item for i, item in enumerate(x) if y[i] != outlier_label])
-    y_inlier = np.array([item for item in y if item != outlier_label])
-    x_outlier = np.array([item for i, item in enumerate(x) if y[i] == outlier_label])
-    y_outlier = np.array([item for item in y if item == outlier_label])
-
-    inlier = np.array([[item, y_inlier[i], 0] for i, item in enumerate(x_inlier)])
-    outlier = np.array([[item, y_outlier[i], 0] for i, item in enumerate(x_outlier)])
-
     # add outliers to data set
-    num_outliers = int(contamination_global * len(y_inlier))
-    assert num_outliers < len(outlier)
-    shuffled_out_indices = np.arange(len(outlier))
-    np.random.shuffle(shuffled_out_indices)
-    outlier = outlier[shuffled_out_indices][:num_outliers]
+    num_outliers = int(contamination_global * len(y))
+    outlier_indices = np.random.choice(np.arange(len(y)), num_outliers)
+    for index in outlier_indices:
+        image_indices = np.random.choice(range(len(y)), 2, replace=False)
+        image_a = x[image_indices[0]]
+        image_b = x[image_indices[1]]
+        outlier_image = np.maximum(image_a, image_b)
+        print(outlier_image.shape)
+        plt.imshow(outlier_image.reshape((28, 28)))
+        plt.show()
+        x[index] = outlier_image
 
-    data = np.concatenate((inlier, outlier))
+    labels = np.array([0 for i in range(len(y))], dtype=int)
+    labels[outlier_indices] = 1
 
-    # remove global outlier labels values
-    masked_labels = np.arange(num_outlying_devices)
-    inlier_mask = np.invert(np.isin(data[:, 1], masked_labels)).flatten()
-    in_partition = data[inlier_mask]
+    shuffled_indices = np.arange(len(y))
+    np.random.shuffle(shuffled_indices)
 
-    sorted_indices = np.argsort(in_partition[:, 1])
-    in_partition = in_partition[sorted_indices]
+    data = np.array([[x[i], y[i], labels[i]] for i in range(len(y))])
+    data = data[shuffled_indices]
 
-    data = create_shards(in_partition, num_clients, shards_per_client)
+    data = create_shards(data, num_clients, shards_per_client)
     data = assign_shards(data, num_clients, shards_per_client)
-    # x, y = add_outlying_partitions(x, y, x_out_part, y_out_part, num_outlying_devices)
     np.random.shuffle(data)
 
     x = np.array(data[:, :, 0])
@@ -148,3 +146,9 @@ def create_mvtec_data(num_clients=10,
     labels = data[:, :, 2].flatten().astype(float)
 
     return x, y, labels
+
+
+def plot_outlier(images, labels, index):
+    out_images = images[labels == 0]
+    plt.imshow(out_images[index])
+    plt.show()

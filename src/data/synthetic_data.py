@@ -98,13 +98,16 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
     def to_outlier(p, device_index):
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
-        other_device = device_index
-        while other_device == device_index:
-            other_device = np.random.choice(np.arange(data.shape[0]))
-            print(other_device)
+        subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
+        distances = []
+        for device in np.arange(data.shape[0]):
+            mean_this_device = np.mean(data[device_index][subspace], axis=-2)
+            mean_other_device = np.mean(data[device][subspace], axis=-2)
+            dist = np.linalg.norm(mean_this_device-mean_other_device)
+            distances.append(dist)
+        other_device = np.argmax(distances)
         random_point_index = np.random.choice(np.arange(data.shape[1]))
         random_point = data[other_device][random_point_index]
-        subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
         p[subspace] = random_point[subspace]
         o[subspace] = True
         return p, o
@@ -124,8 +127,6 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
     #     return p, o
 
     for i, points in enumerate(data_with_outliers):
-        param = np.array([mean_outlier_data[i], std_outlier_data[i]])
-        sign_point = sign[i]
         num_out = int(len(points) * frac_outlying)
         o_indices = np.random.choice(range(len(points)), num_out, replace=False)
 
@@ -133,8 +134,9 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
             point, o = to_outlier(points[j], indices[i])
             # point, o = to_outlier(points[j], param, sign_point)
             points[j] = point
+            data_with_outliers[i][j] = point
             relevant_outliers[i][j] = o
-        data_with_outliers[i] = points
+        # data_with_outliers[i] = points
 
     data[indices] = data_with_outliers
     outliers[indices] = relevant_outliers
@@ -147,8 +149,8 @@ def add_global_outliers(data, indices, subspace_size, frac_outlying=0.03):
         o = np.empty(shape=p.shape, dtype=bool)
         o.fill(False)
         sign = np.random.choice([-1, 1], subspace_size, replace=True)
-        a = 3 * sign
-        b = 3.5 * sign
+        a = 2.5 * sign
+        b = 3 * sign
         ab = np.sort(np.vstack((a, b)).T)
         a, b = ab.T[0], ab.T[1]
         mean = param[0][subspace]
