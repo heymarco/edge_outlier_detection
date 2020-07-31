@@ -53,7 +53,7 @@ def add_outlying_partitions(to_x_data, to_y_data,
     return to_x_data, to_y_data
 
 
-def create_mnist_data(num_clients=10,
+def create_mnist_data(num_clients=100,
                       contamination_global=0.01, contamination_local=0.005,
                       num_outlying_devices=1, shards_per_client=5):
     # (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
@@ -73,13 +73,9 @@ def create_mnist_data(num_clients=10,
         image_a = x[image_indices[0]]
         image_b = x[image_indices[1]]
         outlier_image = np.maximum(image_a, image_b)
-        print(outlier_image.shape)
-        plt.imshow(outlier_image.reshape((28, 28)))
-        plt.show()
-        x[index] = outlier_image
 
     labels = np.array([0 for i in range(len(y))], dtype=int)
-    labels[outlier_indices] = 1
+    labels[outlier_indices] = 2
 
     shuffled_indices = np.arange(len(y))
     np.random.shuffle(shuffled_indices)
@@ -90,6 +86,19 @@ def create_mnist_data(num_clients=10,
     data = create_shards(data, num_clients, shards_per_client)
     data = assign_shards(data, num_clients, shards_per_client)
     np.random.shuffle(data)
+
+    for i, client_data in enumerate(data):
+        for j, d in enumerate(client_data):
+            if i < num_outlying_devices:
+                if np.random.uniform() < contamination_local:
+                    data[i, j, 0] = 1.0 - d[0] # invert color
+                    data[i, j, 2] = 1
+            else:
+                if np.random.uniform() < 0.5:
+                    data[i, j, 0] = 1.0 - d[0]  # invert color
+                    data[i, j, 2] = 1
+                plt.imshow(data[i, j, 0].reshape((28, 28)))
+                plt.show()
 
     x = np.array(data[:, :, 0])
     shape = list(x.shape) + list(x[0, 0].shape)
