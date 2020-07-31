@@ -1,8 +1,19 @@
 import os
 import numpy as np
+import tensorflow as tf
 import tensorflow.keras as keras
 
 import matplotlib.pyplot as plt
+
+
+def augment(image):
+    original_shape = image.shape
+    image = tf.image.resize_with_crop_or_pad(image, 34, 34) # Add 6 pixels of padding
+    image = tf.image.random_crop(image, size=[28, 28, 1]) # Random crop back to 28x28
+    image = tf.image.random_brightness(image, max_delta=0.2) # Random brightness
+    image = tf.image.random_contrast(image, lower=0.2, upper=0.5)
+    image = tf.image.random_flip_left_right(image)
+    return image
 
 
 def get_image_data(id, num_clients):
@@ -145,7 +156,7 @@ def create_mnist_data(num_clients=100,
 
 def create_mvtec_data(num_clients=10,
                       contamination_global=0.01, contamination_local=0.005,
-                      num_outlying_devices=1, shards_per_client=5):
+                      num_outlying_devices=0, shards_per_client=5):
     x_inlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "inliers.npy"))
     y_inlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "labels_inliers.npy"))
     x_outlier = np.load(os.path.join(os.getcwd(), "data", "mvtec", "outliers.npy"))
@@ -153,6 +164,11 @@ def create_mvtec_data(num_clients=10,
 
     x_inlier = np.expand_dims(x_inlier, axis=-1)
     x_outlier = np.expand_dims(x_outlier, axis=-1)
+
+    for i in np.arange(len(x_inlier)):
+        x_inlier[i] = augment(x_inlier[i])
+    for i in np.arange(len(x_outlier)):
+        x_outlier[i] = augment(x_outlier[i])
 
     inlier = np.array([[x_inlier[i], y, 0] for i, y in enumerate(y_inlier)])
     outlier = np.array([[x_outlier[i], y, 1] for i, y in enumerate(y_outlier)])

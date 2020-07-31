@@ -29,20 +29,14 @@ def create_model(dims, compression_factor):
 def create_deep_model(dims=(28, 28, 1)):
     input_img = Input(shape=dims)
 
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(input_img)
-    x = BatchNormalization()(x)
-    x = MaxPooling2D((2, 2), padding='same')(x)
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-    x = BatchNormalization()(x)
+    x = Conv2D(8, (3, 3), activation='relu', padding='same', 
+               kernel_regularizer=tf.keras.regularizers.l2())(input_img)
     encoded = MaxPooling2D((2, 2), padding='same')(x)
 
     # at this point the representation is (128, 128, 8)
 
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
-    x = BatchNormalization()(x)
-    x = UpSampling2D((2, 2))(x)
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-    x = BatchNormalization()(x)
+    x = Conv2D(8, (3, 3), activation='relu', padding='same', 
+               kernel_regularizer=tf.keras.regularizers.l2())(encoded)
     x = UpSampling2D((2, 2))(x)
     decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 

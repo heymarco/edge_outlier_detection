@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf
 
 from src.utils import average_weights
 
@@ -8,17 +9,20 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
     local_detectors = ensembles[1]
 
     oldshape = data.shape
-    fshape = (oldshape[0], oldshape[1]*oldshape[2]*oldshape[3])
+    fshape = (oldshape[0], oldshape[1], oldshape[-3]*oldshape[-2]*oldshape[-1])
     fdata = data if not convolutional else data.reshape(fshape)
 
     # federated training
     for _ in range(global_epochs):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
                                            frac_available=1.0)
+    tf.keras.backend.clear_session()
 
     # global scores
     predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
-    diff = predicted - data
+    if convolutional: 
+        predicted = predicted.reshape(fshape)
+    diff = predicted - fdata
     dist = np.linalg.norm(diff, axis=-1)
     global_scores = dist.flatten()
 
@@ -30,8 +34,12 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
         else:
             [l.fit(fdata[i]) for i, l in enumerate(local_detectors)]
     if l_name == "ae":
-        [l.fit(fdata[i], fdata[i],
-               batch_size=32, epochs=global_epochs) for i, l in enumerate(local_detectors)]
+        for i, l in enumerate(local_detectors):
+            if convolutional:
+                l.fit(data[i], data[i], batch_size=32, epochs=global_epochs)
+            else:
+                l.fit(fdata[i], fdata[i], batch_size=32, epochs=global_epochs)
+            tf.keras.backend.clear_session()
 
     # local scores
     if l_name.startswith("lof"):
@@ -48,7 +56,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
             predicted = np.array([model.predict(fdata[i]) for i, model in enumerate(local_detectors)])
         diff = predicted - fdata
         dist = np.linalg.norm(diff, axis=-1)
-        local_scores = np.reshape(dist, newshape=(fdata.shape[0], fdata.shape[1]))
+        local_scores = dist.flatten()  # np.reshape(dist, newshape=(oldshape[0], oldshape[1]))
 
     return global_scores, local_scores
 
