@@ -6,7 +6,8 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.ensemble import IsolationForest
 
 from xstream.python.Chains import Chains
-from src.models import create_model, create_models, train_federated
+from src.models import create_model, create_models
+from src.training import train_federated
 from src.utils import color_palette
 
 import matplotlib as mpl
@@ -48,16 +49,6 @@ def create_ensembles(shape, l_name, contamination=0.01):
     return np.array(c), np.array(l)
 
 
-def train_ensembles(data, ensembles, l_name, global_epochs=10):
-    collab_detectors = ensembles[0]
-    local_detectors = ensembles[1]
-
-    global_scores = train_global_detectors(data, collab_detectors, global_epochs)
-    local_scores = train_local_detectors(data, local_detectors, global_epochs, l_name)
-
-    return global_scores, local_scores
-
-
 def train_global_detectors(data, collab_detectors, global_epochs):
     # federated training
     for _ in range(global_epochs):
@@ -94,82 +85,3 @@ def train_local_detectors(data, local_detectors, global_epochs, l_name):
         dist = np.linalg.norm(diff, axis=-1)
         local_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
     return local_scores
-
-
-def score(result_global, result_local):
-    assert len(result_local) == len(result_global)
-    scores = []
-    for i in range(len(result_local)):
-        rl = result_local[i]
-        rg = np.reshape(result_global[i], newshape=rl.shape)
-        score_global = np.mean(rg, axis=-1)
-        scores.append(score_global)
-    return np.mean(np.array(scores), axis=0)
-
-
-def evaluate(scores, ground_truth):
-    is_candidate = ground_truth.any(axis=1)
-    ground_truth_global = np.mean(scores)
-    std_global = np.std(scores)
-    delta1_outlying = (scores[is_candidate]-ground_truth_global)/std_global
-    delta1_normal = (scores[np.invert(is_candidate)]-ground_truth_global)/std_global
-    delta1_outlying = np.mean(delta1_outlying)
-    delta1_normal = np.mean(delta1_normal)
-    print(delta1_normal, delta1_outlying)
-    return delta1_normal, delta1_outlying
-
-
-def plot_result():
-    # read from dir
-    directory = os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions")
-
-    def parse_filename(file):
-        components = file.split("_")
-        c_name = components[-2]
-        l_name = components[-1]
-        num_devices = components[0]
-        frac = components[3]
-        contamination = components[5]
-        return num_devices, frac, c_name, l_name, contamination
-
-    names = {
-        "ae": "AE",
-        "if": "IF",
-        "xstream": "xStream",
-        "lof": "LOF"
-    }
-    res = []
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".npy"):
-                num_devices, frac, c_name, l_name, contamination = parse_filename(file[:-4])
-                result = np.load(os.path.join(directory, file))
-                c = names[c_name]
-                l = names[l_name]
-                print(result)
-                new_res = [int(num_devices),
-                           float(frac),
-                           float(contamination),
-                           "{}/{}".format(c, l),
-                           np.abs(result[0]),
-                           "Inlier"]
-                res.append(new_res)
-                new_res = [int(num_devices),
-                           float(frac),
-                           float(contamination),
-                           "{}/{}".format(c, l),
-                           np.abs(result[1]),
-                           "Outlier"]
-                res.append(new_res)
-
-    mpl.rc('font', **{"size": 14})
-    d = {'color': color_palette, "marker": ["o", "*", "v", "x"]}
-    df = pd.DataFrame(res,
-                      columns=["\# Devices", "Subspace frac", "Contamination", "Ensemble",
-                                    "$\Delta$", "Type"])
-    df = df.sort_values(by=["\# Devices", "Contamination"])
-    g = sns.FacetGrid(df, col="\# Devices", hue="Type", hue_kws=d, margin_titles=True)
-    g.map(plt.plot, "Contamination", "$\Delta$").add_legend()
-
-    # plt.tight_layout()
-    plt.show()

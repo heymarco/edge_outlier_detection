@@ -16,7 +16,7 @@ def augment(image):
     return image
 
 
-def get_data(id, num_clients):
+def get_image_data(id, num_clients):
     if id == "mnist":
         return create_mnist_data(num_clients=num_clients)
     if id == "mvtec":
@@ -80,7 +80,7 @@ def create_mnist_data(num_clients=100,
     # add outliers to data set
     num_outliers = int(contamination_global * len(y))
     outlier_indices = np.random.choice(np.arange(len(y)), num_outliers)
-    for index in outlier_indices:
+    for _ in outlier_indices:
         image_indices = np.random.choice(range(len(y)), 2, replace=False)
         image_a = x[image_indices[0]]
         image_b = x[image_indices[1]]
