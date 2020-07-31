@@ -66,7 +66,7 @@ def add_outlying_partitions(to_x_data, to_y_data,
 
 def create_mnist_data(num_clients=100,
                       contamination_global=0.01, contamination_local=0.005,
-                      num_outlying_devices=1, shards_per_client=5):
+                      num_outlying_devices=10, shards_per_client=5):
     # (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
     x_train = np.expand_dims(x_train, axis=-1)
