@@ -1,4 +1,5 @@
 import os
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
@@ -23,6 +24,8 @@ def create_ensembles(shape, l_name, contamination=0.01):
     num_clients = shape[0]
     c = create_models(num_clients, shape[-1], compression_factor=0.4)
     l = None
+    if l_name == "lof":
+        l = [LocalOutlierFactor(n_neighbors=8, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "lof1":
         l = [LocalOutlierFactor(n_neighbors=1, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "lof2":
@@ -67,7 +70,8 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
     predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
     diff = predicted - data
     dist = np.linalg.norm(diff, axis=-1)
-    global_scores = dist.flatten()
+    global_scores = dist
+    tf.keras.backend.clear_session()
 
     print("Fitting {}".format(l_name))
     # local training
@@ -89,6 +93,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10):
         diff = predicted - data
         dist = np.linalg.norm(diff, axis=-1)
         local_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
+    tf.keras.backend.clear_session()
 
     return global_scores, local_scores
 

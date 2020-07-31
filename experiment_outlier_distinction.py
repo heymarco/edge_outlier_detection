@@ -48,7 +48,7 @@ if __name__ == '__main__':
             for i in range(reps):
                 ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
-                result = np.vstack((global_scores, local_scores, gt))
+                result = [global_scores, local_scores, gt]
                 results.append(result)
             fname = "{}_{}_{}".format(key, c_name, l_name)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), results)
