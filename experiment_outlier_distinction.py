@@ -32,9 +32,9 @@ if __name__ == '__main__':
 
     # create ensembles
     combinations = [("ae", "ae"),
-                    ("ae", "lof8"),
-                    ("ae", "if"),
-                    ("ae", "xstream")
+                    # ("ae", "lof8"),
+                    # ("ae", "if"),
+                    # ("ae", "xstream")
     ]
     print("Executing combinations {}".format(combinations))
 

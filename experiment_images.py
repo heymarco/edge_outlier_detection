@@ -18,7 +18,7 @@ mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
-setup_machine(cuda_device=0)
+setup_machine(cuda_device=args.gpu)
 
 num_devices = 10
 global_epochs = 20
