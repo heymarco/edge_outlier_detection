@@ -2,36 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/images/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/images/functions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/local_and_global/functions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/training.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Autoencoder.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data Generator.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/XStream.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_local_outliers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_outlier_distinction.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_outlier_distinction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_outlying_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mixed_data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_mixed_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outlying_partitions_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_outlying_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_distribution.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_os_cifar100.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_quick_check.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_images.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/image_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/image_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/images_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/TOOL_mvtec_images_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/synthetic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/local_outliers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/local_outliers/evaluation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/metrics.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/outliers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pipelines.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/t_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/t_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/evaluation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

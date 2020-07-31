@@ -24,14 +24,14 @@ mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
-setup_machine(cuda_device=0)
-
-num_devices = 10
+num_devices = 100
 global_epochs = 20
 
 x, y, labels = get_image_data(args.data, num_clients=num_devices)
 
 print("Fraction of outliers: {}".format(np.sum(labels)/len(labels)))
+
+setup_machine(cuda_device=0)
 
 use_convolutional = args.conv
 

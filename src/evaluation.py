@@ -157,7 +157,7 @@ def evaluate_results(from_dir):
             c_name = components[-2]
             l_name = components[-1]
             num_devices = components[0]
-            frac = components[3]
+            frac = components[3] if len(components) > 3 else None
             return num_devices, frac, c_name, l_name
 
         def average_result(result):
