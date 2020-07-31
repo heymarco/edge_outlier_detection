@@ -5,7 +5,7 @@ import tensorflow.keras as keras
 import matplotlib.pyplot as plt
 
 
-def get_data(id, num_clients):
+def get_image_data(id, num_clients):
     if id == "mnist":
         return create_mnist_data(num_clients=num_clients)
     if id == "mvtec":
@@ -55,20 +55,21 @@ def add_outlying_partitions(to_x_data, to_y_data,
 
 def create_mnist_data(num_clients=100,
                       contamination_global=0.01, contamination_local=0.005,
-                      num_outlying_devices=1, shards_per_client=5):
+                      num_outlying_devices=10, shards_per_client=5):
     # (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-    x_train = x_train / 255.0
     x_train = np.expand_dims(x_train, axis=-1)
     x_test = np.expand_dims(x_test, axis=-1)
 
     x = np.vstack((x_train, x_test))
     y = np.concatenate((y_train, y_test))
 
+    x = x / 255.0
+
     # add outliers to data set
     num_outliers = int(contamination_global * len(y))
     outlier_indices = np.random.choice(np.arange(len(y)), num_outliers)
-    for index in outlier_indices:
+    for _ in outlier_indices:
         image_indices = np.random.choice(range(len(y)), 2, replace=False)
         image_a = x[image_indices[0]]
         image_b = x[image_indices[1]]

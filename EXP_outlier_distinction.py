@@ -1,7 +1,7 @@
 import argparse
-from src.local_and_global.evaluation import *
-from src.local_outliers.evaluation import get_frac_local
+from src.local_and_global.functions import *
 from src.data.synthetic_data import normalize_along_axis
+from src.training import train_ensembles
 
 if __name__ == '__main__':
     # create data parser

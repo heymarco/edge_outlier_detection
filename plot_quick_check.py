@@ -27,10 +27,10 @@ global_scores = dist.flatten()
 for val in np.unique(y):
     global_scores[y == val] = global_scores[y == val] / np.mean(global_scores[y == val])
 
-outliers = global_scores[label.astype(bool)]
-inliers = global_scores[np.invert(label.astype(bool))]
+outliers = global_scores[label == 1]
+inliers = global_scores[label != 1]
 
-fpr, tpr, thresholds = roc_curve(label.flatten(), global_scores)
+fpr, tpr, thresholds = roc_curve(label.flatten() == 1, global_scores)
 roc_auc = auc(fpr, tpr)
 
 plt.figure(figsize=(10,6))

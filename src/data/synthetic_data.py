@@ -112,20 +112,6 @@ def add_local_outliers(data, indices, subspace_size, frac_outlying=0.03):
         o[subspace] = True
         return p, o
 
-    # def to_outlier(p, param, sign):
-    #     subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
-    #     o = np.empty(shape=p.shape, dtype=bool)
-    #     o.fill(False)
-    #     a = np.sqrt(np.random.uniform(3.0, 3.1, size=sign[subspace].shape))*sign[subspace]
-    #     b = np.sqrt(np.random.uniform(3.2, 3.3, size=sign[subspace].shape))*sign[subspace]
-    #     ab = np.sort(np.vstack((a, b)).T)
-    #     a, b = ab.T[0], ab.T[1]
-    #     print(param[1][subspace])
-    #     out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
-    #     p[subspace] = out
-    #     o[subspace] = True
-    #     return p, o
-
     for i, points in enumerate(data_with_outliers):
         num_out = int(len(points) * frac_outlying)
         o_indices = np.random.choice(range(len(points)), num_out, replace=False)
