@@ -24,9 +24,9 @@ mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
-setup_machine(cuda_device=0)
+setup_machine(cuda_device=args.gpu)
 
-num_devices = 10
+num_devices = 100
 global_epochs = 20
 
 x, y, labels = get_image_data(args.data, num_clients=num_devices)
@@ -36,7 +36,7 @@ print("Fraction of outliers: {}".format(np.sum(labels)/len(labels)))
 use_convolutional = args.conv
 
 oldshape = x.shape
-newshape = (x.shape[0], x.shape[1], x.shape[2] * x.shape[3] * x.shape[4])
+newshape = (x.shape[0], x.shape[1], x.shape[-3] * x.shape[-2] * x.shape[-1])
 
 if not use_convolutional:
     x = x.reshape(newshape)
@@ -56,8 +56,8 @@ for c_name, l_name in combinations:
     for i in range(args.reps):
         ensembles = create_ensembles(x.shape, l_name, contamination=contamination, use_convolutional=use_convolutional)
         global_scores, local_scores = train_ensembles(x, ensembles,
-                                                      global_epochs=20, l_name=l_name, convolutional=args.conv)
+                                                      global_epochs=global_epochs, l_name=l_name, convolutional=args.conv)
         result = np.vstack((global_scores, local_scores, labels))
         results.append(result)
     fname = "{}_{}_{}".format(args.data, c_name, l_name)
-    np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), results)
+    np.save(os.path.join(os.getcwd(), "results", "numpy", "images", fname), results)
