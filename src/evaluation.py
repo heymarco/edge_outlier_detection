@@ -160,6 +160,14 @@ def evaluate_results(from_dir):
             frac = components[3] if len(components) > 3 else None
             return num_devices, frac, c_name, l_name
 
+        def add_f1_iso_curve():
+            f_scores = np.linspace(0.2, 0.8, num=4)
+            for f_score in f_scores:
+                x = np.linspace(0.01, 1)
+                y = f_score * x / (2 * x - f_score)
+                l, = plt.plot(x[y >= 0], y[y >= 0], color='gray', alpha=0.2)
+                plt.annotate('$f_1={0:0.1f}$'.format(f_score), xy=(0.8, y[45] + 0.02), fontsize=6)
+
         def average_result(result):
             p_c1_arr = []
             p_l1_arr = []
@@ -173,30 +181,32 @@ def evaluate_results(from_dir):
             r_comb1_arr = []
             p_comb2_arr = []
             r_comb2_arr = []
-            for rep in result:
-                os_c = rep[0]
-                os_l = rep[1]
-                labels = rep[2].astype(int).flatten()
-                os_c = os_c.flatten()  # (os_c / np.mean(os_c, axis=-1, keepdims=True)).flatten()
-                os_l = os_l.flatten()  # (os_l / np.mean(os_l, axis=-1, keepdims=True)).flatten()
-                p_c1, r_c1, _ = precision_recall_curve(labels, os_c, pos_label=1)
-                p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
-                p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
-                p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
-                p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
-                p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
-                p_c1_arr.append(p_c1)
-                p_l1_arr.append(p_l1)
-                p_c2_arr.append(p_c2)
-                p_l2_arr.append(p_l2)
-                r_c1_arr.append(r_c1)
-                r_l1_arr.append(r_l1)
-                r_c2_arr.append(r_c2)
-                r_l2_arr.append(r_l2)
-                p_comb1_arr.append(p_comb1)
-                p_comb2_arr.append(p_comb2)
-                r_comb1_arr.append(r_comb1)
-                r_comb2_arr.append(r_comb2)
+            rep = result[0]
+            # for rep in result:
+            os_c = rep[0]
+            os_l = rep[1]
+            labels = rep[2].astype(int).flatten()
+            os_c = os_c.flatten()
+            os_l = os_l.flatten()
+            p_c1, r_c1, _ = precision_recall_curve(labels, os_c, pos_label=1)
+            p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
+            p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
+            p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
+            p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
+            p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
+            p_c1_arr.append(p_c1)
+            p_l1_arr.append(p_l1)
+            p_c2_arr.append(p_c2)
+            p_l2_arr.append(p_l2)
+            r_c1_arr.append(r_c1)
+            r_l1_arr.append(r_l1)
+            r_c2_arr.append(r_c2)
+            r_l2_arr.append(r_l2)
+            p_comb1_arr.append(p_comb1)
+            p_comb2_arr.append(p_comb2)
+            r_comb1_arr.append(r_comb1)
+            r_comb2_arr.append(r_comb2)
+
             res1 = (np.mean(p_c1_arr, axis=0), np.mean(r_c1_arr, axis=0))
             res2 = (np.mean(p_c2_arr, axis=0), np.mean(r_c2_arr, axis=0))
             res3 = (np.mean(p_l1_arr, axis=0), np.mean(r_l1_arr, axis=0))
@@ -207,7 +217,7 @@ def evaluate_results(from_dir):
 
         mainlegend_labels = []
 
-        for key in sorted(results):
+        for i, key in enumerate(sorted(results)):
             result = results[key]
             _, frac, _, _ = parse_filename(key)
             res_1, res_2, res_3, res_4, res_5, res_6 = average_result(result)
@@ -220,10 +230,18 @@ def evaluate_results(from_dir):
             plt.legend(bbox_to_anchor=(0.5, 0), loc="upper center", frameon=False, ncol=2)
             plt.title('$C$ identifies LO')
 
+            if i == 0:
+                plt.ylim((0, 1))
+                add_f1_iso_curve()
+
             ax2 = plt.subplot(2, 3, 4, sharey=ax1, sharex=ax1)
             plot_roc(res_2[0], res_2[1], label="sf={}".format(frac), hline_y=0.005)
             plt.legend(bbox_to_anchor=(0.5, -0.2), loc="upper center", frameon=False, ncol=2)
             plt.title('$C$ identifies GO')
+
+            if i == 0:
+                plt.ylim((0, 1))
+                add_f1_iso_curve()
 
             ax3 = plt.subplot(2, 3, 2, sharex=ax1, sharey=ax1)
             ax3.get_yaxis().set_visible(False)
@@ -232,11 +250,19 @@ def evaluate_results(from_dir):
             plt.legend(bbox_to_anchor=(0.5, 0), loc="upper center", frameon=False, ncol=2)
             plt.title('$L$ identifies LO')
 
+            if i == 0:
+                plt.ylim((0, 1))
+                add_f1_iso_curve()
+
             ax4 = plt.subplot(2, 3, 5, sharey=ax1, sharex=ax1)
             ax4.get_yaxis().set_visible(False)
             plot_roc(res_4[0], res_4[1], label="sf={}".format(frac), hline_y=0.005)
             plt.legend(bbox_to_anchor=(0.5, -0.2), loc="upper center", frameon=False, ncol=2)
             plt.title('$L$ identifies GO')
+
+            if i == 0:
+                plt.ylim((0, 1))
+                add_f1_iso_curve()
 
             ax5 = plt.subplot(2, 3, 3, sharey=ax1, sharex=ax1)
             ax5.get_yaxis().set_visible(False)
@@ -245,11 +271,19 @@ def evaluate_results(from_dir):
             plt.legend(bbox_to_anchor=(0.5, 0), loc="upper center", frameon=False, ncol=2)
             plt.title('$L + C$ identify LO')
 
+            if i == 0:
+                plt.ylim((0, 1))
+                add_f1_iso_curve()
+
             ax6 = plt.subplot(2, 3, 6, sharey=ax1, sharex=ax1)
             ax6.get_yaxis().set_visible(False)
             plot_roc(res_6[0], res_6[1], label="sf={}".format(frac), hline_y=0.005)
             plt.legend(bbox_to_anchor=(0.5, -0.2), loc="upper center", frameon=False, ncol=2)
             plt.title('$L + C$ identify GO')
+
+            if i == 0:
+                plt.ylim((0, 1))
+                add_f1_iso_curve()
 
         handles, labels = ax1.get_legend_handles_labels()
         plt.figlegend(handles, mainlegend_labels, loc='lower center', frameon=False, ncol=len(handles))
