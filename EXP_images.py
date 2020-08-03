@@ -31,7 +31,7 @@ x, y, labels = get_image_data(args.data, num_clients=num_devices)
 
 print("Fraction of outliers: {}".format(np.sum(labels)/len(labels)))
 
-setup_machine(cuda_device=0)
+setup_machine(cuda_device=args.gpu)
 
 use_convolutional = args.conv
 

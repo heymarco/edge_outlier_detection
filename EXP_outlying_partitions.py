@@ -1,6 +1,7 @@
 import argparse
 import gc
 
+from src.utils import setup_machine
 from src.outlying_partitions.evaluation import *
 from src.data.synthetic_data import normalize_along_axis
 
@@ -8,7 +9,7 @@ from src.data.synthetic_data import normalize_along_axis
 if __name__ == '__main__':
     # create data parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-data", type=str)
+    parser.add_argument("-data", type=str, default="outlying_partitions")
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
 
@@ -16,6 +17,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
+
+    # select GPU
+    setup_machine(cuda_device=args.gpu)
 
     # load, trim, normalize data
     data = {}
@@ -33,11 +37,7 @@ if __name__ == '__main__':
     print("Finished data loading")
 
     # create ensembles
-    combinations = [("ae", "ae"),
-                    # ("ae", "lof"),
-                    # ("ae", "if"),
-                    # ("ae", "xstream")
-    ]
+    combinations = [("ae", "ae"),]
     print("Executing combinations {}".format(combinations))
 
     # run ensembles on each data set

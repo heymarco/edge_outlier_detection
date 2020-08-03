@@ -117,39 +117,39 @@ def create_mnist_data(num_clients=100,
     y = data[:, :, 1].flatten().astype(float)
     labels = data[:, :, 2].flatten().astype(float)
 
-    plt.figure(figsize=(10, 4))
-    plt.subplot(131)
-    all_inliers = x.reshape((x.shape[0]*x.shape[1], 28, 28))[labels == 0]
-    inlier_class_labels = y[labels == 0]
-    inlier_image = None
-    inlier_image_class_label = None
-    for i, image in enumerate(all_inliers[int(len(all_inliers)/2):]):
-        if image[0][0] > 0.5:  # dark
-            inlier_image = image
-            inlier_image_class_label = inlier_class_labels[i]
-            break
-    for i, image in enumerate(all_inliers[int(len(all_inliers)/2):]):
-        print(image[0][0])
-        if image[0][0] < 0.5 and inlier_image_class_label == inlier_class_labels[i]:  # light
-            print("Exchange image half")
-            inlier_image[:, 14:] = image[:, 14:]
-            break
-    plt.imshow(inlier_image, cmap='gray')
-    plt.gca().set_xticklabels([""])
-    plt.gca().set_yticklabels([""])
-    plt.title("Inliers")
-    plt.subplot(132)
-    plt.imshow(x.reshape((x.shape[0]*x.shape[1], 28, 28))[labels == 1][0], cmap='gray')
-    plt.gca().set_xticklabels([""])
-    plt.gca().set_yticklabels([""])
-    plt.title("Local Outlier")
-    plt.subplot(133)
-    plt.imshow(x.reshape((x.shape[0]*x.shape[1], 28, 28))[labels == 2][0], cmap='gray')
-    plt.gca().set_xticklabels([""])
-    plt.gca().set_yticklabels([""])
-    plt.title("Global Outlier")
-    plt.tight_layout()
-    plt.savefig("example_image_mnist.pdf")
+    # plt.figure(figsize=(10, 4))
+    # plt.subplot(131)
+    # all_inliers = x.reshape((x.shape[0]*x.shape[1], 28, 28))[labels == 0]
+    # inlier_class_labels = y[labels == 0]
+    # inlier_image = None
+    # inlier_image_class_label = None
+    # for i, image in enumerate(all_inliers[int(len(all_inliers)/2):]):
+    #     if image[0][0] > 0.5:  # dark
+    #         inlier_image = image
+    #         inlier_image_class_label = inlier_class_labels[i]
+    #         break
+    # for i, image in enumerate(all_inliers[int(len(all_inliers)/2):]):
+    #     print(image[0][0])
+    #     if image[0][0] < 0.5 and inlier_image_class_label == inlier_class_labels[i]:  # light
+    #         print("Exchange image half")
+    #         inlier_image[:, 14:] = image[:, 14:]
+    #         break
+    # plt.imshow(inlier_image, cmap='gray')
+    # plt.gca().set_xticklabels([""])
+    # plt.gca().set_yticklabels([""])
+    # plt.title("Inliers")
+    # plt.subplot(132)
+    # plt.imshow(x.reshape((x.shape[0]*x.shape[1], 28, 28))[labels == 1][0], cmap='gray')
+    # plt.gca().set_xticklabels([""])
+    # plt.gca().set_yticklabels([""])
+    # plt.title("Local Outlier")
+    # plt.subplot(133)
+    # plt.imshow(x.reshape((x.shape[0]*x.shape[1], 28, 28))[labels == 2][0], cmap='gray')
+    # plt.gca().set_xticklabels([""])
+    # plt.gca().set_yticklabels([""])
+    # plt.title("Global Outlier")
+    # plt.tight_layout()
+    # plt.savefig("example_image_mnist.pdf")
 
     return x, y, labels
 
