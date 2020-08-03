@@ -11,11 +11,12 @@ mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-sf", type=float, default=0.3)
+parser.add_argument("-sf", type=float, default=0.2)
 parser.add_argument("-device_frac", type=float, default=0.1)
 parser.add_argument("-cont", type=float, default=0.5)
 parser.add_argument("-dims", type=int, default=100)
 parser.add_argument("-dev", type=int, default=100)
+parser.add_argument("-shift", type=float, default=1.5)
 args = parser.parse_args()
 
 # configuration
@@ -25,11 +26,6 @@ dims = args.dims
 subspace_frac = args.sf
 frac_outlying_devices = args.device_frac
 frac_outlying_data = args.cont
-
-# Experiment:
-# - Create devices where 1/10th of devices are outlying
-# - Increase contamination (0.01, 0.05, 0.1, 0.2 ...)
-# - Observe at which contamination we start to learn that a device is abnormal
 
 # create local outliers
 gamma = 0.5
@@ -41,7 +37,7 @@ device_indices = np.random.choice(np.arange(num_devices), int(frac_outlying_devi
 subspace_size = int(subspace_frac*dims)
 absolute_contamination = int(frac_outlying_data*num_data)
 
-std = 3.2
+std = args.shift
 shift = np.random.choice([-std, std], size=subspace_size)
 
 subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
@@ -51,10 +47,10 @@ labels = np.empty(shape=data.shape, dtype=bool)
 labels.fill(0)
 
 for dev in device_indices:
+    labels[dev].fill(True)
     for p in point_indices:
         for i, s in enumerate(subspace):
             data[dev, p, s] = data[dev, p, s] + shift[i]
-            labels[dev, p, s] = True
 
 # write to file
 params_str = "{}_{}_{}_{}_{}_{}_{}_{}_mixed".format(num_devices,

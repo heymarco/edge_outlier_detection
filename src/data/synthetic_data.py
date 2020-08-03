@@ -168,7 +168,7 @@ def add_global_outliers(data, indices, subspace_size, frac_outlying=0.03):
     return data, outliers
 
 
-def add_abnormal_devices(data, indices, subspace_size, frac_outlying=0.9):
+def add_abnormal_devices(data, indices, subspace_size, frac_outlying=0.9, mean_deviation=1.5):
     def to_outlier(p, deviation, subspace):
         p[subspace] = p[subspace] + deviation
         o = np.empty(shape=p.shape, dtype=bool)
@@ -189,7 +189,7 @@ def add_abnormal_devices(data, indices, subspace_size, frac_outlying=0.9):
         subspace = np.random.choice(range(points.shape[-1]), subspace_size, replace=False)
         o_indices = np.random.choice(range(len(points)), num_out, replace=False)
         sign = np.random.choice([-1, 1], size=len(subspace), replace=True)
-        outlier_mean = sign * (3 * std[subspace])
+        outlier_mean = sign * (mean_deviation * std[subspace])
         for j in o_indices:
             point, o = to_outlier(points[j], outlier_mean, subspace)
             points[j] = point

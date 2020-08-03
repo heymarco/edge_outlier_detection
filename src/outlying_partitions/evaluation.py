@@ -11,13 +11,18 @@ mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 
+labels_suffix = "_labels.npy"
+ensemble_suffix = "_aa_bb.npy"
+
+
 def parse_filename(file):
     components = file.split("_")
     c_name = components[-2]
     l_name = components[-1]
     num_devices = components[0]
     frac = components[3]
-    return num_devices, frac, c_name, l_name
+    cont = components[-4]
+    return num_devices, frac, c_name, l_name, cont
 
 
 def load_all_in_dir(directory):
@@ -27,11 +32,11 @@ def load_all_in_dir(directory):
         for file in files:
             if file.endswith(".npy"):
                 filepath = os.path.join(directory, file)
-                labels_suffix = "_labels.npy"
                 if file.endswith(labels_suffix):
                     all_labels[file[:-len(labels_suffix)]] = np.load(filepath)
+                    continue
                 result_file = np.load(filepath)
-                all_files[file] = result_file
+                all_files[file[:-(len(ensemble_suffix))]] = result_file
     return all_files, all_labels
 
 
@@ -59,51 +64,49 @@ def plot_t_test_over(x, directory):
 
     file_dict, label_dict = load_all_in_dir(directory)
 
-    def over_frac():
-        fracs = []
-        means_t = []
-        means_p = []
-        for key in file_dict:
-            num_devices, frac, c_name, l_name = parse_filename(key)
-            fracs.append(frac)
-            f = file_dict[key]
-            labels = label_dict[key].astype(np.bool)
-            results = evaluate_array_t_statistic(f)
+    x_axis_vals = []
+    means_t = []
+    means_p = []
+    for key in file_dict:
+        num_devices, frac, c_name, l_name, cont = parse_filename(key)
+        if x == "frac":
+            x_axis_vals.append(frac)
+        elif x == "devices":
+            x_axis_vals.append(num_devices)
+        elif x == "cont":
+            x_axis_vals.append(cont)
+        else:
+            print("No valid x-identifier provided")
+        f = file_dict[key]
+        labels = label_dict[key]
+        these_results_p = []
+        these_results_t = []
+        for rep in f:
+            results = evaluate_array_t_statistic(rep)
             t_values = results.T[0][labels]
             p_values = results.T[1][labels]
-            means_t.append(np.mean(t_values))
-            means_p.append(np.mean(p_values))
-        plt.plot(fracs, means_p, label="p-value")
-        plt.plot(fracs, means_t, linestyle="--", label="t-value")
-        plt.xlabel("Subspace fraction")
-        plt.ylabel("t, p")
-        plt.legend()
-        plt.tight_layout()
-        plt.show()
-
-    def over_devices():
-        devices = []
-        means_t = []
-        means_p = []
-        for key in file_dict:
-            num_devices, frac, c_name, l_name = parse_filename(key)
-            devices.append(frac)
-            f = file_dict[key]
-            labels = label_dict[key].astype(np.bool)
-            results = evaluate_array_t_statistic(f)
-            t_values = results.T[0][labels]
-            p_values = results.T[1][labels]
-            means_t.append(np.mean(t_values))
-            means_p.append(np.mean(p_values))
-        plt.plot(devices, means_p, label="p-value")
-        plt.plot(devices, means_t, linestyle="--", label="t-value")
-        plt.xlabel("Subspace fraction")
-        plt.ylabel("t, p")
-        plt.legend()
-        plt.tight_layout()
-        plt.show()
-
+            these_results_t.append(np.mean(t_values))
+            these_results_p.append(np.mean(p_values))
+        means_t.append(np.mean(these_results_t))
+        means_p.append(np.mean(these_results_p))
+    sorted_indices = np.argsort(x_axis_vals)
+    x_axis_vals = np.sort(x_axis_vals)
+    means_t = np.array(means_t)[sorted_indices]
+    means_p = np.array(means_p)[sorted_indices]
+    fig, ax1 = plt.subplots()
+    line1 = ax1.plot(x_axis_vals, means_p, label="p-value")
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    line2 = ax2.plot(x_axis_vals, means_t, linestyle="--", label="t-value")
     if x == "frac":
-        over_frac()
-    if x == "devices":
-        over_devices()
+        ax1.set_xlabel("Subspace fraction")
+    elif x == "cont":
+        ax1.set_xlabel("Fraction of outlying observations")
+    elif x == "devices":
+        ax1.set_xlabel("Total number of deviced")
+    ax1.set_ylabel("$p$-value")
+    ax2.set_ylabel("$t$-value")
+    lines = line1 + line2
+    labs = [l.get_label() for l in lines]
+    plt.legend(lines, labs)
+    plt.tight_layout()
+    plt.show()

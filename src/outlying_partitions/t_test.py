@@ -24,8 +24,8 @@ def evaluate_array_t_statistic(arr):
     std = np.std(os_star)
     results = []
     for value in os_star:
-        t_val = t_statistic(value, mean, std, len(os_star))
-        p_val = t.cdf(t_val)
+        t_val = t_statistic(value, mean, std, os_star.shape[-1])
+        p_val = t.sf(t_val, df=os_star.shape[-1])  # survival function
         results.append([t_val, p_val])
     return np.array(results)
 
