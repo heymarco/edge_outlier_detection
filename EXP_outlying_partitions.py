@@ -2,7 +2,7 @@ import argparse
 import gc
 
 from src.utils import setup_machine
-from src.outlying_partitions.evaluation import *
+from src.outlying_partitions.functions import *
 from src.data.synthetic_data import normalize_along_axis
 
 
@@ -44,7 +44,8 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key]
-        contamination = np.sum(gt > 0)/len(gt.flatten())
+        labels = np.any(gt, axis=-1)
+        np.save(os.path.join(os.getcwd(), "results", "numpy", "outlying_partitions", key + "_labels"), labels)
         for c_name, l_name in combinations:
             results = []
             for _ in range(reps):

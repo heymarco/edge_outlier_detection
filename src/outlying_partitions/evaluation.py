@@ -1,87 +1,109 @@
 import os
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.ensemble import IsolationForest
 
-from xstream.python.Chains import Chains
-from src.models import create_model, create_models
-from src.training import train_federated
-from src.utils import color_palette
+from .t_test import t_statistic, evaluate_array_t_statistic
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import seaborn as sns
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 
-def create_ensembles(shape, l_name, contamination=0.01):
-    num_clients = shape[0]
-    c = create_models(num_clients, shape[-1], compression_factor=0.4)
-    l = None
-    if l_name == "lof1":
-        l = [LocalOutlierFactor(n_neighbors=1, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof2":
-        l = [LocalOutlierFactor(n_neighbors=2, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof4":
-        l = [LocalOutlierFactor(n_neighbors=4, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof8":
-        l = [LocalOutlierFactor(n_neighbors=8, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof16":
-        l = [LocalOutlierFactor(n_neighbors=16, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof32":
-        l = [LocalOutlierFactor(n_neighbors=32, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof64":
-        l = [LocalOutlierFactor(n_neighbors=64, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "lof100":
-        l = [LocalOutlierFactor(n_neighbors=100, contamination=contamination, novelty=True) for _ in range(num_clients)]
-    if l_name == "xstream":
-        l = [Chains(k=50, nchains=10, depth=10) for _ in range(num_clients)]
-    if l_name == "ae":
-        l = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
-    if l_name == "if":
-        l = [IsolationForest(contamination=contamination) for _ in range(num_clients)]
-    if not l:
-        raise KeyError("No valid local outlier detector name provided.")
-    return np.array(c), np.array(l)
+def parse_filename(file):
+    components = file.split("_")
+    c_name = components[-2]
+    l_name = components[-1]
+    num_devices = components[0]
+    frac = components[3]
+    return num_devices, frac, c_name, l_name
 
 
-def train_global_detectors(data, collab_detectors, global_epochs):
-    # federated training
-    for _ in range(global_epochs):
-        collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
-                                           frac_available=1.0)
+def load_all_in_dir(directory):
+    all_files = {}
+    all_labels = {}
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".npy"):
+                filepath = os.path.join(directory, file)
+                labels_suffix = "_labels.npy"
+                if file.endswith(labels_suffix):
+                    all_labels[file[:-len(labels_suffix)]] = np.load(filepath)
+                result_file = np.load(filepath)
+                all_files[file] = result_file
+    return all_files, all_labels
 
-    # global scores
-    predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
-    diff = predicted - data
-    global_scores = np.linalg.norm(diff, axis=-1)
-    tf.keras.backend.clear_session()
-    return global_scores
+
+def plot_os_star_hist(from_dir):
+
+    def create_plots(file_dict):
+        def get_os_star(f):
+            return np.mean(f[0], axis=-1)
+
+        def create_hist(os_stars, label):
+            plt.hist(os_stars, label=label, bins=7)
+
+        for i, key in enumerate(file_dict):
+            file = file_dict[key]
+            os_star = get_os_star(file[0])
+            ax = plt.subplot(3, 2, i+1)
+            create_hist(os_star, "$sf=$")
+        plt.show()
+
+    fs = load_all_in_dir(from_dir)
+    create_plots(file_dict=fs)
 
 
-def train_local_detectors(data, local_detectors, global_epochs, l_name):
-    print("Fitting {}".format(l_name))
-    # local training
-    if l_name == "lof" or l_name == "if" or l_name == "xstream":
-        [l.fit(data[i]) for i, l in enumerate(local_detectors)]
-    if l_name == "ae":
-        [l.fit(data[i], data[i],
-               batch_size=32, epochs=global_epochs) for i, l in enumerate(local_detectors)]
+def plot_t_test_over(x, directory):
 
-    # local scores
-    if l_name == "lof":
-        local_scores = - np.array([model.negative_outlier_factor_ for i, model in enumerate(local_detectors)])
-    if l_name == "xstream":
-        local_scores = np.array([-model.score(data[i]) for i, model in enumerate(local_detectors)])
-    if l_name == "if":
-        local_scores = -np.array([model.score_samples(data[i]) for i, model in enumerate(local_detectors)])
-    if l_name == "ae":
-        predicted = np.array([model.predict(data[i]) for i, model in enumerate(local_detectors)])
-        diff = predicted - data
-        dist = np.linalg.norm(diff, axis=-1)
-        local_scores = np.reshape(dist, newshape=(data.shape[0], data.shape[1]))
-    return local_scores
+    file_dict, label_dict = load_all_in_dir(directory)
+
+    def over_frac():
+        fracs = []
+        means_t = []
+        means_p = []
+        for key in file_dict:
+            num_devices, frac, c_name, l_name = parse_filename(key)
+            fracs.append(frac)
+            f = file_dict[key]
+            labels = label_dict[key].astype(np.bool)
+            results = evaluate_array_t_statistic(f)
+            t_values = results.T[0][labels]
+            p_values = results.T[1][labels]
+            means_t.append(np.mean(t_values))
+            means_p.append(np.mean(p_values))
+        plt.plot(fracs, means_p, label="p-value")
+        plt.plot(fracs, means_t, linestyle="--", label="t-value")
+        plt.xlabel("Subspace fraction")
+        plt.ylabel("t, p")
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+    def over_devices():
+        devices = []
+        means_t = []
+        means_p = []
+        for key in file_dict:
+            num_devices, frac, c_name, l_name = parse_filename(key)
+            devices.append(frac)
+            f = file_dict[key]
+            labels = label_dict[key].astype(np.bool)
+            results = evaluate_array_t_statistic(f)
+            t_values = results.T[0][labels]
+            p_values = results.T[1][labels]
+            means_t.append(np.mean(t_values))
+            means_p.append(np.mean(p_values))
+        plt.plot(devices, means_p, label="p-value")
+        plt.plot(devices, means_t, linestyle="--", label="t-value")
+        plt.xlabel("Subspace fraction")
+        plt.ylabel("t, p")
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+    if x == "frac":
+        over_frac()
+    if x == "devices":
+        over_devices()

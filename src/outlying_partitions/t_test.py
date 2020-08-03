@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import t
 import argparse
 
 import matplotlib as mpl
@@ -22,11 +23,10 @@ def evaluate_array_t_statistic(arr):
     mean = np.mean(os_star)
     std = np.std(os_star)
     results = []
-    print(mean)
-    print(std)
     for value in os_star:
         t_val = t_statistic(value, mean, std, len(os_star))
-        results.append(t_val)
-        print(t_val)
+        p_val = t.cdf(t_val)
+        results.append([t_val, p_val])
+    return np.array(results)
 
 

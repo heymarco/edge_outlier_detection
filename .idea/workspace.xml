@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/outlying_partitions/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GEN_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_outlying_partitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_outlying_partitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/outlying_partitions/t_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partitions/t_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,10 +104,11 @@
     </state>
     <state x="245" y="114" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265490972" />
     <state x="184" y="99" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.828@0.23.1440.828" timestamp="1589815780187" />
-    <state x="430" y="234" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1596203941498">
-      <screen x="0" y="23" width="1440" height="822" />
+    <state x="573" y="276" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1596440485613">
+      <screen x="0" y="23" width="1920" height="986" />
     </state>
     <state x="430" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.822@0.23.1440.822" timestamp="1596203941498" />
+    <state x="573" y="276" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1920.986@0.23.1920.986" timestamp="1596440485613" />
     <state x="524" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1596203960901">
       <screen x="0" y="23" width="1440" height="822" />
     </state>
@@ -113,12 +118,13 @@
       <screen x="0" y="23" width="1920" height="989" />
     </state>
     <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265422681" />
-    <state x="492" y="82" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1596203475276">
-      <screen x="0" y="23" width="1440" height="822" />
+    <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1596440513613">
+      <screen x="0" y="23" width="1920" height="986" />
     </state>
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416787958" />
     <state x="492" y="82" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.822@0.23.1440.822" timestamp="1596203475276" />
     <state x="492" y="337" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.826@0.23.1440.826" timestamp="1591108417170" />
+    <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.986@0.23.1920.986" timestamp="1596440513613" />
     <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.989@0.23.1920.989" timestamp="1591128617585" />
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.992@0.23.1920.992" timestamp="1595488621503" />
     <state x="342" y="23" key="CommitChangelistDialog2" timestamp="1591687531992">
