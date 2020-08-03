@@ -15,7 +15,7 @@ parser.add_argument("-sf", type=float, default=0.3)
 parser.add_argument("-device_frac", type=float, default=0.1)
 parser.add_argument("-cont", type=float, default=0.5)
 parser.add_argument("-dims", type=int, default=100)
-parser.add_argument("-dev", type=int, default=10)
+parser.add_argument("-dev", type=int, default=100)
 args = parser.parse_args()
 
 # configuration
