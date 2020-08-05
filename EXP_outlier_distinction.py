@@ -11,23 +11,23 @@ def create_datasets(args):
     files = glob.glob(os.path.join(directory, "*"))
     for f in files: os.remove(f)
     # beta_range = [0.0, 0.001, 0.003, 0.005, 0.01, 0.01, 0.03, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
+    # data_generator = os.path.join(os.getcwd(),
+    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.02, args.data))
+    # os.system("{} {}".format("python", data_generator))
+    # data_generator = os.path.join(os.getcwd(),
+    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.05, args.data))
+    # os.system("{} {}".format("python", data_generator))
+    # data_generator = os.path.join(os.getcwd(),
+    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.1, args.data))
+    # os.system("{} {}".format("python", data_generator))
+    # data_generator = os.path.join(os.getcwd(),
+    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.2, args.data))
+    # os.system("{} {}".format("python", data_generator))
+    # data_generator = os.path.join(os.getcwd(),
+    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.3, args.data))
+    # os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.02, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.05, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.1, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.2, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.3, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.4, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(1.0, args.data))
     os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data

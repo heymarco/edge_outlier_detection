@@ -10,52 +10,53 @@ def create_raw_data(num_devices, n, dims):
 
 def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     num_outliers = int(data.shape[1]*frac_outlying)
-    def to_outlier(p, param):
-        subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
-        o = np.empty(shape=p.shape, dtype=bool)
-        o.fill(False)
-        sign = np.random.choice([-1, 1], subspace_size, replace=True)
-        a = 2.5 * sign
-        b = 3 * sign
-        ab = np.sort(np.vstack((a, b)).T)
-        a, b = ab.T[0], ab.T[1]
-        mean = param[0][subspace]
-        std = param[1][subspace]
-        out = mean + np.random.uniform(a, b, size=p[subspace].shape) * std
-        # out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
-        p[subspace] = out
-        o[subspace] = True
-        return p, o
-
-    mean = np.mean(data, axis=(0, 1))
-    std = np.std(data, axis=(0, 1))
-    mean_param = np.array([mean, std])
-    outliers = np.empty(shape=data.shape, dtype=bool)
-    outliers.fill(False)
-
-    relevant_data = data
-    relevant_outliers = outliers
-    for i, points in enumerate(relevant_data):
-        num_out = int(len(points) * frac_outlying)
-        o_indices = np.random.choice(range(len(points)), num_out, replace=False)
-        for j in o_indices:
-            point, o = to_outlier(points[j], mean_param)
-            points[j] = point
-            relevant_outliers[i][j] = o
-        relevant_data[i] = points
-    data = relevant_data
-    outliers = relevant_outliers
-    # outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    # outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 5
-    # mask = np.zeros(data.shape)
-    # for i in range(len(mask)):
-    #     point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
-    #     for j in point_indices:
-    #         subspace_indices = range(mask.shape[-1])
-    #         subspace = np.random.choice(subspace_indices, subspace_size, replace=False)
-    #         mask[i][j][subspace] = 1
-    # np.putmask(data, mask, outliers)
-    return data, outliers
+    # def to_outlier(p, param):
+    #     subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
+    #     o = np.empty(shape=p.shape, dtype=bool)
+    #     o.fill(False)
+    #     sign = np.random.choice([-1, 1], subspace_size, replace=True)
+    #     a = 2.5 * sign
+    #     b = 3 * sign
+    #     ab = np.sort(np.vstack((a, b)).T)
+    #     a, b = ab.T[0], ab.T[1]
+    #     mean = param[0][subspace]
+    #     std = param[1][subspace]
+    #     out = mean + np.random.uniform(a, b, size=p[subspace].shape) * std
+    #     # out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
+    #     p[subspace] = out
+    #     o[subspace] = True
+    #     return p, o
+    #
+    # mean = np.mean(data, axis=(0, 1))
+    # std = np.std(data, axis=(0, 1))
+    # mean_param = np.array([mean, std])
+    # outliers = np.empty(shape=data.shape, dtype=bool)
+    # outliers.fill(False)
+    #
+    # relevant_data = data
+    # relevant_outliers = outliers
+    # for i, points in enumerate(relevant_data):
+    #     num_out = int(len(points) * frac_outlying)
+    #     o_indices = np.random.choice(range(len(points)), num_out, replace=False)
+    #     for j in o_indices:
+    #         point, o = to_outlier(points[j], mean_param)
+    #         points[j] = point
+    #         relevant_outliers[i][j] = o
+    #     relevant_data[i] = points
+    # data = relevant_data
+    # outliers = relevant_outliers
+    std = np.std(data)
+    outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
+    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 8 * std
+    mask = np.zeros(data.shape)
+    for i in range(len(mask)):
+        point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
+        for j in point_indices:
+            subspace_indices = range(mask.shape[-1])
+            subspace = np.random.choice(subspace_indices, subspace_size, replace=False)
+            mask[i][j][subspace] = 1
+    np.putmask(data, mask, outliers)
+    return data, mask.astype(bool)
 
 
 def add_random_correlation(data):
