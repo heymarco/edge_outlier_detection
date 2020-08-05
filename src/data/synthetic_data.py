@@ -14,7 +14,8 @@ def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 4
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
-        for j in range(num_outliers):
+        point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
+        for j in point_indices:
             subspace_indices = range(mask.shape[-1])
             subspace = np.random.choice(subspace_indices, subspace_size, replace=False)
             mask[i][j][subspace] = 1
@@ -31,15 +32,20 @@ def add_random_correlation(data):
         normal_eq_mean = normal_eq_mean.transpose()
         normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
         data[i] = normal_eq_mean.T
-    plt.scatter(data[0].T[0], data[0].T[1])
-    plt.show()
+    # plt.scatter(data[0].T[0], data[0].T[1])
+    # plt.show()
     return data
 
 
-def test():
-    data = create_raw_data(2, 500, 2)
-    data = add_global_outliers_to_device(data, 2, frac_outlying=0.03)
-    add_random_correlation(data)
+def add_deviation(data, gamma, delta):
+    def create_deviation(size, dev):
+        return zscore(np.random.uniform(low=-1, high=1, size=size)) * dev
+
+    deviation = np.array([create_deviation(data.shape[-1], gamma) for _ in range(data.shape[0])])
+    deviation = np.expand_dims(deviation, axis=1)
+    deviation = np.repeat(deviation, data.shape[1], axis=1)
+    data = data + deviation
+    return data
 
 
 def create_data(num_devices, n, dims, gamma, delta):
@@ -65,57 +71,6 @@ def create_data(num_devices, n, dims, gamma, delta):
     data = data + noise
 
     return data
-
-
-def alter_device_data(data, max_shift, indices=[], subspaces=[]):
-    if len(indices) == 0:
-        indices = range(len(data))
-    relevant_data = data[indices]
-    if len(subspaces) == 0:
-        subspaces = [range(len(data[i][0])) for i in range(len(indices))]
-    else:
-        assert len(subspaces) == len(indices)
-    for i, timeseries in enumerate(relevant_data):
-        subspace = subspaces[i]
-        alpha = 0.2
-        noise = (1.0 - alpha) + alpha * np.random.uniform(size=len(subspace))
-        noise = np.expand_dims(noise, axis=0)
-        noise = np.repeat(noise, len(timeseries), axis=0)
-        relevant_data[i][:, subspace] = timeseries[:, subspace] + noise * max_shift
-    data[indices] = relevant_data
-    return data
-
-
-def add_hidden_outliers(data, indices, subspace_size, frac_outlying=0.05):
-    """
-    Attention when normalizing: Circle shape might get lost! TODO: correct
-    :param data:
-    :param indices:
-    :param subspace_size:
-    :param frac_outlying:
-    :return:
-    """
-
-    def circle(shape, snr=0.05):
-        random_data = np.random.uniform(low=-1, high=1, size=shape)
-        c = random_data / np.linalg.norm(random_data, keepdims=True, axis=-1)
-        noise = np.random.uniform(low=-1, high=1, size=shape) * snr
-        c = c * (1 - 2 * snr)
-        c = c * 0.5
-        c = c + 0.5
-        c = c + noise
-        return c
-
-    c = circle(shape=(len(data), len(data[0]), subspace_size))
-    data[:, :, :subspace_size] = c
-    outliers = np.empty(shape=data.shape, dtype=bool)
-    outliers.fill(False)
-    for i in indices:
-        num_outlying_data = int(len(data[0]) * frac_outlying)
-        outlier_indices = np.random.choice(range(len(data[i])), num_outlying_data, replace=False)
-        data[i][outlier_indices, :subspace_size] = np.random.uniform(low=0.95, high=1.0, size=subspace_size)
-        outliers[i][outlier_indices, :subspace_size] = True
-    return data, outliers
 
 
 def add_local_outliers(data, subspace_size, frac_outlying=0.03):
@@ -155,7 +110,7 @@ def add_local_outliers(data, subspace_size, frac_outlying=0.03):
         o_indices = np.random.choice(range(len(points)), num_out, replace=False)
 
         for j in o_indices:
-            point, o = to_outlier(points[j], range(len(data))[i])
+            point, o = to_outlier(points[j], i)
             # point, o = to_outlier(points[j], param, sign_point)
             points[j] = point
             data[i][j] = point
