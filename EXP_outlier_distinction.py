@@ -12,22 +12,22 @@ def create_datasets(args):
     for f in files: os.remove(f)
     # beta_range = [0.0, 0.001, 0.003, 0.005, 0.01, 0.01, 0.03, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.02, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.02, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.05, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.05, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.1, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.1, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.2, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.2, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.3, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.3, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.4, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.4, args.data))
     os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
@@ -59,19 +59,7 @@ if __name__ == '__main__':
     reps = args.reps
 
     # load, trim, normalize data
-    data = {}
-    ground_truth = {}
-    directory = os.path.join(os.getcwd(), "data", dirname)
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith("d.npy") or file.endswith("o.npy"):
-                f = np.load(os.path.join(directory, file))
-                if file.endswith("d.npy"):
-                    f = normalize_along_axis(f, axis=(0, 1))
-                    data[file[:-6]] = f
-                if file.endswith("o.npy"):
-                    ground_truth[file[:-6]] = f
-    print("Finished data loading")
+    data, ground_truth = create_datasets(args)
 
     # create ensembles
     combinations = [("ae", "ae"),
