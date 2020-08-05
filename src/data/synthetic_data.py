@@ -76,9 +76,10 @@ def add_random_correlation(data):
 
 def add_deviation(data, gamma, delta):
     def create_deviation(size, dev):
-        random_deviation = np.random.normal(size=size)
-        random_deviation = random_deviation / np.linalg.norm(random_deviation)
-        return random_deviation * dev
+        # random_deviation = np.random.normal(size=size)
+        # random_deviation = random_deviation / np.linalg.norm(random_deviation)
+        deviation = np.random.uniform(low=-1, high=1, size=size)
+        return deviation * dev
 
     deviation = np.array([create_deviation(data.shape[-1], gamma) for _ in range(data.shape[0])])
     deviation = np.expand_dims(deviation, axis=1)

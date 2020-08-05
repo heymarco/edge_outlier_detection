@@ -102,7 +102,7 @@ def plot_t_test_over(x, directory):
     elif x == "cont":
         ax1.set_xlabel("Fraction of outlying observations")
     elif x == "devices":
-        ax1.set_xlabel("Total number of deviced")
+        ax1.set_xlabel("Total number of devices")
     ax1.set_ylabel("$p$-value")
     ax2.set_ylabel("$t$-value")
     lines = line1 + line2
