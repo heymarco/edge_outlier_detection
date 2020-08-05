@@ -62,13 +62,13 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.1):
 
 
 def evaluate_results(from_dir):
-    def load_all_in_dir(dir):
+    def load_all_in_dir(directory):
         all_files = {}
-        for root, dirs, files in os.walk(dir):
+        for root, dirs, files in os.walk(directory):
             for file in files:
                 if file.endswith(".npy"):
-                    filepath = os.path.join(from_dir, file)
-                    result_file = np.load(filepath)
+                    filepath = os.path.join(directory, file)
+                    result_file = np.load(filepath, allow_pickle=True)
                     all_files[file] = result_file
         return all_files
 
@@ -113,72 +113,74 @@ def evaluate_results(from_dir):
             r_comb1_arr = []
             p_comb2_arr = []
             r_comb2_arr = []
-            for rep in result:
-                os_c = rep[0]
-                os_l = rep[1]
-                labels = rep[2].astype(int).flatten()
-                os_c = os_c.flatten()
-                os_l = os_l.flatten()
-                p_c1, r_c1, _ = precision_recall_curve(labels, os_c, pos_label=1)
-                p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
-                p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
-                p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
-                p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
-                p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
-                p_c1_arr.append(p_c1)
-                p_l1_arr.append(p_l1)
-                p_c2_arr.append(p_c2)
-                p_l2_arr.append(p_l2)
-                r_c1_arr.append(r_c1)
-                r_l1_arr.append(r_l1)
-                r_c2_arr.append(r_c2)
-                r_l2_arr.append(r_l2)
-                p_comb1_arr.append(p_comb1)
-                p_comb2_arr.append(p_comb2)
-                r_comb1_arr.append(r_comb1)
-                r_comb2_arr.append(r_comb2)
+            # for rep in result:
+            rep = result[0]
+            os_c = rep[0]
+            os_l = rep[1]
+            labels = rep[2].astype(int).flatten()
+            os_c = os_c.flatten()
+            os_l = os_l.flatten()
+            p_c1, r_c1, _ = precision_recall_curve(labels, os_c, pos_label=1)
+            p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
+            p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
+            p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
+            p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
+            p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
+            p_c1_arr.append(p_c1)
+            p_l1_arr.append(p_l1)
+            p_c2_arr.append(p_c2)
+            p_l2_arr.append(p_l2)
+            r_c1_arr.append(r_c1)
+            r_l1_arr.append(r_l1)
+            r_c2_arr.append(r_c2)
+            r_l2_arr.append(r_l2)
+            p_comb1_arr.append(p_comb1)
+            p_comb2_arr.append(p_comb2)
+            r_comb1_arr.append(r_comb1)
+            r_comb2_arr.append(r_comb2)
 
-            shortest_length = np.min([len(item) for item in p_c1_arr])
-            for r in range(len(p_c1_arr)):
-                diff_lengths = len(p_c1_arr[r]) - shortest_length
-                excluded_indices = np.random.choice(range(len(p_c1_arr[r])), diff_lengths, replace=False)
-                p_c1_arr[r] = np.delete(p_c1_arr[r], excluded_indices)
-                r_c1_arr[r] = np.delete(r_c1_arr[r], excluded_indices)
-
-            shortest_length = np.min([len(item) for item in p_c2_arr])
-            for r in range(len(p_c2_arr)):
-                diff_lengths = len(p_c2_arr[r]) - shortest_length
-                excluded_indices = np.random.choice(range(len(p_c2_arr[r])), diff_lengths, replace=False)
-                p_c2_arr[r] = np.delete(p_c2_arr[r], excluded_indices)
-                r_c2_arr[r] = np.delete(r_c2_arr[r], excluded_indices)
-
-            shortest_length = np.min([len(item) for item in p_l1_arr])
-            for r in range(len(p_l1_arr)):
-                diff_lengths = len(p_l1_arr[r]) - shortest_length
-                excluded_indices = np.random.choice(range(len(p_l1_arr[r])), diff_lengths, replace=False)
-                p_l1_arr[r] = np.delete(p_l1_arr[r], excluded_indices)
-                r_l1_arr[r] = np.delete(r_l1_arr[r], excluded_indices)
-
-            shortest_length = np.min([len(item) for item in p_l2_arr])
-            for r in range(len(p_l2_arr)):
-                diff_lengths = len(p_l2_arr[r]) - shortest_length
-                excluded_indices = np.random.choice(range(len(p_l2_arr[r])), diff_lengths, replace=False)
-                p_l2_arr[r] = np.delete(p_l2_arr[r], excluded_indices)
-                r_l2_arr[r] = np.delete(r_l2_arr[r], excluded_indices)
-
-            shortest_length = np.min([len(item) for item in p_comb1_arr])
-            for r in range(len(p_comb1_arr)):
-                diff_lengths = len(p_comb1_arr[r]) - shortest_length
-                excluded_indices = np.random.choice(range(len(p_comb1_arr[r])), diff_lengths, replace=False)
-                p_comb1_arr[r] = np.delete(p_comb1_arr[r], excluded_indices)
-                r_comb1_arr[r] = np.delete(r_comb1_arr[r], excluded_indices)
-
-            shortest_length = np.min([len(item) for item in p_comb2_arr])
-            for r in range(len(p_comb2_arr)):
-                diff_lengths = len(p_comb2_arr[r]) - shortest_length
-                excluded_indices = np.random.choice(range(len(p_comb2_arr[r])), diff_lengths, replace=False)
-                p_comb2_arr[r] = np.delete(p_comb2_arr[r], excluded_indices)
-                r_comb2_arr[r] = np.delete(r_comb2_arr[r], excluded_indices)
+            # shortest_length = np.min([len(item) for item in p_c1_arr])
+            # for r in range(len(p_c1_arr)):
+            #     diff_lengths = len(p_c1_arr[r]) - shortest_length
+            #     excluded_indices = np.random.choice(range(len(p_c1_arr[r])), diff_lengths, replace=False)
+            #     p_c1_arr[r] = np.delete(p_c1_arr[r], excluded_indices)
+            #     r_c1_arr[r] = np.delete(r_c1_arr[r], excluded_indices)
+            #
+            # shortest_length = np.min([len(item) for item in p_c2_arr])
+            # for r in range(len(p_c2_arr)):
+            #     diff_lengths = len(p_c2_arr[r]) - shortest_length
+            #     excluded_indices = np.random.choice(range(len(p_c2_arr[r])), diff_lengths, replace=False)
+            #     p_c2_arr[r] = np.delete(p_c2_arr[r], excluded_indices)
+            #     r_c2_arr[r] = np.delete(r_c2_arr[r], excluded_indices)
+            #
+            # shortest_length = np.min([len(item) for item in p_l1_arr])
+            # for r in range(len(p_l1_arr)):
+            #     diff_lengths = len(p_l1_arr[r]) - shortest_length
+            #     excluded_indices = np.random.choice(range(len(p_l1_arr[r])), diff_lengths, replace=False)
+            #     p_l1_arr[r] = np.delete(p_l1_arr[r], excluded_indices)
+            #     r_l1_arr[r] = np.delete(r_l1_arr[r], excluded_indices)
+            #
+            # shortest_length = np.min([len(item) for item in p_l2_arr])
+            # for r in range(len(p_l2_arr)):
+            #     diff_lengths = len(p_l2_arr[r]) - shortest_length
+            #     excluded_indices = np.random.choice(range(len(p_l2_arr[r])), diff_lengths, replace=False)
+            #     p_l2_arr[r] = np.delete(p_l2_arr[r], excluded_indices)
+            #     r_l2_arr[r] = np.delete(r_l2_arr[r], excluded_indices)
+            #
+            # shortest_length = np.min([len(item) for item in p_comb1_arr])
+            # print(shortest_length)
+            # for r in range(len(p_comb1_arr)):
+            #     diff_lengths = len(p_comb1_arr[r]) - shortest_length
+            #     excluded_indices = np.random.choice(range(len(p_comb1_arr[r])), diff_lengths, replace=False)
+            #     p_comb1_arr[r] = np.delete(p_comb1_arr[r], excluded_indices)
+            #     r_comb1_arr[r] = np.delete(r_comb1_arr[r], excluded_indices)
+            #
+            # shortest_length = np.min([len(item) for item in p_comb2_arr])
+            # for r in range(len(p_comb2_arr)):
+            #     diff_lengths = len(p_comb2_arr[r]) - shortest_length
+            #     excluded_indices = np.random.choice(range(len(p_comb2_arr[r])), diff_lengths, replace=False)
+            #     p_comb2_arr[r] = np.delete(p_comb2_arr[r], excluded_indices)
+            #     r_comb2_arr[r] = np.delete(r_comb2_arr[r], excluded_indices)
 
             res1 = (np.mean(p_c1_arr, axis=0), np.mean(r_c1_arr, axis=0))
             res2 = (np.mean(p_c2_arr, axis=0), np.mean(r_c2_arr, axis=0))
@@ -186,6 +188,8 @@ def evaluate_results(from_dir):
             res4 = (np.mean(p_l2_arr, axis=0), np.mean(r_l2_arr, axis=0))
             res5 = (np.mean(p_comb1_arr, axis=0), np.mean(r_comb1_arr, axis=0))
             res6 = (np.mean(p_comb2_arr, axis=0), np.mean(r_comb2_arr, axis=0))
+
+            print(res5)
 
             return res1, res2, res3, res4, res5, res6
 

@@ -94,4 +94,5 @@ if __name__ == '__main__':
                 result = [global_scores, local_scores, gt]
                 results.append(result)
             fname = "{}_{}_{}".format(key, c_name, l_name)
+            results = np.array(results, dtype=float)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), results)
