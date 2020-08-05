@@ -68,7 +68,7 @@ def evaluate_results(from_dir):
             for file in files:
                 if file.endswith(".npy"):
                     filepath = os.path.join(directory, file)
-                    result_file = np.load(filepath, allow_pickle=True)
+                    result_file = np.load(filepath)
                     all_files[file] = result_file
         return all_files
 

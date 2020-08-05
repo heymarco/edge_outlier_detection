@@ -2,7 +2,7 @@ import os
 import argparse
 
 import numpy as np
-from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers
+from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers, add_deviation
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -37,6 +37,7 @@ raw_data = create_raw_data(num_devices, num_data, dims)
 data, labels_global = add_global_outliers(raw_data, subspace_size, frac_outlying=args.frac_global)
 data = add_random_correlation(data)
 data, labels_local = add_local_outliers(raw_data, subspace_size, args.frac_local)
+data = add_deviation(data, gamma, delta)
 
 # create labels
 labels = labels_local.astype(np.int32)
