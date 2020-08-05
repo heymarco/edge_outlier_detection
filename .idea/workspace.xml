@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/EXP_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_outlying_partitions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EXP_vary_beta.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_outlier_distinction.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_outlier_distinction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GEN_mixed_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_mixed_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/synthetic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,9 +39,9 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/outlying_partitions" />
       <recent name="$PROJECT_DIR$/src/data" />
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/local_outliers" />
       <recent name="$PROJECT_DIR$/data" />
     </key>
@@ -145,8 +150,8 @@
     </state>
     <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
     <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state x="507" y="315" key="com.intellij.ide.util.TipDialog" timestamp="1595837719340">
-      <screen x="0" y="23" width="1920" height="982" />
+    <state x="380" y="268" key="com.intellij.ide.util.TipDialog" timestamp="1596474521879">
+      <screen x="0" y="23" width="1440" height="825" />
     </state>
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.986@0.23.1920.986" timestamp="1591170896778" />
@@ -154,6 +159,7 @@
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595262946947" />
     <state x="-1060" y="931" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.991@-1440.670.1440.877" timestamp="1594201577734" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1588660507567" />
+    <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.825@0.23.1440.825" timestamp="1596474521879" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.826@0.23.1440.826" timestamp="1591085958510" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1594216543779" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.828@0.23.1440.828" timestamp="1595581118164" />

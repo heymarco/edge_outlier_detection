@@ -1,8 +1,11 @@
+import argparse
+import gc
 import os
 import glob
-import argparse
-from src.local_and_global.functions import *
+
+from src.utils import setup_machine
 from src.data.synthetic_data import normalize_along_axis
+from src.local_and_global.functions import *
 from src.training import train_ensembles
 
 
@@ -12,22 +15,37 @@ def create_datasets(args):
     for f in files: os.remove(f)
     # beta_range = [0.0, 0.001, 0.003, 0.005, 0.01, 0.01, 0.03, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.02, args.data))
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.0, 0.01, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.05, args.data))
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.001, 0.009, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.1, args.data))
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.002, 0.008, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.2, args.data))
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.003, 0.007, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.3, args.data))
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.004, 0.006, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {}, -dir {}".format(0.4, args.data))
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.005, 0.005, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.006, 0.004, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.007, 0.003, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.008, 0.002, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.009, 0.001, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.01, 0.0, args.data))
     os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
@@ -49,7 +67,7 @@ def create_datasets(args):
 if __name__ == '__main__':
     # create data parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-data", type=str)
+    parser.add_argument("-data", type=str, default="vary_beta")
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
 
@@ -58,20 +76,10 @@ if __name__ == '__main__':
     dirname = args.data
     reps = args.reps
 
-    # load, trim, normalize data
-    data = {}
-    ground_truth = {}
-    directory = os.path.join(os.getcwd(), "data", dirname)
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith("d.npy") or file.endswith("o.npy"):
-                f = np.load(os.path.join(directory, file))
-                if file.endswith("d.npy"):
-                    f = normalize_along_axis(f, axis=(0, 1))
-                    data[file[:-6]] = f
-                if file.endswith("o.npy"):
-                    ground_truth[file[:-6]] = f
-    print("Finished data loading")
+    # select GPU
+    setup_machine(cuda_device=args.gpu)
+
+    data, ground_truth = create_datasets(args)
 
     # create ensembles
     combinations = [("ae", "ae"),
@@ -94,4 +102,8 @@ if __name__ == '__main__':
                 result = [global_scores, local_scores, gt]
                 results.append(result)
             fname = "{}_{}_{}".format(key, c_name, l_name)
-            np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), results)
+            np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", fname), results)
+        # remove unneeded data
+        data[key] = None
+        ground_truth[key] = None
+        gc.collect()
