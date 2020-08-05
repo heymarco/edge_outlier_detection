@@ -29,7 +29,7 @@ def create_datasets(args):
     #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.3, args.data))
     # os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {}".format(1.0, args.data))
+                                  "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 10))
     os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
