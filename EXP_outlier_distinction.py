@@ -77,6 +77,7 @@ if __name__ == '__main__':
     # run ensembles on each data set
     for key in data.keys():
         d = data[key]
+        print(ground_truth.shape)
         gt = ground_truth[key].flatten()
         contamination = np.sum(gt > 0)/len(gt)
         for c_name, l_name in combinations:
