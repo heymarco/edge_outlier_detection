@@ -2,6 +2,7 @@ import os
 from sklearn.metrics import precision_recall_curve, auc
 
 import numpy as np
+from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers, add_deviation
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -75,7 +76,6 @@ def evaluate_results(from_dir):
     def plot_roc(precision, recall, label, hline_y):
         roc_auc = auc(recall, precision)
         plt.plot(recall, precision, label='$PR_{auc} = %0.2f)$' % roc_auc)
-        # plt.plot(recall, precision, label=label)
         plt.xlim((0, 1))
         # plt.ylim((0, 1))
         plt.xlabel('Recall')
@@ -113,74 +113,73 @@ def evaluate_results(from_dir):
             r_comb1_arr = []
             p_comb2_arr = []
             r_comb2_arr = []
-            # for rep in result:
-            rep = result[0]
-            os_c = rep[0]
-            os_l = rep[1]
-            labels = rep[2].astype(int).flatten()
-            os_c = os_c.flatten()
-            os_l = os_l.flatten()
-            p_c1, r_c1, _ = precision_recall_curve(labels, os_c, pos_label=1)
-            p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
-            p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
-            p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
-            p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
-            p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
-            p_c1_arr.append(p_c1)
-            p_l1_arr.append(p_l1)
-            p_c2_arr.append(p_c2)
-            p_l2_arr.append(p_l2)
-            r_c1_arr.append(r_c1)
-            r_l1_arr.append(r_l1)
-            r_c2_arr.append(r_c2)
-            r_l2_arr.append(r_l2)
-            p_comb1_arr.append(p_comb1)
-            p_comb2_arr.append(p_comb2)
-            r_comb1_arr.append(r_comb1)
-            r_comb2_arr.append(r_comb2)
+            for rep in result:
+                rep = result[0]
+                os_c = rep[0]
+                os_l = rep[1]
+                labels = rep[2].astype(int).flatten()
+                os_c = os_c.flatten()
+                os_l = os_l.flatten()
+                p_c1, r_c1, _ = precision_recall_curve(labels, os_c, pos_label=1)
+                p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
+                p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
+                p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
+                p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
+                p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
+                p_c1_arr.append(p_c1)
+                p_l1_arr.append(p_l1)
+                p_c2_arr.append(p_c2)
+                p_l2_arr.append(p_l2)
+                r_c1_arr.append(r_c1)
+                r_l1_arr.append(r_l1)
+                r_c2_arr.append(r_c2)
+                r_l2_arr.append(r_l2)
+                p_comb1_arr.append(p_comb1)
+                p_comb2_arr.append(p_comb2)
+                r_comb1_arr.append(r_comb1)
+                r_comb2_arr.append(r_comb2)
 
-            # shortest_length = np.min([len(item) for item in p_c1_arr])
-            # for r in range(len(p_c1_arr)):
-            #     diff_lengths = len(p_c1_arr[r]) - shortest_length
-            #     excluded_indices = np.random.choice(range(len(p_c1_arr[r])), diff_lengths, replace=False)
-            #     p_c1_arr[r] = np.delete(p_c1_arr[r], excluded_indices)
-            #     r_c1_arr[r] = np.delete(r_c1_arr[r], excluded_indices)
-            #
-            # shortest_length = np.min([len(item) for item in p_c2_arr])
-            # for r in range(len(p_c2_arr)):
-            #     diff_lengths = len(p_c2_arr[r]) - shortest_length
-            #     excluded_indices = np.random.choice(range(len(p_c2_arr[r])), diff_lengths, replace=False)
-            #     p_c2_arr[r] = np.delete(p_c2_arr[r], excluded_indices)
-            #     r_c2_arr[r] = np.delete(r_c2_arr[r], excluded_indices)
-            #
-            # shortest_length = np.min([len(item) for item in p_l1_arr])
-            # for r in range(len(p_l1_arr)):
-            #     diff_lengths = len(p_l1_arr[r]) - shortest_length
-            #     excluded_indices = np.random.choice(range(len(p_l1_arr[r])), diff_lengths, replace=False)
-            #     p_l1_arr[r] = np.delete(p_l1_arr[r], excluded_indices)
-            #     r_l1_arr[r] = np.delete(r_l1_arr[r], excluded_indices)
-            #
-            # shortest_length = np.min([len(item) for item in p_l2_arr])
-            # for r in range(len(p_l2_arr)):
-            #     diff_lengths = len(p_l2_arr[r]) - shortest_length
-            #     excluded_indices = np.random.choice(range(len(p_l2_arr[r])), diff_lengths, replace=False)
-            #     p_l2_arr[r] = np.delete(p_l2_arr[r], excluded_indices)
-            #     r_l2_arr[r] = np.delete(r_l2_arr[r], excluded_indices)
-            #
-            # shortest_length = np.min([len(item) for item in p_comb1_arr])
-            # print(shortest_length)
-            # for r in range(len(p_comb1_arr)):
-            #     diff_lengths = len(p_comb1_arr[r]) - shortest_length
-            #     excluded_indices = np.random.choice(range(len(p_comb1_arr[r])), diff_lengths, replace=False)
-            #     p_comb1_arr[r] = np.delete(p_comb1_arr[r], excluded_indices)
-            #     r_comb1_arr[r] = np.delete(r_comb1_arr[r], excluded_indices)
-            #
-            # shortest_length = np.min([len(item) for item in p_comb2_arr])
-            # for r in range(len(p_comb2_arr)):
-            #     diff_lengths = len(p_comb2_arr[r]) - shortest_length
-            #     excluded_indices = np.random.choice(range(len(p_comb2_arr[r])), diff_lengths, replace=False)
-            #     p_comb2_arr[r] = np.delete(p_comb2_arr[r], excluded_indices)
-            #     r_comb2_arr[r] = np.delete(r_comb2_arr[r], excluded_indices)
+            shortest_length = np.min([len(item) for item in p_c1_arr])
+            for r in range(len(p_c1_arr)):
+                diff_lengths = len(p_c1_arr[r]) - shortest_length
+                excluded_indices = np.random.choice(range(len(p_c1_arr[r])), diff_lengths, replace=False)
+                p_c1_arr[r] = np.delete(p_c1_arr[r], excluded_indices)
+                r_c1_arr[r] = np.delete(r_c1_arr[r], excluded_indices)
+
+            shortest_length = np.min([len(item) for item in p_c2_arr])
+            for r in range(len(p_c2_arr)):
+                diff_lengths = len(p_c2_arr[r]) - shortest_length
+                excluded_indices = np.random.choice(range(len(p_c2_arr[r])), diff_lengths, replace=False)
+                p_c2_arr[r] = np.delete(p_c2_arr[r], excluded_indices)
+                r_c2_arr[r] = np.delete(r_c2_arr[r], excluded_indices)
+
+            shortest_length = np.min([len(item) for item in p_l1_arr])
+            for r in range(len(p_l1_arr)):
+                diff_lengths = len(p_l1_arr[r]) - shortest_length
+                excluded_indices = np.random.choice(range(len(p_l1_arr[r])), diff_lengths, replace=False)
+                p_l1_arr[r] = np.delete(p_l1_arr[r], excluded_indices)
+                r_l1_arr[r] = np.delete(r_l1_arr[r], excluded_indices)
+
+            shortest_length = np.min([len(item) for item in p_l2_arr])
+            for r in range(len(p_l2_arr)):
+                diff_lengths = len(p_l2_arr[r]) - shortest_length
+                excluded_indices = np.random.choice(range(len(p_l2_arr[r])), diff_lengths, replace=False)
+                p_l2_arr[r] = np.delete(p_l2_arr[r], excluded_indices)
+                r_l2_arr[r] = np.delete(r_l2_arr[r], excluded_indices)
+
+            shortest_length = np.min([len(item) for item in p_comb1_arr])
+            for r in range(len(p_comb1_arr)):
+                diff_lengths = len(p_comb1_arr[r]) - shortest_length
+                excluded_indices = np.random.choice(range(len(p_comb1_arr[r])), diff_lengths, replace=False)
+                p_comb1_arr[r] = np.delete(p_comb1_arr[r], excluded_indices)
+                r_comb1_arr[r] = np.delete(r_comb1_arr[r], excluded_indices)
+
+            shortest_length = np.min([len(item) for item in p_comb2_arr])
+            for r in range(len(p_comb2_arr)):
+                diff_lengths = len(p_comb2_arr[r]) - shortest_length
+                excluded_indices = np.random.choice(range(len(p_comb2_arr[r])), diff_lengths, replace=False)
+                p_comb2_arr[r] = np.delete(p_comb2_arr[r], excluded_indices)
+                r_comb2_arr[r] = np.delete(r_comb2_arr[r], excluded_indices)
 
             res1 = (np.mean(p_c1_arr, axis=0), np.mean(r_c1_arr, axis=0))
             res2 = (np.mean(p_c2_arr, axis=0), np.mean(r_c2_arr, axis=0))
@@ -188,8 +187,6 @@ def evaluate_results(from_dir):
             res4 = (np.mean(p_l2_arr, axis=0), np.mean(r_l2_arr, axis=0))
             res5 = (np.mean(p_comb1_arr, axis=0), np.mean(r_comb1_arr, axis=0))
             res6 = (np.mean(p_comb2_arr, axis=0), np.mean(r_comb2_arr, axis=0))
-
-            print(res5)
 
             return res1, res2, res3, res4, res5, res6
 
@@ -269,4 +266,77 @@ def evaluate_results(from_dir):
     files = load_all_in_dir(from_dir)
     create_subplots(files)
     # plt.tight_layout()
+    plt.show()
+
+
+def plot_outlier_scores(file_dir):
+    file = np.load(file_dir)
+    osc = file[0][0].flatten()
+    osl = file[0][1].flatten()
+    labels = file[0][2].flatten()
+    indices = np.arange(len(osc))
+    plt.subplot(121)
+    plt.scatter(indices[labels == 0], osc[labels == 0], alpha=0.05, label="inlier")
+    plt.scatter(indices[labels == 1], osc[labels == 1], label="local outlier")
+    plt.scatter(indices[labels == 2], osc[labels == 2], label="global outlier")
+    plt.title("$os_c$")
+    plt.subplot(122)
+    plt.scatter(indices[labels == 0], osl[labels == 0], alpha=0.05, label="inlier")
+    plt.scatter(indices[labels == 1], osl[labels == 1], label="local outlier")
+    plt.scatter(indices[labels == 2], osl[labels == 2], label="global outlier")
+    plt.title("$os_l$")
+    plt.legend()
+    plt.show()
+
+
+def plot_2d_dataset():
+    sns.set_palette(sns.color_palette("binary", 3))
+    def remove_ticks(ax):
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_xticklabels([""])
+        ax.set_yticklabels([""])
+
+    data = create_raw_data(3, 50, 2)
+    ax = plt.subplot(151)
+    plt.title("Normal data")
+    remove_ticks(ax)
+    for d in data:
+        plt.scatter(d.T[0], d.T[1], marker=".")
+
+    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.05)
+    labels_global = np.any(labels_global, axis=-1)
+    ax = plt.subplot(152)
+    plt.title("Add global outliers")
+    remove_ticks(ax)
+    for i, d in enumerate(data):
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+
+    data = add_random_correlation(data)
+    ax = plt.subplot(153)
+    plt.title("Add correlation")
+    remove_ticks(ax)
+    for i, d in enumerate(data):
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+
+    data = add_deviation(data, 1, 0.3)
+    ax = plt.subplot(154)
+    plt.title("Add deviation")
+    remove_ticks(ax)
+    for i, d in enumerate(data):
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+
+    data, labels_local = add_local_outliers(data, 2, 0.05)
+    labels_local = np.any(labels_local, axis=-1)
+    is_inlier = np.invert(np.logical_or(labels_local, labels_global))
+    ax = plt.subplot(155)
+    plt.title("Add local outliers")
+    remove_ticks(ax)
+    for i, d in enumerate(data):
+        plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".")
+        plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], color="red", marker="x", zorder=3)
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
     plt.show()

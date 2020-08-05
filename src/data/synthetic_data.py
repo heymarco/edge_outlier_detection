@@ -11,7 +11,7 @@ def create_raw_data(num_devices, n, dims):
 def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     num_outliers = int(data.shape[1]*frac_outlying)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 4
+    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 5
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
         point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
@@ -32,6 +32,7 @@ def add_random_correlation(data):
         normal_eq_mean = normal_eq_mean.transpose()
         normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
         data[i] = normal_eq_mean.T
+        print(np.corrcoef(normal_eq_mean))
     # plt.scatter(data[0].T[0], data[0].T[1])
     # plt.show()
     return data
@@ -45,6 +46,7 @@ def add_deviation(data, gamma, delta):
     deviation = np.expand_dims(deviation, axis=1)
     deviation = np.repeat(deviation, data.shape[1], axis=1)
     data = data + deviation
+    print(data)
     return data
 
 

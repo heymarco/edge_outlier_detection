@@ -56,7 +56,7 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
             predicted = np.array([model.predict(fdata[i]) for i, model in enumerate(local_detectors)])
         diff = predicted - fdata
         dist = np.linalg.norm(diff, axis=-1)
-        local_scores = dist.flatten()  # np.reshape(dist, newshape=(oldshape[0], oldshape[1]))
+        local_scores = dist.flatten()
 
     return global_scores, local_scores
 
