@@ -297,25 +297,24 @@ def plot_2d_dataset():
         ax.set_xticklabels([""])
         ax.set_yticklabels([""])
 
-    data = create_raw_data(3, 50, 2)
+    data = create_raw_data(3, 100, 2)
     ax = plt.subplot(151)
     plt.title("Normal data")
     remove_ticks(ax)
     for d in data:
         plt.scatter(d.T[0], d.T[1], marker=".")
 
-    data, labels_global = add_global_outliers(data, 1, frac_outlying=0.05)
-    labels_global = np.any(labels_global, axis=-1)
+    data = add_deviation(data, 2, 0)
     ax = plt.subplot(152)
-    plt.title("Add global outliers")
+    plt.title("Add deviation")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+        plt.scatter(d.T[0], d.T[1], marker=".")
 
-    data = add_deviation(data, 3, 0)
+    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.05)
+    labels_global = np.any(labels_global, axis=-1)
     ax = plt.subplot(153)
-    plt.title("Add deviation")
+    plt.title("Add global outliers")
     remove_ticks(ax)
     for i, d in enumerate(data):
         plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")

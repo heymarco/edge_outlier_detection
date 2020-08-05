@@ -1,6 +1,5 @@
 import numpy as np
-from scipy.stats import zscore
-from sklearn.datasets import make_spd_matrix
+from scipy.stats import zscore, random_correlation
 import matplotlib.pyplot as plt
 
 
@@ -47,7 +46,7 @@ def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     # outliers = relevant_outliers
     std = np.std(data)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 8 * std
+    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * 3 * std
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
         point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
@@ -61,32 +60,32 @@ def add_global_outliers(data, subspace_size, frac_outlying=0.03):
 
 def add_random_correlation(data):
     dims = data.shape[-1]
-    random_cov_matrix = make_spd_matrix(dims)
-    cholesky_transform = np.linalg.cholesky(random_cov_matrix)
+    evs = np.random.uniform(0.01, 1, size=dims)
+    evs = evs / np.sum(evs) * dims
+    random_corr_matrix = random_correlation.rvs(evs)
+    cholesky_transform = np.linalg.cholesky(random_corr_matrix)
     for i in range(data.shape[0]):
         normal_eq_mean = cholesky_transform.dot(data[i].T)  # Generating random MVN (0, cov_matrix)
         normal_eq_mean = normal_eq_mean.transpose()
         normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
         data[i] = normal_eq_mean.T
-        print(np.corrcoef(normal_eq_mean))
     # plt.scatter(data[0].T[0], data[0].T[1])
     # plt.show()
     return data
 
 
 def add_deviation(data, gamma, delta):
+    old_data = data
     def create_deviation(size, dev):
-        std = np.std(data.reshape(data.shape[0]*data.shape[1], data.shape[-1]), axis=0)
-        # random_deviation = np.random.normal(size=size)
-        # random_deviation = random_deviation / np.linalg.norm(random_deviation)
+        std = np.std(old_data.reshape(old_data.shape[0]*old_data.shape[1], old_data.shape[-1]), axis=0)
         deviation = np.random.uniform(low=-1, high=1, size=size)
         deviation = zscore(deviation)
         return deviation * dev * std
 
-    deviation = np.array([create_deviation(data.shape[-1], gamma) for _ in range(data.shape[0])])
-    deviation = np.expand_dims(deviation, axis=1)
-    deviation = np.repeat(deviation, data.shape[1], axis=1)
-    data = data + deviation
+    for i in range(len(data)):
+        deviation = create_deviation(data.shape[-1], gamma)
+        data[i] = data[i] + deviation
+
     return data
 
 
