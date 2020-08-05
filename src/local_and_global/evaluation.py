@@ -313,7 +313,7 @@ def plot_2d_dataset():
         plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
 
-    data = add_deviation(data, 1.2, 0.3)
+    data = add_deviation(data, 3, 0)
     ax = plt.subplot(153)
     plt.title("Add deviation")
     remove_ticks(ax)
@@ -339,4 +339,5 @@ def plot_2d_dataset():
         plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".")
         plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], color="red", marker="x", zorder=3)
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+
     plt.show()
