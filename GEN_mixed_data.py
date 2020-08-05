@@ -35,7 +35,7 @@ subspace_size = int(subspace_frac * dims)
 
 raw_data = create_raw_data(num_devices, num_data, dims)
 data, labels_global = add_global_outliers(raw_data, subspace_size, frac_outlying=args.frac_global)
-data = add_random_correlation(data)
+# data = add_random_correlation(data)
 data, labels_local = add_local_outliers(raw_data, subspace_size, args.frac_local)
 
 # create labels
