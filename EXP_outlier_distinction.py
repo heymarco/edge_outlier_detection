@@ -1,6 +1,8 @@
 import os
 import glob
 import argparse
+
+from src.utils import setup_machine
 from src.local_and_global.functions import *
 from src.data.synthetic_data import normalize_along_axis
 from src.training import train_ensembles
@@ -61,6 +63,9 @@ if __name__ == '__main__':
     # load, trim, normalize data
     data, ground_truth = create_datasets(args)
 
+    # select GPU
+    setup_machine(cuda_device=args.gpu)
+
     # create ensembles
     combinations = [("ae", "ae"),
                     # ("ae", "lof8"),
@@ -72,13 +77,16 @@ if __name__ == '__main__':
     # run ensembles on each data set
     for key in data.keys():
         d = data[key]
-        gt = ground_truth[key]
-        contamination = np.sum(gt > 0)/len(gt.flatten())
+        gt = ground_truth[key].flatten()
+        contamination = np.sum(gt > 0)/len(gt)
         for c_name, l_name in combinations:
             results = []
             for i in range(reps):
                 ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
+                print(gt.shape)
+                print(global_scores.shape)
+                print(local_scores.shape)
                 result = [global_scores, local_scores, gt]
                 results.append(result)
             fname = "{}_{}_{}".format(key, c_name, l_name)
