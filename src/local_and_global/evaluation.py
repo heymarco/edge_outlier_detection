@@ -304,7 +304,7 @@ def plot_2d_dataset():
     for d in data:
         plt.scatter(d.T[0], d.T[1], marker=".")
 
-    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.05)
+    data, labels_global = add_global_outliers(data, 1, frac_outlying=0.05)
     labels_global = np.any(labels_global, axis=-1)
     ax = plt.subplot(152)
     plt.title("Add global outliers")
@@ -313,17 +313,17 @@ def plot_2d_dataset():
         plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
 
-    data = add_random_correlation(data)
+    data = add_deviation(data, 1.2, 0.3)
     ax = plt.subplot(153)
-    plt.title("Add correlation")
+    plt.title("Add deviation")
     remove_ticks(ax)
     for i, d in enumerate(data):
         plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
 
-    data = add_deviation(data, 1, 0.3)
+    data = add_random_correlation(data)
     ax = plt.subplot(154)
-    plt.title("Add deviation")
+    plt.title("Add correlation")
     remove_ticks(ax)
     for i, d in enumerate(data):
         plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
