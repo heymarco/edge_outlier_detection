@@ -29,7 +29,7 @@ subspace_frac = args.sf
 frac_outlying_devices = 1.0
 
 # create local outliers
-gamma = 1.2
+gamma = 1
 delta = 0.3
 
 subspace_size = int(subspace_frac * dims)
