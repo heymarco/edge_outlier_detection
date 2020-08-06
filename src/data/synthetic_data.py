@@ -11,7 +11,7 @@ def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     num_outliers = int(data.shape[1]*frac_outlying)
     std = np.std(data)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    diff = data[:, :, :subspace_size] - np.mean(data[:, :, :subspace_size], axis=(0, 1))
+    diff = data[:, :, :subspace_size] - np.median(data[:, :, :subspace_size], axis=(0, 1))
     mean_dist = np.linalg.norm(diff, axis=-1)
     mean_dist = np.mean(mean_dist)
     dist = np.random.uniform(3, 6, size=(data.shape[0], num_outliers, subspace_size))
@@ -45,10 +45,11 @@ def add_random_correlation(data):
 
 def add_deviation(data, gamma, delta):
     old_data = np.copy(data)
+    diff = old_data - np.median(old_data, axis=(0, 1))
     mean_dist = np.mean(np.linalg.norm(diff, axis=-1))
+
     def create_deviation(size, dev):
-        diff = old_data - np.mean(old_data, axis=(0, 1))
-        std = np.std(old_data.reshape(old_data.shape[0]*old_data.shape[1], old_data.shape[-1]), axis=0)
+        # std = np.std(old_data.reshape(old_data.shape[0]*old_data.shape[1], old_data.shape[-1]), axis=0)
         deviation = np.random.uniform(low=-1, high=1, size=size)
         deviation = zscore(deviation)
         return deviation * dev * mean_dist

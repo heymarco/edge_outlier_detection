@@ -12,7 +12,7 @@ mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 
-def prc_ranks(os_c, os_l, labels, pos_label, beta=0.1):
+def prc_ranks(os_c, os_l, labels, pos_label, beta=0.01):
     os_c = os_c.flatten()
     os_l = os_l.flatten()
     labels = labels.flatten()
@@ -290,54 +290,76 @@ def plot_outlier_scores(file_dir):
     plt.show()
 
 
-def plot_2d_dataset():
-    sns.set_palette(sns.color_palette("binary", 3))
+def plot_2d_dataset(dev):
+    palette = sns.color_palette()
+    alpha = 0.3
     def remove_ticks(ax):
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_xticklabels([""])
         ax.set_yticklabels([""])
 
-    data = create_raw_data(3, 100, 2)
+    data = create_raw_data(2, 50, 2)
     ax = plt.subplot(151)
-    plt.title("Normal data")
-    remove_ticks(ax)
-    for d in data:
-        plt.scatter(d.T[0], d.T[1], marker=".")
-
-    data = add_deviation(data, 2, 0)
-    ax = plt.subplot(152)
-    plt.title("Add deviation")
+    plt.title("$(1)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d.T[0], d.T[1], marker=".")
+        plt.scatter(d.T[0], d.T[1], marker=".", color=palette[i], alpha=1.0)
 
-    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.05)
+    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.02)
     labels_global = np.any(labels_global, axis=-1)
+    ax = plt.subplot(152)
+    plt.title("$(2)$")
+    remove_ticks(ax)
+    for i, d in enumerate(data):
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".", color=palette[i], alpha=alpha)
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color=palette[i], marker="x", zorder=2)
+
+    data = add_deviation(data, dev, 0)
     ax = plt.subplot(153)
-    plt.title("Add global outliers")
+    plt.title("$(3)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".", color=palette[i], alpha=alpha)
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i])
 
-    data = add_random_correlation(data)
+    data = add_2d_correlation(data)
     ax = plt.subplot(154)
-    plt.title("Add correlation")
+    plt.title("$(4)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".")
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".", color=palette[i], alpha=alpha)
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i])
 
-    data, labels_local = add_local_outliers(data, 2, 0.05)
+    data, labels_local = add_local_outliers(data, 2, 0.02)
     labels_local = np.any(labels_local, axis=-1)
     is_inlier = np.invert(np.logical_or(labels_local, labels_global))
     ax = plt.subplot(155)
-    plt.title("Add local outliers")
+    plt.title("$(5)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".")
-        plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], color="red", marker="x", zorder=3)
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color="blue", marker="1", zorder=2)
+        plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".", label="$db_{}$".format(i+1), color=palette[i], alpha=alpha)
+        plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3, label="$o^L_{}$".format(i+1), color=palette[i])
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, label="$o^C_{}$".format(i+1), color=palette[i])
 
+    handles, labels = ax.get_legend_handles_labels()
+    print(handles)
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
     plt.show()
+
+
+def add_2d_correlation(data):
+    dims = data.shape[-1]
+    evs = np.random.uniform(0.01, 1, size=dims)
+    evs = evs / np.sum(evs) * dims
+    random_corr_matrix = np.array([[1, 0.8],
+                                   [0.8, 1]])
+    cholesky_transform = np.linalg.cholesky(random_corr_matrix)
+    for i in range(data.shape[0]):
+        normal_eq_mean = cholesky_transform.dot(data[i].T)  # Generating random MVN (0, cov_matrix)
+        normal_eq_mean = normal_eq_mean.transpose()
+        normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
+        data[i] = normal_eq_mean.T
+    # plt.scatter(data[0].T[0], data[0].T[1])
+    # plt.show()
+    return data
