@@ -78,6 +78,7 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key].flatten()
+        print(gt.shape)
         contamination = np.sum(gt > 0)/len(gt)
         for c_name, l_name in combinations:
             results = []

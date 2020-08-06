@@ -274,6 +274,7 @@ def plot_outlier_scores(file_dir):
     osc = file[0][0].flatten()
     osl = file[0][1].flatten()
     labels = file[0][2].flatten()
+    print(labels.shape)
     indices = np.arange(len(osc))
     plt.subplot(121)
     plt.scatter(indices[labels == 0], osc[labels == 0], alpha=0.05, label="inlier")
