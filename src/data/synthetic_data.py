@@ -14,7 +14,7 @@ def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     diff = data[:, :, :subspace_size] - np.median(data[:, :, :subspace_size], axis=(0, 1))
     mean_dist = np.linalg.norm(diff, axis=-1)
     mean_dist = np.mean(mean_dist)
-    dist = np.random.uniform(3, 6, size=(data.shape[0], num_outliers, subspace_size))
+    dist = np.random.uniform(3, 5, size=(data.shape[0], num_outliers, subspace_size))
     outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_dist * std
     mask = np.zeros(data.shape)
     for i in range(len(mask)):

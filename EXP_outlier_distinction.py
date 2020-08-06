@@ -31,6 +31,12 @@ def create_datasets(args):
     data_generator = os.path.join(os.getcwd(),
                                   "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 10))
     os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 100))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 1000))
+    os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
     data = {}
