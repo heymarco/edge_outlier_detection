@@ -9,45 +9,13 @@ def create_raw_data(num_devices, n, dims):
 
 def add_global_outliers(data, subspace_size, frac_outlying=0.03):
     num_outliers = int(data.shape[1]*frac_outlying)
-    # def to_outlier(p, param):
-    #     subspace = np.random.choice(np.arange(len(p)), subspace_size, replace=False)
-    #     o = np.empty(shape=p.shape, dtype=bool)
-    #     o.fill(False)
-    #     sign = np.random.choice([-1, 1], subspace_size, replace=True)
-    #     a = 2.5 * sign
-    #     b = 3 * sign
-    #     ab = np.sort(np.vstack((a, b)).T)
-    #     a, b = ab.T[0], ab.T[1]
-    #     mean = param[0][subspace]
-    #     std = param[1][subspace]
-    #     out = mean + np.random.uniform(a, b, size=p[subspace].shape) * std
-    #     # out = truncnorm.rvs(a=a, b=b, loc=param[0][subspace], scale=param[1][subspace], size=p[subspace].shape)
-    #     p[subspace] = out
-    #     o[subspace] = True
-    #     return p, o
-    #
-    # mean = np.mean(data, axis=(0, 1))
-    # std = np.std(data, axis=(0, 1))
-    # mean_param = np.array([mean, std])
-    # outliers = np.empty(shape=data.shape, dtype=bool)
-    # outliers.fill(False)
-    #
-    # relevant_data = data
-    # relevant_outliers = outliers
-    # for i, points in enumerate(relevant_data):
-    #     num_out = int(len(points) * frac_outlying)
-    #     o_indices = np.random.choice(range(len(points)), num_out, replace=False)
-    #     for j in o_indices:
-    #         point, o = to_outlier(points[j], mean_param)
-    #         points[j] = point
-    #         relevant_outliers[i][j] = o
-    #     relevant_data[i] = points
-    # data = relevant_data
-    # outliers = relevant_outliers
     std = np.std(data)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    dist = np.random.uniform(5, 10, size=(data.shape[0], num_outliers, subspace_size))
-    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * std
+    diff = data[:, :, :subspace_size] - np.mean(data[:, :, :subspace_size], axis=(0, 1))
+    mean_dist = np.linalg.norm(diff, axis=-1)
+    mean_dist = np.mean(mean_dist)
+    dist = np.random.uniform(3, 6, size=(data.shape[0], num_outliers, subspace_size))
+    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_dist * std
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
         point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
@@ -76,15 +44,18 @@ def add_random_correlation(data):
 
 
 def add_deviation(data, gamma, delta):
-    old_data = data
+    old_data = np.copy(data)
+    mean_dist = np.mean(np.linalg.norm(diff, axis=-1))
     def create_deviation(size, dev):
+        diff = old_data - np.mean(old_data, axis=(0, 1))
         std = np.std(old_data.reshape(old_data.shape[0]*old_data.shape[1], old_data.shape[-1]), axis=0)
         deviation = np.random.uniform(low=-1, high=1, size=size)
         deviation = zscore(deviation)
-        return deviation * dev * std
+        return deviation * dev * mean_dist
 
     for i in range(len(data)):
-        deviation = create_deviation(data.shape[-1], gamma)
+        dev = np.sqrt(gamma**2 / data.shape[-1]) / 2
+        deviation = create_deviation(data.shape[-1], dev)
         data[i] = data[i] + deviation
 
     return data
