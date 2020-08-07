@@ -4,18 +4,19 @@ import matplotlib.pyplot as plt
 
 
 def create_raw_data(num_devices, n, dims):
-    return np.random.normal(size=(num_devices, n, dims))
+    mean = np.zeros(dims)
+    cov = np.identity(dims)
+    mat = np.random.multivariate_normal(mean, cov, size=(num_devices, n))
+    mat = mat
+    return mat
 
 
-def add_global_outliers(data, subspace_size, frac_outlying=0.03):
+def add_global_outliers(data, subspace_size, frac_outlying=0.03, gamma=5):
     num_outliers = int(data.shape[1]*frac_outlying)
-    std = np.std(data)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    diff = data[:, :, :subspace_size] - np.median(data[:, :, :subspace_size], axis=(0, 1))
-    mean_dist = np.linalg.norm(diff, axis=-1)
-    mean_dist = np.mean(mean_dist)
-    dist = np.random.uniform(3, 5, size=(data.shape[0], num_outliers, subspace_size))
-    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_dist * std
+    mean_norm = np.linalg.norm(np.ones(data.shape[-1]))  # we have data which is normally distributed
+    dist = np.random.uniform(gamma, gamma+1, size=(data.shape[0], num_outliers, subspace_size))
+    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_norm
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
         point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
@@ -44,19 +45,15 @@ def add_random_correlation(data):
 
 
 def add_deviation(data, gamma, delta):
-    old_data = np.copy(data)
-    diff = old_data - np.median(old_data, axis=(0, 1))
-    mean_dist = np.mean(np.linalg.norm(diff, axis=-1))
 
     def create_deviation(size, dev):
-        # std = np.std(old_data.reshape(old_data.shape[0]*old_data.shape[1], old_data.shape[-1]), axis=0)
-        deviation = np.random.uniform(low=-1, high=1, size=size)
-        deviation = zscore(deviation)
-        return deviation * dev * mean_dist
+        deviation = zscore(np.random.uniform(low=-1, high=1, size=size))
+        sign = np.random.choice([-1, 1], size=size)
+        deviation = deviation * sign
+        return deviation * dev
 
     for i in range(len(data)):
-        dev = np.sqrt(gamma**2 / data.shape[-1]) / 2
-        deviation = create_deviation(data.shape[-1], dev)
+        deviation = create_deviation(data.shape[-1], gamma)
         data[i] = data[i] + deviation
 
     return data

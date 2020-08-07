@@ -1,5 +1,6 @@
 import os
 import glob
+import gc
 import argparse
 
 from src.utils import setup_machine
@@ -12,30 +13,20 @@ def create_datasets(args):
     directory = os.path.join(os.getcwd(), "data", args.data)
     files = glob.glob(os.path.join(directory, "*"))
     for f in files: os.remove(f)
-    # beta_range = [0.0, 0.001, 0.003, 0.005, 0.01, 0.01, 0.03, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
-    # data_generator = os.path.join(os.getcwd(),
-    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.02, args.data))
-    # os.system("{} {}".format("python", data_generator))
-    # data_generator = os.path.join(os.getcwd(),
-    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.05, args.data))
-    # os.system("{} {}".format("python", data_generator))
-    # data_generator = os.path.join(os.getcwd(),
-    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.1, args.data))
-    # os.system("{} {}".format("python", data_generator))
-    # data_generator = os.path.join(os.getcwd(),
-    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.2, args.data))
-    # os.system("{} {}".format("python", data_generator))
-    # data_generator = os.path.join(os.getcwd(),
-    #                               "GEN_mixed_data.py -sf {} -dir {}".format(0.3, args.data))
-    # os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 10))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.02, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 100))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.05, args.data))
     os.system("{} {}".format("python", data_generator))
     data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -sf {} -dir {} -dims {}".format(1.0, args.data, 1000))
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.1, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.2, args.data))
+    os.system("{} {}".format("python", data_generator))
+    data_generator = os.path.join(os.getcwd(),
+                                  "GEN_mixed_data.py -sf {} -dir {}".format(0.3, args.data))
     os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
@@ -84,7 +75,6 @@ if __name__ == '__main__':
     for key in data.keys():
         d = data[key]
         gt = ground_truth[key].flatten()
-        print(gt.shape)
         contamination = np.sum(gt > 0)/len(gt)
         for c_name, l_name in combinations:
             results = []
@@ -96,3 +86,6 @@ if __name__ == '__main__':
             fname = "{}_{}_{}".format(key, c_name, l_name)
             results = np.array(results).astype(float)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "local_and_global", fname), results)
+        data[key] = None
+        ground_truth[key] = None
+        gc.collect()
