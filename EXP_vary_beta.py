@@ -15,7 +15,7 @@ def create_datasets(args):
     files = glob.glob(os.path.join(directory, "*"))
     for f in files:
         os.remove(f)
-    contaminations = [0.001, 0.005, 0.01, 0.05, 0.1]
+    contaminations = [0.002, 0.005, 0.01, 0.05, 0.1]
     for cont in contaminations:
         cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
         data_generator = os.path.join(os.getcwd(), cmd_string)
