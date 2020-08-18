@@ -59,8 +59,8 @@ params_str = "{}_{}_{}_{}_{}_{}_{}_{}_{}_mixed".format(num_devices,
                                                        frac_outlying_devices,
                                                        args.frac_local,
                                                        args.frac_global,
-                                                       gamma,
-                                                       delta)
+                                                       sigma_l,
+                                                       sigma_g)
 dataname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_o")
 np.save(dataname, data)
