@@ -1,52 +1,24 @@
 import argparse
 import gc
-import os
 import glob
+import os
 
-from src.utils import setup_machine
 from src.data.synthetic_data import normalize_along_axis
 from src.local_and_global.functions import *
 from src.training import train_ensembles
+from src.utils import setup_machine
 
 
 def create_datasets(args):
     directory = os.path.join(os.getcwd(), "data", args.data)
     files = glob.glob(os.path.join(directory, "*"))
-    for f in files: os.remove(f)
-    # beta_range = [0.0, 0.001, 0.003, 0.005, 0.01, 0.01, 0.03, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.0, 0.01, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.001, 0.009, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.002, 0.008, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.003, 0.007, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.004, 0.006, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.005, 0.005, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.006, 0.004, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.007, 0.003, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.008, 0.002, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.009, 0.001, args.data))
-    os.system("{} {}".format("python", data_generator))
-    data_generator = os.path.join(os.getcwd(),
-                                  "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(0.01, 0.0, args.data))
-    os.system("{} {}".format("python", data_generator))
+    for f in files:
+        os.remove(f)
+    contaminations = [0.001, 0.005, 0.01, 0.05, 0.1]
+    for cont in contaminations:
+        cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
+        data_generator = os.path.join(os.getcwd(), cmd_string)
+        os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
     data = {}
@@ -101,9 +73,10 @@ if __name__ == '__main__':
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
                 result = [global_scores, local_scores, gt]
                 results.append(result)
+                del ensembles
+                gc.collect()
             fname = "{}_{}_{}".format(key, c_name, l_name)
             np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", fname), results)
         # remove unneeded data
         data[key] = None
         ground_truth[key] = None
-        gc.collect()

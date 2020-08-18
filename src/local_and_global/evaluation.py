@@ -80,7 +80,7 @@ def evaluate_results(from_dir):
         # plt.ylim((0, 1))
         plt.xlabel('Recall')
         plt.ylabel('Precision')
-        plt.axhline(hline_y, color='navy', linestyle='--')
+        # plt.axhline(hline_y, color='navy', linestyle='--')
 
     def create_subplots(results):
         sns.set_palette(sns.color_palette("PuBuGn_d"))
@@ -98,7 +98,8 @@ def evaluate_results(from_dir):
                 x = np.linspace(0.01, 1)
                 y = f_score * x / (2 * x - f_score)
                 l, = plt.plot(x[y >= 0], y[y >= 0], color='gray', alpha=0.2)
-                plt.annotate('$f_1={0:0.1f}$'.format(f_score), xy=(0.8, y[45] + 0.02), fontsize=6)
+                # plt.annotate('$f_1={0:0.1f}$'.format(f_score), xy=(x[45] + 0.02, 0.2), fontsize=6)
+            return l
 
         def average_result(result):
             p_c1_arr = []
@@ -207,11 +208,11 @@ def evaluate_results(from_dir):
 
             if i == 0:
                 plt.ylim((0, 1))
-                add_f1_iso_curve()
+                f1_legend = add_f1_iso_curve()
 
             ax2 = plt.subplot(2, 3, 4, sharey=ax1, sharex=ax1)
             plot_roc(res_2[0], res_2[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, -0.2), loc="upper center", frameon=False, ncol=2)
+            plt.legend(bbox_to_anchor=(0.5, -0.25), loc="upper center", frameon=False, ncol=2)
             plt.title('$C$ identifies GO')
 
             if i == 0:
@@ -232,7 +233,7 @@ def evaluate_results(from_dir):
             ax4 = plt.subplot(2, 3, 5, sharey=ax1, sharex=ax1)
             ax4.get_yaxis().set_visible(False)
             plot_roc(res_4[0], res_4[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, -0.2), loc="upper center", frameon=False, ncol=2)
+            plt.legend(bbox_to_anchor=(0.5, -0.25), loc="upper center", frameon=False, ncol=2)
             plt.title('$L$ identifies GO')
 
             if i == 0:
@@ -253,7 +254,7 @@ def evaluate_results(from_dir):
             ax6 = plt.subplot(2, 3, 6, sharey=ax1, sharex=ax1)
             ax6.get_yaxis().set_visible(False)
             plot_roc(res_6[0], res_6[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, -0.2), loc="upper center", frameon=False, ncol=2)
+            plt.legend(bbox_to_anchor=(0.5, -0.25), loc="upper center", frameon=False, ncol=2)
             plt.title('$L + C$ identify GO')
 
             if i == 0:
@@ -261,6 +262,8 @@ def evaluate_results(from_dir):
                 add_f1_iso_curve()
 
         handles, labels = ax1.get_legend_handles_labels()
+        handles.append(f1_legend)
+        mainlegend_labels.append("$f_1 = [0.2, 0.4, 0.6, 0.8]$")
         plt.figlegend(handles, mainlegend_labels, loc='lower center', frameon=False, ncol=len(handles))
 
     files = load_all_in_dir(from_dir)
@@ -343,7 +346,6 @@ def plot_2d_dataset(dev):
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, label="$o^C_{}$".format(i+1), color=palette[i])
 
     handles, labels = ax.get_legend_handles_labels()
-    print(handles)
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
     plt.show()
 
