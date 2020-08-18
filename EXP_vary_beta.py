@@ -44,15 +44,13 @@ if __name__ == '__main__':
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
 
-    # load all files in dir
+    logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
 
     # select GPU
     setup_machine(cuda_device=args.gpu)
-
-    data, ground_truth = create_datasets(args)
 
     # create ensembles
     combinations = [("ae", "ae"),
@@ -62,22 +60,25 @@ if __name__ == '__main__':
     ]
     logging.info("Executing combinations {}".format(combinations))
 
-    # run ensembles on each data set
-    for key in data.keys():
-        d = data[key]
-        gt = ground_truth[key]
-        contamination = np.sum(gt > 0)/len(gt.flatten())
+    results = {}
+    for i in range(reps):
+        logging.info("Rep {}".format(i))
+        data, ground_truth = create_datasets(args)
         for c_name, l_name in combinations:
-            results = []
-            for i in range(reps):
+            for key in data.keys():
+                d = data[key]
+                gt = ground_truth[key].flatten()
+                contamination = np.sum(gt > 0) / len(gt)
                 ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
                 result = [global_scores, local_scores, gt]
-                results.append(result)
                 del ensembles
                 gc.collect()
-            fname = "{}_{}_{}".format(key, c_name, l_name)
-            np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", fname), results)
-        # remove unneeded data
-        data[key] = None
-        ground_truth[key] = None
+                fname = "{}_{}_{}".format(key, c_name, l_name)
+                if i == 0:
+                    results[fname] = [result]
+                else:
+                    results[fname].append(result)
+
+    for key in results:
+        np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", key), results[key])

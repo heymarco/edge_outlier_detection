@@ -1,5 +1,6 @@
-import os
 import argparse
+import os
+import logging
 
 import numpy as np
 
@@ -73,4 +74,4 @@ if subspace_frac == 1:
         plt.scatter(d.T[0][labels[i].T[0] == 2], d.T[1][labels[i].T[1] == 2], color="grey")
     plt.show()
 
-print("Num outliers = {}".format((np.sum(np.amax(labels, axis=-1) > 0))))
+logging.info("Num outliers = {}".format((np.sum(np.amax(labels, axis=-1) > 0))))
