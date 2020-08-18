@@ -29,14 +29,14 @@ subspace_frac = args.sf
 frac_outlying_devices = 1.0
 
 # create local outliers
-gamma = 3
-delta = 0.3
+sigma_g = 3
+sigma_l = 3
 
 subspace_size = int(subspace_frac * dims)
 
 data = create_raw_data(num_devices, num_data, dims)
-data, labels_global = add_global_outliers(data, subspace_size, frac_outlying=args.frac_global, gamma=gamma)
-data = add_deviation(data, gamma, delta)
+data, labels_global = add_global_outliers(data, subspace_size, frac_outlying=args.frac_global, sigma=sigma_g)
+data = add_deviation(data, sigma_l)
 data, labels_local = add_local_outliers(data, subspace_size, args.frac_local)
 data = add_random_correlation(data)
 

@@ -10,11 +10,11 @@ def create_raw_data(num_devices, n, dims):
     return mat
 
 
-def add_global_outliers(data, subspace_size, frac_outlying=0.03, gamma=5):
+def add_global_outliers(data, subspace_size, frac_outlying=0.03, sigma=5):
     num_outliers = int(data.shape[1]*frac_outlying)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
     mean_norm = np.linalg.norm(np.ones(data.shape[-1]))  # we have data which is normally distributed
-    dist = np.random.uniform(gamma, gamma+1, size=(data.shape[0], num_outliers, subspace_size))
+    dist = np.random.uniform(sigma, sigma+1, size=(data.shape[0], num_outliers, subspace_size))
     outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_norm
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
