@@ -1,6 +1,7 @@
 import argparse
 import gc
 import glob
+import logging
 import os
 
 from src.data.synthetic_data import normalize_along_axis
@@ -32,7 +33,7 @@ def create_datasets(args):
                     data[file[:-6]] = f
                 if file.endswith("o.npy"):
                     ground_truth[file[:-6]] = f
-    print("Finished data loading")
+    logging.info("Finished data loading")
     return data, ground_truth
 
 
@@ -59,7 +60,7 @@ if __name__ == '__main__':
                     # ("ae", "if"),
                     # ("ae", "xstream")
     ]
-    print("Executing combinations {}".format(combinations))
+    logging.info("Executing combinations {}".format(combinations))
 
     # run ensembles on each data set
     for key in data.keys():
