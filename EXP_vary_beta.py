@@ -49,7 +49,7 @@ def create_datasets(args):
 if __name__ == '__main__':
     # create data parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-data", type=str, default="vary_beta")
+    parser.add_argument("-data", type=str)
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
     parser.add_argument("-vary", type=str)
@@ -91,4 +91,4 @@ if __name__ == '__main__':
                     results[fname].append(result)
 
     for key in results:
-        np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", key), np.array(results[key]).astype(float))
+        np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]).astype(float))
