@@ -13,6 +13,7 @@ from src.utils import load_all_in_dir, parse_filename
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
+sns.set_palette("husl")
 
 
 def get_rank_distance(os_c, os_l, labels, beta):
@@ -124,9 +125,31 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
 
 def evaluate_vary_beta(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55]
+    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
 
-    fig, axs = plt.subplots(4, 2, sharex="all", sharey="all")
+    fig, axs = plt.subplots(4, 2)
+    pad = 5
+    rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
+    for ax, row in zip(axs[:, 0], rows):
+        ax.set_ylabel("AUPR")
+        ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
+                    xycoords=ax.yaxis.label, textcoords='offset points',
+                    size='large', ha='right', va='center', rotation=90)
+    for ax in axs[-1, :]:
+        ax.set_xlabel(r"$\beta$")
+    axs[0, 0].set_title("Local")
+    axs[0, 1].set_title("Global")
+    for ax in axs[:-1, 1:].flatten():
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+    for ax in axs[:-1, 0]:
+        ax.set_xticklabels([])
+    for ax in axs[-1, 1:]:
+        ax.set_yticklabels([])
+    for ax in axs.flatten():
+        ax.axvline(0.005, ls="solid", color="gray")
+        ax.axvline(0.025, ls="dotted", color="gray")
+        ax.axvline(0.05, ls="dashed", color="gray")
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
@@ -181,26 +204,8 @@ def evaluate_vary_beta(from_dir):
         axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
                          label="$c_g={}, c_l={}$".format(params["frac_local"], params["frac_global"]))
 
-    pad = 5
-    rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
-    for ax, row in zip(axs[:, 0], rows):
-        ax.set_ylabel("AUPR")
-        ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
-                    xycoords=ax.yaxis.label, textcoords='offset points',
-                    size='large', ha='right', va='center', rotation=90)
-    for ax in axs[-1, :]:
-        ax.set_xlabel(r"$\beta$")
-    axs[0, 0].set_title("Local")
-    axs[0, 1].set_title("Global")
-    for ax in axs[1:, :-1].flatten():
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
-    for ax in axs[:-1, 0]:
-        ax.set_xticklabels([])
-    for ax in axs[-1, 1:]:
-        ax.set_yticklabels([])
     handles, labels = axs[0, -1].get_legend_handles_labels()
-    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
     plt.show()
 
 

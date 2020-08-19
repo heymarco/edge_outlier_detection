@@ -15,11 +15,20 @@ def create_datasets(args):
     files = glob.glob(os.path.join(directory, "*"))
     for f in files:
         os.remove(f)
-    contaminations = [0.002, 0.005, 0.01, 0.05, 0.1]
-    for cont in contaminations:
-        cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
-        data_generator = os.path.join(os.getcwd(), cmd_string)
-        os.system("{} {}".format("python", data_generator))
+    if args.vary == "cont":
+        contaminations = [0.002, 0.005, 0.01, 0.05, 0.1]
+        for cont in contaminations:
+            cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
+            data_generator = os.path.join(os.getcwd(), cmd_string)
+            os.system("{} {}".format("python", data_generator))
+    if args.vary == "ratio":
+        frac_local = [0.01]
+        [frac_local.append(frac_local[-1] + 0.005) for _ in range(8)]
+        for fl in frac_local:
+            cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05-fl,
+                                                                                           args.data)
+            data_generator = os.path.join(os.getcwd(), cmd_string)
+            os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
     data = {}
@@ -43,6 +52,7 @@ if __name__ == '__main__':
     parser.add_argument("-data", type=str, default="vary_beta")
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
+    parser.add_argument("-vary", type=str)
 
     logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
