@@ -1,23 +1,24 @@
-import os
 from sklearn.metrics import precision_recall_curve, auc
 
 import numpy as np
-from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers, add_deviation
+from src.data.synthetic_data import create_raw_data, add_global_outliers, add_local_outliers, add_deviation
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import seaborn as sns
+
+from src.utils import load_all_in_dir, parse_filename
+
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 
-def prc_ranks(os_c, os_l, labels, pos_label, beta=0.01):
+def get_rank_distance(os_c, os_l, labels, beta):
     os_c = os_c.flatten()
     os_l = os_l.flatten()
     labels = labels.flatten()
-    recalls = []
-    precisions = []
 
     # argsort osl
     # argsort osc
@@ -33,13 +34,76 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.01):
 
     # diff = a - b
     diff = sorted_indices_si_osl - sorted_indices_si_osc
-    #
 
-    beta_abs = beta*len(labels)
+    beta_abs = beta * len(labels)
 
     dist = diff - beta_abs
+    return dist
 
-    # if beta_abs = 0 --> local outlier
+
+def prc_ranks(os_c, os_l, labels, pos_label, beta=0.01, dist=None):
+    if dist is None:
+        dist = get_rank_distance(os_c, os_l, labels, beta)
+    precisions = []
+    recalls = []
+
+    val_range = np.argsort(os_l)
+    sorted_labels = labels[val_range]
+    val_range = np.array([i for i in range(len(val_range)) if sorted_labels[i] > 0])
+    val_range = val_range / len(labels)
+
+    is_pos_label = labels == pos_label
+
+    for p in val_range:
+        l_thresh = np.quantile(os_l, p)
+        classification = np.zeros(labels.shape)
+        classification[os_l > l_thresh] = 1
+        classification[np.logical_and(os_l > l_thresh, dist <= 0)] = 2
+        true_positives = np.logical_and(classification == labels, is_pos_label)
+        precision = np.sum(true_positives) / np.sum(classification == pos_label)
+        recall = np.sum(true_positives) / np.sum(is_pos_label)
+        if not np.isnan(recall) and not np.isnan(precision):
+            recalls.append(recall)
+            precisions.append(precision)
+    recalls.append(1.0)
+    precisions.append(np.sum(labels > 0)/len(labels))
+    return sorted(precisions, reverse=True), sorted(recalls)
+
+
+def roc_ranks(os_c, os_l, labels, pos_label, beta=0.01, dist=None):
+    if dist is None:
+        dist = get_rank_distance(os_c, os_l, labels, beta)
+    tprs = []
+    fprs = []
+
+    val_range = np.argsort(os_l)
+    sorted_labels = labels[val_range]
+    val_range = np.array([i for i in range(len(val_range)) if sorted_labels[i] > 0])
+    val_range = val_range / len(labels)
+
+    is_pos_label = labels == pos_label
+
+    for p in val_range:
+        l_thresh = np.quantile(os_l, p)
+        classification = np.zeros(labels.shape)
+        classification[os_l > l_thresh] = 1
+        classification[np.logical_and(os_l > l_thresh, dist <= 0)] = 2
+        true_positives = np.logical_and(classification == labels, is_pos_label)
+        false_positives = np.logical_and(classification == pos_label, labels != pos_label)
+        tpr = np.sum(true_positives) / np.sum(is_pos_label)
+        fpr = np.sum(false_positives) / np.sum(labels != pos_label)
+        if not np.isnan(tpr) and not np.isnan(fpr):
+            tprs.append(tpr)
+            fprs.append(fpr)
+    # fprs.append(0.0)
+    # tprs.append(np.sum(labels > 0)/len(labels))
+    return sorted(tprs, reverse=True), sorted(fprs)
+
+
+def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
+    if dist is None:
+        dist = get_rank_distance(os_c, os_l, labels, beta)
+    kappas = []
 
     val_range = np.argsort(os_l)
     sorted_labels = labels[val_range]
@@ -51,27 +115,86 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.01):
         classification = np.zeros(labels.shape)
         classification[os_l > l_thresh] = 1
         classification[np.logical_and(os_l > l_thresh, dist <= 0)] = 2
-        true_positives = np.logical_and(classification == labels, labels == pos_label)
-        precision = np.sum(true_positives) / np.sum(classification == pos_label)
-        recall = np.sum(true_positives) / np.sum(labels == pos_label)
-        if not np.isnan(recall) and not np.isnan(precision):
-            recalls.append(recall)
-            precisions.append(precision)
-    recalls.append(1.0)
-    precisions.append(np.sum(labels > 0)/len(labels))
-    return sorted(precisions, reverse=True), sorted(recalls)
+        accuracy = np.sum(classification == labels) / len(labels)
+        majority_chance = np.sum(labels == 0) / len(labels)
+        kappa_m = (accuracy - majority_chance) / (1 - majority_chance)
+        kappas.append(kappa_m)
+    return kappas
+
+
+def evaluate_vary_beta(from_dir):
+    files = load_all_in_dir(from_dir)
+    beta_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55]
+
+    fig, axs = plt.subplots(4, 2, sharex="all", sharey="all")
+    markers = Line2D.filled_markers
+
+    def get_row(l_name):
+        if l_name.startswith("ae"): return 0
+        if l_name.startswith("lof"): return 1
+        if l_name.startswith("if"): return 2
+        if l_name.startswith("xstream"): return 3
+
+    for i, file in enumerate(files):
+        params = parse_filename(file)
+        row = get_row(params["l_name"])
+        result = files[file]
+        final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+        final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+        for j, res in enumerate(result):
+            if j > 0: break
+            os_c = res[0]
+            os_l = res[1]
+            labels = res[2].astype(int).flatten()
+            os_c = os_c.flatten()
+            os_l = os_l.flatten()
+            results_au_pr_1 = []
+            results_au_pr_2 = []
+            for beta in beta_range:
+                distance = get_rank_distance(os_c, os_l, labels, beta)
+                prec1, rec1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta, dist=distance)
+                prec2, rec2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta, dist=distance)
+
+                au_pr_1 = auc(rec1, prec1)
+                au_pr_2 = auc(rec2, prec2)
+
+                results_au_pr_1.append(au_pr_1)
+                results_au_pr_2.append(au_pr_2)
+
+            final_pr1[j] = results_au_pr_1
+            final_pr2[j] = results_au_pr_2
+
+        final_pr1 = np.mean(final_pr1, axis=0)
+        final_pr2 = np.mean(final_pr2, axis=0)
+
+        axs[row, 0].plot(beta_range, final_pr1, marker=markers[i])
+        axs[row, 1].plot(beta_range, final_pr2, marker=markers[i],
+                    label="$c_g={}, c_l={}$".format(params["frac_local"], params["frac_global"]))
+
+    pad = 5
+    rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
+    for ax, row in zip(axs[:, 0], rows):
+        ax.set_ylabel("AUPR")
+        ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
+                    xycoords=ax.yaxis.label, textcoords='offset points',
+                    size='large', ha='right', va='center', rotation=90)
+    for ax in axs[-1, :]:
+        ax.set_xlabel(r"$\beta$")
+    axs[0, 0].set_title("Local")
+    axs[0, 1].set_title("Global")
+    for ax in axs[1:, :-1].flatten():
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+    for ax in axs[:-1, 0]:
+        ax.set_xticklabels([])
+    for ax in axs[-1, 1:]:
+        ax.set_yticklabels([])
+    handles, labels = axs[-1, -1].get_legend_handles_labels()
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
+    plt.show()
 
 
 def evaluate_results(from_dir):
-    def load_all_in_dir(directory):
-        all_files = {}
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                if file.endswith(".npy"):
-                    filepath = os.path.join(directory, file)
-                    result_file = np.load(filepath)
-                    all_files[file] = result_file
-        return all_files
 
     def plot_roc(precision, recall, label, hline_y):
         roc_auc = auc(recall, precision)
@@ -84,13 +207,6 @@ def evaluate_results(from_dir):
 
     def create_subplots(results):
         sns.set_palette(sns.color_palette("PuBuGn_d"))
-        def parse_filename(file):
-            components = file.split("_")
-            c_name = components[-2]
-            l_name = components[-1]
-            num_devices = components[0]
-            frac = components[3] if len(components) > 3 else None
-            return num_devices, frac, c_name, l_name
 
         def add_f1_iso_curve():
             f_scores = np.linspace(0.2, 0.8, num=4)

@@ -81,4 +81,4 @@ if __name__ == '__main__':
                     results[fname].append(result)
 
     for key in results:
-        np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", key), results[key])
+        np.save(os.path.join(os.getcwd(), "results", "numpy", "vary_beta", key), np.array(results[key]).astype(float))

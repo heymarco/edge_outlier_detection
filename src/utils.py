@@ -1,4 +1,6 @@
 import json
+import os
+
 import tensorflow as tf
 import numpy as np
 import seaborn as sns
@@ -19,22 +21,6 @@ def normalize(array_like):
     min_val = array_like.min()
     max_val = array_like.max()
     return (array_like - min_val) / (max_val - min_val)
-
-
-def parse_filename(name):
-    raw = name.split("_")
-    params = {
-        "num_devices": int(raw[0]),
-        "num_data": int(raw[1]),
-        "dims": int(raw[2]),
-        "subspace_frac": float(raw[3]),
-        "frac_outlying_devices": float(raw[4]),
-        "frac_outlying_data": float(raw[5]),
-        "gamma": float(raw[6]),
-        "delta": float(raw[7]),
-        "outlier_type": raw[8]
-    }
-    return params
 
 
 def setup_machine(cuda_device, ram=False):
@@ -61,3 +47,37 @@ def average_weights(models):
             np.array([np.array(w).mean(axis=0) for w in zip(*weights_list_tuple)])
             )
     return new_weights
+
+
+def load_all_in_dir(directory):
+    all_files = {}
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".npy"):
+                filepath = os.path.join(directory, file)
+                result_file = np.load(filepath)
+                all_files[file] = result_file
+    return all_files
+
+
+def parse_filename(file):
+    keys = [
+        "num_devices",
+        "num_data",
+        "dims",
+        "subspace_frac",
+        "frac_outlying_devices",
+        "frac_local",
+        "frac_global",
+        "sigma_l",
+        "sigma_g",
+        "data_type",
+        "c_name",
+        "l_name"
+    ]
+    components = file.split("_")
+    assert len(components) == len(keys)
+    parsed_args = {}
+    for i in range(len(keys)):
+        parsed_args[keys[i]] = components[i]
+    return parsed_args
