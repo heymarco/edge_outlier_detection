@@ -124,10 +124,9 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
 
 def evaluate_vary_beta(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55]
+    beta_range = [0.0, 0.005, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55]
 
     fig, axs = plt.subplots(4, 2, sharex="all", sharey="all")
-    markers = Line2D.filled_markers
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
@@ -135,7 +134,18 @@ def evaluate_vary_beta(from_dir):
         if l_name.startswith("if"): return 2
         if l_name.startswith("xstream"): return 3
 
-    for i, file in enumerate(files):
+    def get_linestyle(frac_local):
+        line_styles = ["solid", "dotted", "dashed", "dashdot"]
+        if frac_local == "0.005": return line_styles[0]
+        if frac_local == "0.025": return line_styles[1]
+        if frac_local == "0.05": return line_styles[2]
+        assert False, "Error in get_linestyle"
+
+    file_keys = np.array(list(files.keys()))
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    sorted_key_indices = np.argsort(contamination_fracs)
+
+    for i, file in enumerate(file_keys[sorted_key_indices]):
         params = parse_filename(file)
         row = get_row(params["l_name"])
         result = files[file]
@@ -167,9 +177,9 @@ def evaluate_vary_beta(from_dir):
         final_pr1 = np.mean(final_pr1, axis=0)
         final_pr2 = np.mean(final_pr2, axis=0)
 
-        axs[row, 0].plot(beta_range, final_pr1, marker=markers[i])
-        axs[row, 1].plot(beta_range, final_pr2, marker=markers[i],
-                    label="$c_g={}, c_l={}$".format(params["frac_local"], params["frac_global"]))
+        axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
+        axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
+                         label="$c_g={}, c_l={}$".format(params["frac_local"], params["frac_global"]))
 
     pad = 5
     rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
@@ -189,7 +199,7 @@ def evaluate_vary_beta(from_dir):
         ax.set_xticklabels([])
     for ax in axs[-1, 1:]:
         ax.set_yticklabels([])
-    handles, labels = axs[-1, -1].get_legend_handles_labels()
+    handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
     plt.show()
 

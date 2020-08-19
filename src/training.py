@@ -43,13 +43,14 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
 
     # local scores
     if l_name.startswith("lof"):
-        local_scores = - np.array([model.negative_outlier_factor_ for i, model in enumerate(local_detectors)])
+        local_scores = - np.array([model.negative_outlier_factor_ for i, model in enumerate(local_detectors)],
+                                  dtype=float).flatten()
     if l_name == "xstream":
         local_scores = np.array([-model.score(fdata[i]) for i, model in enumerate(local_detectors)],
-                                dtype=float)
+                                dtype=float).flatten()
     if l_name == "if":
         local_scores = -np.array([model.score_samples(fdata[i]) for i, model in enumerate(local_detectors)],
-                                 dtype=float)
+                                 dtype=float).flatten()
     if l_name == "ae":
         if convolutional:
             predicted = np.array([model.predict(data[i]) for i, model in enumerate(local_detectors)],
