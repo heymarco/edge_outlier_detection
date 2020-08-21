@@ -15,8 +15,8 @@ mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
-# sns.set_palette("husl")
-sns.set_palette(sns.cubehelix_palette(8, start=.5, rot=-.75))
+sns.set_palette("husl")
+# sns.set_palette(sns.cubehelix_palette(8, start=.5, rot=-.75))
 
 
 def get_rank_distance(os_c, os_l, labels, beta):
@@ -280,6 +280,8 @@ def evaluate_vary_cont(from_dir):
                 final_pr1[j] = results_au_pr_1
                 final_pr2[j] = results_au_pr_2
 
+            print(final_pr1)
+            print(final_pr2)
             final_pr1 = np.mean(final_pr1, axis=0)
             final_pr2 = np.mean(final_pr2, axis=0)
 
@@ -306,10 +308,14 @@ def plot_vary_cont(from_dir):
     for ax in axs[:-1, 1:].flatten():
         ax.set_xticklabels([])
         ax.set_yticklabels([])
+        ax.set_xticks([])
+        ax.set_yticks([])
     for ax in axs[:-1, 0]:
         ax.set_xticklabels([])
+        ax.set_xticks([])
     for ax in axs[-1, 1:]:
         ax.set_yticklabels([])
+        ax.set_yticks([])
     for ax in axs.flatten():
         ax.axvline(0.005, ls="solid", color="gray")
         ax.axvline(0.025, ls="dotted", color="gray")
@@ -345,6 +351,8 @@ def plot_vary_cont(from_dir):
 
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
+        print(final_pr1)
+        print(final_pr2)
         axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
         axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
                          label="$c_g={}, c_l={}$".format(fl, fg))
@@ -360,7 +368,6 @@ def evaluate_results(from_dir):
         roc_auc = auc(recall, precision)
         plt.plot(recall, precision, label='$PR_{auc} = %0.2f)$' % roc_auc)
         plt.xlim((0, 1))
-        # plt.ylim((0, 1))
         plt.xlabel('Recall')
         plt.ylabel('Precision')
         # plt.axhline(hline_y, color='navy', linestyle='--')
