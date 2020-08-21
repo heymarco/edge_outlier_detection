@@ -138,7 +138,7 @@ def evaluate_vary_ratio(from_dir):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
         cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
 
-        if not os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+        if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
             final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
             final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
@@ -253,7 +253,7 @@ def evaluate_vary_cont(from_dir):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
         cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
 
-        if not os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+        if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
             final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
             final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
