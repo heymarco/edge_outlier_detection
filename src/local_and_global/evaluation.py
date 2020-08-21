@@ -1,3 +1,4 @@
+import os
 from sklearn.metrics import precision_recall_curve, auc
 
 import numpy as np
@@ -13,7 +14,9 @@ from src.utils import load_all_in_dir, parse_filename
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
-sns.set_palette("husl")
+
+# sns.set_palette("husl")
+sns.set_palette(sns.cubehelix_palette(8, start=.5, rot=-.75))
 
 
 def get_rank_distance(os_c, os_l, labels, beta):
@@ -123,7 +126,168 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
     return kappas
 
 
-def evaluate_vary_beta(from_dir):
+def evaluate_vary_ratio(from_dir):
+    files = load_all_in_dir(from_dir)
+    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+
+    file_keys = np.array(list(files.keys()))
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    sorted_key_indices = np.argsort(contamination_fracs)
+
+    for i, file in enumerate(file_keys[sorted_key_indices]):
+        cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
+        cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+
+        if not os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+            result = files[file]
+            final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+            final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+            for j, res in enumerate(result):
+                if j > 0: break
+                os_c = res[0]
+                os_l = res[1]
+                labels = res[2].astype(int).flatten()
+                os_c = os_c.flatten()
+                os_l = os_l.flatten()
+                results_au_pr_1 = []
+                results_au_pr_2 = []
+                for beta in beta_range:
+                    distance = get_rank_distance(os_c, os_l, labels, beta)
+                    prec1, rec1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta, dist=distance)
+                    prec2, rec2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta, dist=distance)
+
+                    au_pr_1 = auc(rec1, prec1)
+                    au_pr_2 = auc(rec2, prec2)
+
+                    results_au_pr_1.append(au_pr_1)
+                    results_au_pr_2.append(au_pr_2)
+
+                final_pr1[j] = results_au_pr_1
+                final_pr2[j] = results_au_pr_2
+
+            final_pr1 = np.mean(final_pr1, axis=0)
+            final_pr2 = np.mean(final_pr2, axis=0)
+
+            np.save(os.path.join(from_dir, "cache", file[:-4] + "pr1"), final_pr1)
+            np.save(os.path.join(from_dir, "cache", file[:-4] + "pr2"), final_pr2)
+
+
+def plot_vary_ratio(from_dir):
+    files = load_all_in_dir(from_dir)
+    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+
+    file_keys = np.array(list(files.keys()))
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    sorted_key_indices = np.argsort(contamination_fracs)
+
+    fig, axs = plt.subplots(4, 2)
+    pad = 5
+    rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
+    for ax, row in zip(axs[:, 0], rows):
+        ax.set_ylabel("AUPR")
+        ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
+                    xycoords=ax.yaxis.label, textcoords='offset points',
+                    size='large', ha='right', va='center', rotation=90)
+    for ax in axs[-1, :]:
+        ax.set_xlabel(r"$\beta$")
+    axs[0, 0].set_title("Local")
+    axs[0, 1].set_title("Global")
+    for ax in axs[:-1, 1:].flatten():
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.set_xticks([])
+        ax.set_yticks([])
+    for ax in axs[:-1, 0]:
+        ax.set_xticklabels([])
+        ax.set_xticks([])
+    for ax in axs[-1, 1:]:
+        ax.set_yticklabels([])
+        ax.set_yticks([])
+
+    def get_row(l_name):
+        if l_name.startswith("ae"): return 0
+        if l_name.startswith("lof"): return 1
+        if l_name.startswith("if"): return 2
+        if l_name.startswith("xstream"): return 3
+
+    def get_linestyle(frac_local):
+        line_styles = ["solid", "dotted", "dashed", "dashdot"]
+        if frac_local == "0.005": return line_styles[0]
+        if frac_local == "0.025": return line_styles[1]
+        if frac_local == "0.05":
+            return line_styles[2]
+        else:
+            return line_styles[0]
+
+    for i, file in enumerate(file_keys[sorted_key_indices]):
+        cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
+        cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+        params = parse_filename(file)
+        row = get_row(params["l_name"])
+
+        if os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+            final_pr1 = np.load(cached_filename_pr1)
+            final_pr2 = np.load(cached_filename_pr2)
+
+        fl = round(float(params["frac_local"]), 3)
+        fg = round(float(params["frac_global"]), 3)
+        p1 = axs[row, 0].plot(beta_range, final_pr1)
+        p2 = axs[row, 1].plot(beta_range, final_pr2, label=r"$\frac{{c_g}}{{c_l}}={}$".format(round(fg/fl, 1)))
+        axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
+        axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
+
+    handles, labels = axs[0, -1].get_legend_handles_labels()
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
+    plt.show()
+
+
+def evaluate_vary_cont(from_dir):
+    files = load_all_in_dir(from_dir)
+    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+
+    file_keys = np.array(list(files.keys()))
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    sorted_key_indices = np.argsort(contamination_fracs)
+
+    for i, file in enumerate(file_keys[sorted_key_indices]):
+        cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
+        cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+
+        if not os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+            result = files[file]
+            final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+            final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+            for j, res in enumerate(result):
+                if j > 0: break
+                os_c = res[0]
+                os_l = res[1]
+                labels = res[2].astype(int).flatten()
+                os_c = os_c.flatten()
+                os_l = os_l.flatten()
+                results_au_pr_1 = []
+                results_au_pr_2 = []
+                for beta in beta_range:
+                    distance = get_rank_distance(os_c, os_l, labels, beta)
+                    prec1, rec1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta, dist=distance)
+                    prec2, rec2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta, dist=distance)
+
+                    au_pr_1 = auc(rec1, prec1)
+                    au_pr_2 = auc(rec2, prec2)
+
+                    results_au_pr_1.append(au_pr_1)
+                    results_au_pr_2.append(au_pr_2)
+
+                final_pr1[j] = results_au_pr_1
+                final_pr2[j] = results_au_pr_2
+
+            final_pr1 = np.mean(final_pr1, axis=0)
+            final_pr2 = np.mean(final_pr2, axis=0)
+
+            np.save(os.path.join(from_dir, "cache", file[:-4] + "pr1"), final_pr1)
+            np.save(os.path.join(from_dir, "cache", file[:-4] + "pr2"), final_pr2)
+
+
+def plot_vary_cont(from_dir):
     files = load_all_in_dir(from_dir)
     beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
 
@@ -161,48 +325,29 @@ def evaluate_vary_beta(from_dir):
         line_styles = ["solid", "dotted", "dashed", "dashdot"]
         if frac_local == "0.005": return line_styles[0]
         if frac_local == "0.025": return line_styles[1]
-        if frac_local == "0.05": return line_styles[2]
-        assert False, "Error in get_linestyle"
+        if frac_local == "0.05":
+            return line_styles[2]
+        else:
+            return line_styles[0]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
     sorted_key_indices = np.argsort(contamination_fracs)
 
     for i, file in enumerate(file_keys[sorted_key_indices]):
+        cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
+        cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
         params = parse_filename(file)
         row = get_row(params["l_name"])
-        result = files[file]
-        final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
-        final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
-        for j, res in enumerate(result):
-            if j > 0: break
-            os_c = res[0]
-            os_l = res[1]
-            labels = res[2].astype(int).flatten()
-            os_c = os_c.flatten()
-            os_l = os_l.flatten()
-            results_au_pr_1 = []
-            results_au_pr_2 = []
-            for beta in beta_range:
-                distance = get_rank_distance(os_c, os_l, labels, beta)
-                prec1, rec1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta, dist=distance)
-                prec2, rec2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta, dist=distance)
 
-                au_pr_1 = auc(rec1, prec1)
-                au_pr_2 = auc(rec2, prec2)
+        final_pr1 = np.load(cached_filename_pr1)
+        final_pr2 = np.load(cached_filename_pr2)
 
-                results_au_pr_1.append(au_pr_1)
-                results_au_pr_2.append(au_pr_2)
-
-            final_pr1[j] = results_au_pr_1
-            final_pr2[j] = results_au_pr_2
-
-        final_pr1 = np.mean(final_pr1, axis=0)
-        final_pr2 = np.mean(final_pr2, axis=0)
-
+        fl = round(float(params["frac_local"]), 3)
+        fg = round(float(params["frac_global"]), 3)
         axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
         axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
-                         label="$c_g={}, c_l={}$".format(params["frac_local"], params["frac_global"]))
+                         label="$c_g={}, c_l={}$".format(fl, fg))
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)

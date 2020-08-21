@@ -51,12 +51,13 @@ def average_weights(models):
 
 def load_all_in_dir(directory):
     all_files = {}
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".npy"):
-                filepath = os.path.join(directory, file)
-                result_file = np.load(filepath)
-                all_files[file] = result_file
+    for file in os.listdir(directory):
+        if os.path.isdir(os.path.join(directory, file)):
+            continue
+        if file.endswith(".npy"):
+            filepath = os.path.join(directory, file)
+            result_file = np.load(filepath)
+            all_files[file] = result_file
     return all_files
 
 
