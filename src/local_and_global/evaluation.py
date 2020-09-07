@@ -140,10 +140,10 @@ def evaluate_vary_ratio(from_dir):
 
         if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
-            final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
-            final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+            print(result.shape)
+            final_pr1 = []
+            final_pr2 = []
             for j, res in enumerate(result):
-                if j > 0: break
                 os_c = res[0]
                 os_l = res[1]
                 labels = res[2].astype(int).flatten()
@@ -162,8 +162,8 @@ def evaluate_vary_ratio(from_dir):
                     results_au_pr_1.append(au_pr_1)
                     results_au_pr_2.append(au_pr_2)
 
-                final_pr1[j] = results_au_pr_1
-                final_pr2[j] = results_au_pr_2
+                final_pr1.append(results_au_pr_1)
+                final_pr2.append(results_au_pr_2)
 
             final_pr1 = np.mean(final_pr1, axis=0)
             final_pr2 = np.mean(final_pr2, axis=0)
@@ -255,10 +255,10 @@ def evaluate_vary_cont(from_dir):
 
         if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
-            final_pr1 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
-            final_pr2 = np.empty(shape=(len(result), len(beta_range)), dtype=float)
+            final_pr1 = []
+            final_pr2 = []
+            print(result.shape)
             for j, res in enumerate(result):
-                if j > 0: break
                 os_c = res[0]
                 os_l = res[1]
                 labels = res[2].astype(int).flatten()
@@ -277,11 +277,10 @@ def evaluate_vary_cont(from_dir):
                     results_au_pr_1.append(au_pr_1)
                     results_au_pr_2.append(au_pr_2)
 
-                final_pr1[j] = results_au_pr_1
-                final_pr2[j] = results_au_pr_2
+                final_pr1.append(results_au_pr_1)
+                final_pr2.append(results_au_pr_2)
+                print(final_pr1)
 
-            print(final_pr1)
-            print(final_pr2)
             final_pr1 = np.mean(final_pr1, axis=0)
             final_pr2 = np.mean(final_pr2, axis=0)
 
