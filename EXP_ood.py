@@ -15,17 +15,17 @@ def create_datasets(args):
     if args.vary == "frac":
         frac_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55, 1.0]
         for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {}".format(frac))
+            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "cont":
         frac_range = [0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -cont {}".format(frac))
+            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -cont {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "shift":
         frac_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55, 0.89, 1.44, 2.33, 3]
         for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {}".format(frac))
+            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
@@ -41,6 +41,7 @@ def create_datasets(args):
                 if file.endswith("o.npy"):
                     ground_truth[file[:-6]] = f
     print("Finished data loading")
+    print(data)
     return data, ground_truth
 
 
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
 
-    # load all files in dir
+    logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
@@ -60,10 +61,9 @@ if __name__ == '__main__':
     # select GPU
     setup_machine(cuda_device=args.gpu)
 
-    data, ground_truth = create_datasets(args)
-
     # create ensembles
     combinations = [("ae", "ae"),]
+
     logging.info("Executing combinations {}".format(combinations))
     logging.info("Repeating {} times".format(reps))
 
