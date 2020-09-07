@@ -93,4 +93,5 @@ if __name__ == '__main__':
                 results[fname].append(result)
 
     for key in results:
-        np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]).astype(float))
+        print(np.array(results[key]).shape)
+        np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]))

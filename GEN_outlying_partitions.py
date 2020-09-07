@@ -64,5 +64,3 @@ dataname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_o")
 np.save(dataname, data)
 np.save(outname, np.amax(labels, axis=-1))
-
-print("Num outliers = {}".format((np.sum(np.amax(labels, axis=-1) > 0))))
