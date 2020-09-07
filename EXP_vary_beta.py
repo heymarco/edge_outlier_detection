@@ -3,6 +3,8 @@ import gc
 import glob
 import logging
 import os
+from numba import cuda
+import tensorflow as tf
 
 from src.data.synthetic_data import normalize_along_axis
 from src.local_and_global.functions import *
@@ -87,6 +89,9 @@ if __name__ == '__main__':
                 result = [global_scores, local_scores, gt]
                 del ensembles
                 gc.collect()
+                tf.keras.backend.clear_session()
+                cuda.select_device(args.gpu)
+                cuda.close()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []

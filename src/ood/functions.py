@@ -51,7 +51,6 @@ def create_ensembles(shape, l_name, contamination=0.01):
 
 def train_global_detectors(data, collab_detectors, global_epochs):
     # federated training
-    tf.keras.backend.clear_session()
     for _ in range(global_epochs):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
                                            frac_available=1.0)

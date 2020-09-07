@@ -2,6 +2,8 @@ import argparse
 import gc
 import glob
 import logging
+from numba import cuda
+import tensorflow as tf
 
 from src.utils import setup_machine
 from src.ood.functions import *
@@ -80,6 +82,9 @@ if __name__ == '__main__':
                 result = train_global_detectors(d, models, global_epochs=20)
                 del models
                 gc.collect()
+                tf.keras.backend.clear_session()
+                cuda.select_device(args.gpu)
+                cuda.close()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []

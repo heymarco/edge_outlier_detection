@@ -59,7 +59,6 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
         diff = predicted - fdata
         dist = np.linalg.norm(diff, axis=-1)
         local_scores = dist.flatten()
-    tf.keras.backend.clear_session()
     return global_scores, local_scores
 
 
