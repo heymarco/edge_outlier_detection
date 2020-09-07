@@ -15,7 +15,7 @@ mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
-sns.set_palette("husl")
+qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
 # sns.set_palette(sns.cubehelix_palette(8, start=.5, rot=-.75))
 
 
@@ -128,7 +128,7 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
 
 def evaluate_vary_ratio(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.005, 0.1, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
@@ -140,6 +140,7 @@ def evaluate_vary_ratio(from_dir):
 
         if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
+            print(file)
             print(result.shape)
             final_pr1 = []
             final_pr2 = []
@@ -174,7 +175,7 @@ def evaluate_vary_ratio(from_dir):
 
 def plot_vary_ratio(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
@@ -279,7 +280,6 @@ def evaluate_vary_cont(from_dir):
 
                 final_pr1.append(results_au_pr_1)
                 final_pr2.append(results_au_pr_2)
-                print(final_pr1)
 
             final_pr1 = np.mean(final_pr1, axis=0)
             final_pr2 = np.mean(final_pr2, axis=0)
@@ -289,6 +289,7 @@ def evaluate_vary_cont(from_dir):
 
 
 def plot_vary_cont(from_dir):
+    sns.set_palette(sns.color_palette(qualitative_cp))
     files = load_all_in_dir(from_dir)
     beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
     line_styles = ["solid", "dotted", "dashed", "dashdot"]
@@ -306,7 +307,8 @@ def plot_vary_cont(from_dir):
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
     axs[0, 1].set_title("Global")
-    # for ax in axs[:-1, 1:].flatten():
+    for ax in axs[:-1, 1:].flatten():
+        ax.set_xlim(0.0, 0.2)
     #     ax.set_xticklabels([])
     #     ax.set_yticklabels([])
     #     ax.set_xticks([])
@@ -317,11 +319,11 @@ def plot_vary_cont(from_dir):
     # for ax in axs[-1, 1:]:
     #     ax.set_yticklabels([])
     #     ax.set_yticks([])
-    for ax in axs.flatten():
-        ax.axvline(0.005, ls=line_styles[0], color="gray")
-        ax.axvline(0.015, ls=line_styles[1], color="gray")
-        ax.axvline(0.01, ls=line_styles[2], color="gray")
-        ax.axvline(0.025, ls=line_styles[3], color="gray")
+    # for ax in axs.flatten():
+    #     ax.axvline(0.005, ls=line_styles[0], color="gray")
+    #     ax.axvline(0.015, ls=line_styles[1], color="gray")
+    #     ax.axvline(0.01, ls=line_styles[2], color="gray")
+    #     ax.axvline(0.025, ls=line_styles[3], color="gray")
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
@@ -331,9 +333,10 @@ def plot_vary_cont(from_dir):
 
     def get_linestyle(frac_local):
         if frac_local == "0.005": return line_styles[0]
-        if frac_local == "0.025": return line_styles[1]
-        if frac_local == "0.05":
-            return line_styles[2]
+        if frac_local == "0.01": return line_styles[1]
+        if frac_local == "0.015": return line_styles[2]
+        if frac_local == "0.025":
+            return line_styles[3]
         else:
             return line_styles[0]
 
