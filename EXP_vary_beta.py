@@ -74,6 +74,7 @@ if __name__ == '__main__':
     logging.info("Repeating {} times".format(reps))
 
     results = {}
+    print(reps)
     for i in range(reps):
         logging.info("Rep {}".format(i))
         data, ground_truth = create_datasets(args)
