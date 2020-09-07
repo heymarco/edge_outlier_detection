@@ -6,13 +6,6 @@ import numpy as np
 
 from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers, add_deviation
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-
-mpl.rcParams['text.usetex'] = True
-mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
-mpl.rc('font', family='serif')
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-sf", type=float, default=0.2)
 parser.add_argument("-dims", type=int, default=100)
@@ -66,12 +59,5 @@ dataname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_o")
 np.save(dataname, data)
 np.save(outname, np.amax(labels, axis=-1))
-
-if subspace_frac == 1:
-    for i, d in enumerate(data):
-        plt.scatter(d.T[0], d.T[1], alpha=0.4)
-        plt.scatter(d.T[0][labels[i].T[0] == 1], d.T[1][labels[i].T[1] == 1], color="black")
-        plt.scatter(d.T[0][labels[i].T[0] == 2], d.T[1][labels[i].T[1] == 2], color="grey")
-    plt.show()
 
 logging.info("Num outliers = {}".format((np.sum(np.amax(labels, axis=-1) > 0))))

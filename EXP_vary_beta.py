@@ -65,16 +65,15 @@ if __name__ == '__main__':
     setup_machine(cuda_device=args.gpu)
 
     # create ensembles
-    combinations = [# ("ae", "ae"),
+    combinations = [("ae", "ae"),
                     # ("ae", "lof8"),
                     # ("ae", "if"),
-                    ("ae", "xstream")
+                    # ("ae", "xstream")
     ]
     logging.info("Executing combinations {}".format(combinations))
     logging.info("Repeating {} times".format(reps))
 
     results = {}
-    print(reps)
     for i in range(reps):
         logging.info("Rep {}".format(i))
         data, ground_truth = create_datasets(args)
