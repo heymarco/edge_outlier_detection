@@ -243,7 +243,7 @@ def plot_vary_ratio(from_dir):
 
 def evaluate_vary_cont(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
@@ -290,13 +290,15 @@ def evaluate_vary_cont(from_dir):
 
 def plot_vary_cont(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    line_styles = ["solid", "dotted", "dashed", "dashdot"]
 
-    fig, axs = plt.subplots(4, 2)
+    fig, axs = plt.subplots(4, 2, sharex="all")
     pad = 5
     rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
     for ax, row in zip(axs[:, 0], rows):
         ax.set_ylabel("AUPR")
+        ax.set_ylim(top=1)
         ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
                     xycoords=ax.yaxis.label, textcoords='offset points',
                     size='large', ha='right', va='center', rotation=90)
@@ -304,21 +306,22 @@ def plot_vary_cont(from_dir):
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
     axs[0, 1].set_title("Global")
-    for ax in axs[:-1, 1:].flatten():
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
-        ax.set_xticks([])
-        ax.set_yticks([])
-    for ax in axs[:-1, 0]:
-        ax.set_xticklabels([])
-        ax.set_xticks([])
-    for ax in axs[-1, 1:]:
-        ax.set_yticklabels([])
-        ax.set_yticks([])
+    # for ax in axs[:-1, 1:].flatten():
+    #     ax.set_xticklabels([])
+    #     ax.set_yticklabels([])
+    #     ax.set_xticks([])
+    #     ax.set_yticks([])
+    # for ax in axs[:-1, 0]:
+    #     ax.set_xticklabels([])
+    #     ax.set_xticks([])
+    # for ax in axs[-1, 1:]:
+    #     ax.set_yticklabels([])
+    #     ax.set_yticks([])
     for ax in axs.flatten():
-        ax.axvline(0.005, ls="solid", color="gray")
-        ax.axvline(0.025, ls="dotted", color="gray")
-        ax.axvline(0.05, ls="dashed", color="gray")
+        ax.axvline(0.005, ls=line_styles[0], color="gray")
+        ax.axvline(0.015, ls=line_styles[1], color="gray")
+        ax.axvline(0.01, ls=line_styles[2], color="gray")
+        ax.axvline(0.025, ls=line_styles[3], color="gray")
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
@@ -327,7 +330,6 @@ def plot_vary_cont(from_dir):
         if l_name.startswith("xstream"): return 3
 
     def get_linestyle(frac_local):
-        line_styles = ["solid", "dotted", "dashed", "dashdot"]
         if frac_local == "0.005": return line_styles[0]
         if frac_local == "0.025": return line_styles[1]
         if frac_local == "0.05":
