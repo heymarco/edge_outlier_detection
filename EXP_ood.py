@@ -4,7 +4,7 @@ import glob
 import logging
 
 from src.utils import setup_machine
-from src.outlying_partitions.functions import *
+from src.ood.functions import *
 from src.data.synthetic_data import normalize_along_axis
 
 

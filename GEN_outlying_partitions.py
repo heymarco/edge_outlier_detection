@@ -53,16 +53,13 @@ for dev in device_indices:
             data[dev, p, s] = data[dev, p, s] + shift[i]
 
 # write to file
-params_str = "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_ood".format(num_devices,
+params_str = "{}_{}_{}_{}_{}_{}_{}_ood".format(num_devices,
                                                         num_data,
                                                         dims,
                                                         subspace_frac,
                                                         frac_outlying_devices,
-                                                        args.frac_local,
-                                                        args.frac_global,
                                                         sigma_l,
-                                                        sigma_g,
-                                                        shift)
+                                                        args.shift)
 dataname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_o")
 np.save(dataname, data)

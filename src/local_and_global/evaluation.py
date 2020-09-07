@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import seaborn as sns
 
-from src.utils import load_all_in_dir, parse_filename
+from src.utils import load_all_in_dir
 
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
@@ -652,3 +652,26 @@ def add_2d_correlation(data):
     # plt.scatter(data[0].T[0], data[0].T[1])
     # plt.show()
     return data
+
+
+def parse_filename(file):
+    keys = [
+        "num_devices",
+        "num_data",
+        "dims",
+        "subspace_frac",
+        "frac_outlying_devices",
+        "frac_local",
+        "frac_global",
+        "sigma_l",
+        "sigma_g",
+        "data_type",
+        "c_name",
+        "l_name"
+    ]
+    components = file.split("_")
+    assert len(components) == len(keys)
+    parsed_args = {}
+    for i in range(len(keys)):
+        parsed_args[keys[i]] = components[i]
+    return parsed_args

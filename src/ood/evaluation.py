@@ -15,16 +15,6 @@ labels_suffix = "_labels.npy"
 ensemble_suffix = "_aa_bb.npy"
 
 
-def parse_filename(file):
-    components = file.split("_")
-    c_name = components[-2]
-    l_name = components[-1]
-    num_devices = components[0]
-    frac = components[3]
-    cont = components[-4]
-    return num_devices, frac, c_name, l_name, cont
-
-
 def load_all_in_dir(directory):
     all_files = {}
     all_labels = {}
@@ -110,3 +100,21 @@ def plot_t_test_over(x, directory):
     plt.legend(lines, labs)
     plt.tight_layout()
     plt.show()
+
+
+def parse_filename(file):
+    keys = [
+        "num_devices",
+        "num_data",
+        "dims",
+        "subspace_frac",
+        "frac_outlying_devices",
+        "sigma_l",
+        "shift"
+    ]
+    components = file.split("_")
+    assert len(components) == len(keys)
+    parsed_args = {}
+    for i in range(len(keys)):
+        parsed_args[keys[i]] = components[i]
+    return parsed_args
