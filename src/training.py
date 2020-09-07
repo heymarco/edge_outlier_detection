@@ -16,7 +16,6 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
     for _ in range(global_epochs):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
                                            frac_available=1.0)
-    tf.keras.backend.clear_session()
 
     # global scores
     predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
@@ -39,7 +38,6 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
                 l.fit(data[i], data[i], batch_size=32, epochs=global_epochs)
             else:
                 l.fit(fdata[i], fdata[i], batch_size=32, epochs=global_epochs)
-            tf.keras.backend.clear_session()
 
     # local scores
     if l_name.startswith("lof"):
@@ -57,12 +55,11 @@ def train_ensembles(data, ensembles, l_name, global_epochs=10, convolutional=Fal
                                  dtype=float)
             predicted = predicted.reshape(fshape)
         else:
-            print(fdata.shape)
             predicted = np.array([model.predict(fdata[i]) for i, model in enumerate(local_detectors)])
         diff = predicted - fdata
         dist = np.linalg.norm(diff, axis=-1)
         local_scores = dist.flatten()
-
+    tf.keras.backend.clear_session()
     return global_scores, local_scores
 
 

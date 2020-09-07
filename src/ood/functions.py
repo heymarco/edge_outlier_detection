@@ -51,6 +51,7 @@ def create_ensembles(shape, l_name, contamination=0.01):
 
 def train_global_detectors(data, collab_detectors, global_epochs):
     # federated training
+    tf.keras.backend.clear_session()
     for _ in range(global_epochs):
         collab_detectors = train_federated(models=collab_detectors, data=data, epochs=1, batch_size=32,
                                            frac_available=1.0)
@@ -59,7 +60,6 @@ def train_global_detectors(data, collab_detectors, global_epochs):
     predicted = np.array([model.predict(data[i]) for i, model in enumerate(collab_detectors)])
     diff = predicted - data
     global_scores = np.linalg.norm(diff, axis=-1)
-    tf.keras.backend.clear_session()
     return global_scores
 
 
