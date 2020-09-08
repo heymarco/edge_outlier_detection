@@ -98,7 +98,7 @@ if __name__ == '__main__':
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
-                results[fname].append([result, gt])
+                results[fname].append(result)
 
     for key in results:
         print(np.array(results[key]).shape)

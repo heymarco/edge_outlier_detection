@@ -59,6 +59,8 @@ def plot_t_test_over(x, directory):
             x_axis_vals.append(params["subspace_frac"])
         elif x == "devices":
             x_axis_vals.append(params["num_devices"])
+        elif x == "shift":
+            x_axis_vals.append(float(params["shift"]))
         else:
             print("No valid x-identifier provided")
         f = file_dict[key]
@@ -67,6 +69,10 @@ def plot_t_test_over(x, directory):
         for rep in f:
             scores = rep[0]
             labels = rep[1]
+            distributed_shape = (int(params["num_devices"]), int(params["num_data"]))
+            scores = scores.reshape(distributed_shape)
+            labels = labels.reshape(distributed_shape)
+            labels = np.any(labels, axis=-1)
             results = evaluate_array_t_statistic(scores)
             t_values = results.T[0][labels]
             p_values = results.T[1][labels]
@@ -80,12 +86,15 @@ def plot_t_test_over(x, directory):
     means_p = np.array(means_p)[sorted_indices]
     fig, ax1 = plt.subplots()
     line1 = ax1.plot(x_axis_vals, means_p, label="p-value")
+    ax1.set_yscale("log")
     ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
     line2 = ax2.plot(x_axis_vals, means_t, linestyle="--", label="t-value")
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
     elif x == "devices":
         ax1.set_xlabel("Total number of devices")
+    elif x == "shift":
+        ax1.set_xlabel("Shift")
     ax1.set_ylabel("$p$-value")
     ax2.set_ylabel("$t$-value")
     lines = line1 + line2
