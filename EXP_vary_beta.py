@@ -67,16 +67,13 @@ if __name__ == '__main__':
     setup_machine(cuda_device=args.gpu)
 
     # create ensembles
-    combinations = [("ae", "ae"),
-                    # ("ae", "lof8"),
+    combinations = [# ("ae", "ae"),
+                    ("ae", "lof8"),
                     # ("ae", "if"),
                     # ("ae", "xstream")
     ]
     logging.info("Executing combinations {}".format(combinations))
     logging.info("Repeating {} times".format(reps))
-
-    session_config = tf.ConfigProto()
-    session_config.gpu_options.allow_growth = True
 
     results = {}
     for i in range(reps):
@@ -87,14 +84,12 @@ if __name__ == '__main__':
                 d = data[key]
                 gt = ground_truth[key].flatten()
                 contamination = np.sum(gt > 0) / len(gt)
-                with tf.Session(config=session_config) as sess:
-                    tf.keras.backend.set_session(sess)
-                    ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
-                    global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
-                    result = [global_scores, local_scores, gt]
-                    del ensembles
-                    gc.collect()
-                    sess.close()  # should not be necessary
+                tf.keras.backend.clear_session()
+                ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
+                global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
+                result = [global_scores, local_scores, gt]
+                del ensembles
+                gc.collect()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
