@@ -32,6 +32,7 @@ def setup_machine(cuda_device, ram=False):
                                                                         [tf.config.experimental.VirtualDeviceConfiguration(
                                                                             memory_limit=ram)])
             else:
+                tf.config.experimental.set_memory_growth(gpus[CUDA_VISIBLE_DEVICE], True)
                 tf.config.experimental.set_visible_devices(gpus[CUDA_VISIBLE_DEVICE], 'GPU')
 
         except RuntimeError as e:

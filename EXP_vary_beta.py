@@ -89,7 +89,8 @@ if __name__ == '__main__':
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
                 result = [global_scores, local_scores, gt]
                 del ensembles
-                gc.collect()
+                for _ in range(10):
+                    gc.collect()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
