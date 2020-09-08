@@ -5,8 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_ood.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EXP_vary_beta.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_vary_beta.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ood/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/training.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/training.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
