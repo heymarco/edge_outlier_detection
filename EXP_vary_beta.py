@@ -14,9 +14,10 @@ from src.utils import setup_machine
 
 def create_datasets(args):
     directory = os.path.join(os.getcwd(), "data", args.data)
-    files = glob.glob(os.path.join(directory, "*"))
-    for f in files:
-        os.remove(f)
+    entries = os.listdir(directory)
+    for entry in entries:
+        if entry.endswith(".csv"):
+            os.remove(os.path.join(directory, entry))
     if args.vary == "cont":
         logging.info("Varying contamination with outliers")
         contaminations = [0.01, 0.02, 0.03, 0.05]
