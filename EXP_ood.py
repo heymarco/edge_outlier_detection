@@ -15,7 +15,7 @@ def create_datasets(args):
     files = glob.glob(os.path.join(directory, "*"))
     for f in files: os.remove(f)
     if args.vary == "frac":
-        frac_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55, 1.0]
+        frac_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55, 0.89, 1.0]
         for frac in frac_range:
             data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))

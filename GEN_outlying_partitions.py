@@ -11,7 +11,7 @@ parser.add_argument("-device_frac", type=float, default=0.05)
 parser.add_argument("-cont", type=float, default=1.0)
 parser.add_argument("-dims", type=int, default=100)
 parser.add_argument("-dev", type=int, default=100)
-parser.add_argument("-shift", type=float, default=1.5)
+parser.add_argument("-shift", type=float, default=0.1)
 parser.add_argument("-dir", type=str, default="synth")
 args = parser.parse_args()
 
