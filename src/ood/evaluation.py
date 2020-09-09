@@ -51,8 +51,11 @@ def plot_t_test_over(x, directory):
     file_dict = load_all_in_dir(directory)
 
     x_axis_vals = []
-    means_t = []
-    means_p = []
+    means_t_outlier = []
+    means_p_outlier = []
+    means_t_inlier = []
+    means_p_inlier = []
+
     for key in file_dict:
         params = parse_filename(key)
         if x == "frac":
@@ -60,12 +63,18 @@ def plot_t_test_over(x, directory):
         elif x == "devices":
             x_axis_vals.append(params["num_devices"])
         elif x == "shift":
-            x_axis_vals.append(float(params["shift"]))
+            shift = float(params["shift"])
+            affected_dims = float(params["subspace_frac"])*float(params["dims"])
+            avg_dist_from_mean = np.sqrt(affected_dims*(shift**2))
+            print(avg_dist_from_mean)
+            x_axis_vals.append(avg_dist_from_mean)
         else:
             print("No valid x-identifier provided")
         f = file_dict[key]
-        these_results_p = []
-        these_results_t = []
+        mean_results_p_outlier = []
+        mean_results_t_outlier = []
+        mean_results_p_inlier = []
+        mean_results_t_inlier = []
         for rep in f:
             scores = rep[0]
             labels = rep[1]
@@ -74,33 +83,45 @@ def plot_t_test_over(x, directory):
             labels = labels.reshape(distributed_shape)
             labels = np.any(labels, axis=-1)
             results = evaluate_array_t_statistic(scores)
-            t_values = results.T[0][labels]
-            p_values = results.T[1][labels]
-            these_results_t.append(np.mean(t_values))
-            these_results_p.append(np.mean(p_values))
-        means_t.append(np.mean(these_results_t))
-        means_p.append(np.mean(these_results_p))
+            t_values_outlier = results.T[0][labels]
+            p_values_outlier = results.T[1][labels]
+            t_values_inlier = results.T[0][np.invert(labels)]
+            p_values_inlier = results.T[1][np.invert(labels)]
+            mean_results_t_outlier.append(np.mean(t_values_outlier))
+            mean_results_p_outlier.append(np.mean(p_values_outlier))
+            mean_results_t_inlier.append(np.mean(t_values_inlier))
+            mean_results_p_inlier.append(np.mean(p_values_inlier))
+        means_t_outlier.append(np.mean(mean_results_t_outlier))
+        means_p_outlier.append(np.mean(mean_results_p_outlier))
+        means_t_inlier.append(np.mean(mean_results_t_inlier))
+        means_p_inlier.append(np.mean(mean_results_p_inlier))
     sorted_indices = np.argsort(x_axis_vals)
     x_axis_vals = np.sort(x_axis_vals)
-    means_t = np.array(means_t)[sorted_indices]
-    means_p = np.array(means_p)[sorted_indices]
-    fig, ax1 = plt.subplots()
-    line1 = ax1.plot(x_axis_vals, means_p, label="p-value")
-    ax1.set_yscale("log")
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-    line2 = ax2.plot(x_axis_vals, means_t, linestyle="--", label="t-value")
+    means_t_outlier = np.array(means_t_outlier)[sorted_indices]
+    means_p_outlier = np.array(means_p_outlier)[sorted_indices]
+    means_t_inlier = np.array(means_t_inlier)[sorted_indices]
+    means_p_inlier = np.array(means_p_inlier)[sorted_indices]
+    fig, axes = plt.subplots(1, 2)
+    ax1 = axes[0]
+    ax2 = axes[1]
+    ax1.plot(x_axis_vals, means_t_outlier, linestyle="--", label="outliers")
+    ax1.plot(x_axis_vals, means_t_inlier, linestyle="--", label="inliers")
+    ax2.plot(x_axis_vals, means_p_outlier, label="outliers")
+    ax2.plot(x_axis_vals, means_p_inlier, label="inlier")
+    ax2.set_yscale("log")
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
+        ax2.set_xlabel("Subspace fraction")
     elif x == "devices":
         ax1.set_xlabel("Total number of devices")
+        ax2.set_xlabel("Total number of devices")
     elif x == "shift":
-        ax1.set_xlabel("Shift")
-    ax1.set_ylabel("$p$-value")
-    ax2.set_ylabel("$t$-value")
-    lines = line1 + line2
-    labs = [l.get_label() for l in lines]
-    plt.legend(lines, labs)
-    plt.tight_layout()
+        ax1.set_xlabel("Deviation of outlying partition")
+        ax2.set_xlabel("Deviation of outlying partition")
+    ax1.set_ylabel("$t$-value")
+    ax1.legend()
+    ax2.set_ylabel("$p$-value")
+    ax2.legend()
     plt.show()
 
 

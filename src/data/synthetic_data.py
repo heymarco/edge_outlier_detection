@@ -3,10 +3,7 @@ from scipy.stats import zscore, random_correlation
 
 
 def create_raw_data(num_devices, n, dims):
-    mean = np.zeros(dims)
-    cov = np.identity(dims)
-    mat = np.random.multivariate_normal(mean, cov, size=(num_devices, n))
-    mat = mat
+    mat = np.random.normal(size=(num_devices, n, dims))
     return mat
 
 

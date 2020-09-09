@@ -21,8 +21,6 @@ def evaluate_array_t_statistic(arr):
     os_star = np.mean(arr, axis=-1)
     mean = np.mean(os_star)
     std = np.std(os_star, ddof=1)
-    print(mean)
-    print(std)
     results = []
     dof = os_star.shape[-1]-1
     for value in os_star:
