@@ -4,9 +4,7 @@
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_ood.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/synthetic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ood/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ood/t_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/t_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

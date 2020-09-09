@@ -75,6 +75,7 @@ def plot_t_test_over(x, directory):
         mean_results_t_outlier = []
         mean_results_p_inlier = []
         mean_results_t_inlier = []
+        print(f.shape)
         for rep in f:
             scores = rep[0]
             labels = rep[1]
@@ -108,6 +109,7 @@ def plot_t_test_over(x, directory):
     ax1.plot(x_axis_vals, means_t_inlier, linestyle="--", label="inliers")
     ax2.plot(x_axis_vals, means_p_outlier, label="outliers")
     ax2.plot(x_axis_vals, means_p_inlier, label="inlier")
+    ax2.axhline(0.05)
     ax2.set_yscale("log")
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
