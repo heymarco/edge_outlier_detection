@@ -70,9 +70,6 @@ if __name__ == '__main__':
     logging.info("Executing combinations {}".format(combinations))
     logging.info("Repeating {} times".format(reps))
 
-    session_config = tf.ConfigProto()
-    session_config.gpu_options.allow_growth = True
-
     results = {}
     for i in range(reps):
         logging.info("Rep {}".format(i))
@@ -82,17 +79,18 @@ if __name__ == '__main__':
                 d = data[key]
                 gt = ground_truth[key].flatten()
                 contamination = np.sum(gt > 0) / len(gt)
-                with tf.Session(config=session_config) as sess:
-                    tf.keras.backend.set_session(sess)
-                    models = create_models(d.shape[0], d.shape[-1], compression_factor=0.4)
-                    result = train_global_detectors(d, models, global_epochs=20)
-                    del models
+                tf.keras.backend.clear_session()
+                models = create_models(d.shape[0], d.shape[-1], compression_factor=0.4)
+                result = train_global_detectors(d, models, global_epochs=20)
+                del models
+                for _ in range(10):
                     gc.collect()
-                    sess.close()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
-                results[fname].append(result)
+                print(gt.shape)
+                print(result.flatten().shape)
+                results[fname].append([result.flatten(), gt])
 
     for key in results:
         np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]).astype(float))
