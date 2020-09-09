@@ -183,7 +183,7 @@ def plot_vary_ratio(from_dir):
 
     fig, axs = plt.subplots(4, 2)
     pad = 5
-    rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
+    rows = ["AE / AE", "AE / LOF", "AE / IF", "AE / xStream"]
     for ax, row in zip(axs[:, 0], rows):
         ax.set_ylabel("AUPR")
         ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),

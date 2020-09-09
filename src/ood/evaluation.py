@@ -59,9 +59,9 @@ def plot_t_test_over(x, directory):
     for key in file_dict:
         params = parse_filename(key)
         if x == "frac":
-            x_axis_vals.append(params["subspace_frac"])
+            x_axis_vals.append(float(params["subspace_frac"]))
         elif x == "devices":
-            x_axis_vals.append(params["num_devices"])
+            x_axis_vals.append(float(params["num_devices"]))
         elif x == "shift":
             shift = float(params["shift"])
             affected_dims = float(params["subspace_frac"])*float(params["dims"])
@@ -105,11 +105,11 @@ def plot_t_test_over(x, directory):
     fig, axes = plt.subplots(1, 2)
     ax1 = axes[0]
     ax2 = axes[1]
+    ax1.plot(x_axis_vals, means_t_inlier, label="inliers")
     ax1.plot(x_axis_vals, means_t_outlier, linestyle="--", label="outliers")
-    ax1.plot(x_axis_vals, means_t_inlier, linestyle="--", label="inliers")
-    ax2.plot(x_axis_vals, means_p_outlier, label="outliers")
-    ax2.plot(x_axis_vals, means_p_inlier, label="inlier")
-    ax2.axhline(0.05)
+    ax2.plot(x_axis_vals, means_p_inlier, label="inliers")
+    ax2.plot(x_axis_vals, means_p_outlier, linestyle="--", label="outliers")
+
     ax2.set_yscale("log")
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
@@ -123,6 +123,16 @@ def plot_t_test_over(x, directory):
     ax1.set_ylabel("$t$-value")
     ax1.legend()
     ax2.set_ylabel("$p$-value")
+
+    ax_alpha = ax2.twinx()
+    ax_alpha.set_yscale("log")
+    ax_alpha.set_ylim(ax2.get_ylim())
+    alpha_vals = [0.001, 0.01, 0.05]
+    for val in alpha_vals:
+        ax_alpha.axhline(val, c="black", lw=0.7, ls="dotted")
+    ax_alpha.set_yticks(alpha_vals)
+    ax_alpha.set_yticklabels([r"$\alpha={}$".format(val) for val in alpha_vals])
+
     ax2.legend()
     plt.show()
 
