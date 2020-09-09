@@ -12,8 +12,10 @@ from src.data.synthetic_data import normalize_along_axis
 
 def create_datasets(args):
     directory = os.path.join(os.getcwd(), "data", dirname)
-    files = glob.glob(os.path.join(directory, "*"))
-    for f in files: os.remove(f)
+    entries = os.listdir(directory)
+    for entry in entries:
+        if entry.endswith(".csv"):
+            os.remove(os.path.join(directory, entry))
     if args.vary == "frac":
         frac_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55, 0.89, 1.0]
         for frac in frac_range:

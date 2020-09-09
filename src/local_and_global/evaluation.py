@@ -296,7 +296,7 @@ def plot_vary_cont(from_dir):
 
     fig, axs = plt.subplots(4, 2, sharex="all")
     pad = 5
-    rows = ["AU / AE", "AE / LOF", "AE / IF", "AE / xStream"]
+    rows = ["AE / AE", "AE / LOF", "AE / IF", "AE / xStream"]
     for ax, row in zip(axs[:, 0], rows):
         ax.set_ylabel("AUPR")
         ax.set_ylim(top=1)
