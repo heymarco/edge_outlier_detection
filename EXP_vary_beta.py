@@ -87,6 +87,7 @@ if __name__ == '__main__':
                 gt = ground_truth[key].flatten()
                 contamination = np.sum(gt > 0) / len(gt)
                 tf.keras.backend.clear_session()
+                tf.compat.v1.reset_default_graph()
                 ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
                 result = [global_scores, local_scores, gt]

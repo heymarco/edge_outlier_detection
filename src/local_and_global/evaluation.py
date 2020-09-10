@@ -233,7 +233,7 @@ def plot_vary_ratio(from_dir):
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
         p1 = axs[row, 0].plot(beta_range, final_pr1)
-        p2 = axs[row, 1].plot(beta_range, final_pr2, label=r"$\frac{{c_g}}{{c_l}}={}$".format(round(fg/fl, 1)))
+        p2 = axs[row, 1].plot(beta_range, final_pr2, label=r"$|\vec{o}_g|={}, |\vec{o}_l|={}$".format(round(fg/fl, 1)))
         axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
         axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
 
@@ -359,7 +359,7 @@ def plot_vary_cont(from_dir):
         print(final_pr2)
         axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
         axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
-                         label="$c_g={}, c_l={}$".format(fl, fg))
+                         label=r"$|\vec{o}_g|={}, |\vec{o}_l|={}$".format(fl, fg))
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
