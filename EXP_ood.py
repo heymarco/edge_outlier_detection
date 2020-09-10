@@ -1,8 +1,6 @@
 import argparse
 import gc
-import glob
 import logging
-from numba import cuda
 import tensorflow as tf
 
 from src.utils import setup_machine
@@ -45,6 +43,7 @@ def create_datasets(args):
                     data[file[:-6]] = f
                 if file.endswith("o.npy"):
                     ground_truth[file[:-6]] = f
+                del f
     print("Finished data loading")
     print(data)
     return data, ground_truth
@@ -84,15 +83,18 @@ if __name__ == '__main__':
                 tf.keras.backend.clear_session()
                 models = create_models(d.shape[0], d.shape[-1], compression_factor=0.4)
                 result = train_global_detectors(d, models, global_epochs=20)
-                del models
-                for _ in range(10):
-                    gc.collect()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
-                print(gt.shape)
-                print(result.flatten().shape)
                 results[fname].append([result.flatten(), gt])
+                del models
+                del result
+                for _ in range(10):
+                    gc.collect()
+        del data
+        del ground_truth
+        for _ in range(10):
+            gc.collect()
 
     for key in results:
         np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]).astype(float))
