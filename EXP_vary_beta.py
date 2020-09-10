@@ -69,8 +69,8 @@ if __name__ == '__main__':
 
     # create ensembles
     combinations = [# ("ae", "ae"),
-                    ("ae", "lof8"),
-                    # ("ae", "if"),
+                    # ("ae", "lof8"),
+                    ("ae", "if"),
                     # ("ae", "xstream")
     ]
     logging.info("Executing combinations {}".format(combinations))
