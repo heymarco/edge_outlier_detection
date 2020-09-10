@@ -47,6 +47,7 @@ def create_datasets(args):
                     data[file[:-6]] = f
                 if file.endswith("o.npy"):
                     ground_truth[file[:-6]] = f
+                del f
     logging.info("Finished data loading")
     return data, ground_truth
 
@@ -89,13 +90,18 @@ if __name__ == '__main__':
                 ensembles = create_ensembles(d.shape, l_name, contamination=contamination)
                 global_scores, local_scores = train_ensembles(d, ensembles, global_epochs=20, l_name=l_name)
                 result = [global_scores, local_scores, gt]
-                del ensembles
-                for _ in range(10):
-                    gc.collect()
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
                 results[fname].append(result)
+                del ensembles
+                del result
+                for _ in range(10):
+                    gc.collect()
+        del data
+        del ground_truth
+        for _ in range(10):
+            gc.collect()
 
     for key in results:
         print(np.array(results[key]).shape)
