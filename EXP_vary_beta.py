@@ -16,7 +16,7 @@ def create_datasets(args):
     directory = os.path.join(os.getcwd(), "data", args.data)
     entries = os.listdir(directory)
     for entry in entries:
-        if entry.endswith(".csv"):
+        if entry.endswith(".npy"):
             os.remove(os.path.join(directory, entry))
     if args.vary == "cont":
         logging.info("Varying contamination with outliers")
@@ -61,6 +61,7 @@ if __name__ == '__main__':
     parser.add_argument("-vary", type=str, choices=["cont", "ratio"])
 
     logging.getLogger().setLevel(logging.INFO)
+    tf.compat.v1.enable_eager_execution()
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
@@ -69,9 +70,9 @@ if __name__ == '__main__':
     setup_machine(cuda_device=args.gpu)
 
     # create ensembles
-    combinations = [# ("ae", "ae"),
+    combinations = [("ae", "ae"),
                     # ("ae", "lof8"),
-                    ("ae", "if"),
+                    # ("ae", "if"),
                     # ("ae", "xstream")
     ]
     logging.info("Executing combinations {}".format(combinations))

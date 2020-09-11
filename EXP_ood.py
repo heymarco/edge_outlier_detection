@@ -12,10 +12,10 @@ def create_datasets(args):
     directory = os.path.join(os.getcwd(), "data", dirname)
     entries = os.listdir(directory)
     for entry in entries:
-        if entry.endswith(".csv"):
+        if entry.endswith(".npy"):
             os.remove(os.path.join(directory, entry))
     if args.vary == "frac":
-        frac_range = [0.0, 0.01, 0.02, 0.03, 0.05, 0.08, 0.13, 0.21, 0.34, 0.55, 0.89, 1.0]
+        frac_range = np.arange(20+1) / 20
         for frac in frac_range:
             data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
@@ -25,7 +25,7 @@ def create_datasets(args):
             data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -cont {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "shift":
-        frac_range = np.arange(15+1) / 100
+        frac_range = np.arange(30+1) / 100
         for frac in frac_range:
             data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
@@ -57,6 +57,7 @@ if __name__ == '__main__':
     parser.add_argument("-gpu", type=int)
 
     logging.getLogger().setLevel(logging.INFO)
+    tf.compat.v1.enable_eager_execution()
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
@@ -82,7 +83,7 @@ if __name__ == '__main__':
                 tf.keras.backend.clear_session()
                 tf.compat.v1.reset_default_graph()
                 models = create_models(d.shape[0], d.shape[-1], compression_factor=0.4)
-                result = train_global_detectors(d, models, global_epochs=20)
+                result = train_global_detectors(d, models, global_epochs=1)
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
