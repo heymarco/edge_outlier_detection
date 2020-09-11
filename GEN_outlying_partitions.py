@@ -38,16 +38,13 @@ device_indices = np.random.choice(np.arange(num_devices), int(frac_outlying_devi
 subspace_size = int(subspace_frac * dims)
 absolute_contamination = int(frac_outlying_data * num_data)
 
-subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
-point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)
-
-labels = np.empty(shape=data.shape, dtype=bool)
-labels.fill(0)
+labels = np.zeros(shape=data.shape).astype(bool)
 
 for dev in device_indices:
-    std = args.shift
-    shift = np.random.choice([-std, std], size=subspace_size)
+    shift = np.random.choice([-args.shift, args.shift], size=subspace_size)
     labels[dev].fill(True)
+    subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
+    point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)
     for p in point_indices:
         for i, s in enumerate(subspace):
             data[dev, p, s] = data[dev, p, s] + shift[i]

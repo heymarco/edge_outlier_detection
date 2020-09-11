@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_ood.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EXP_vary_beta.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_vary_beta.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GEN_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_outlying_partitions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/evaluation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,10 +120,8 @@
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416787958" />
     <state x="492" y="74" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.814@0.23.1440.814" timestamp="1599490334836" />
     <state x="492" y="82" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.822@0.23.1440.822" timestamp="1596203475276" />
-    <state x="492" y="337" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.826@0.23.1440.826" timestamp="1591108417170" />
     <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.984@0.23.1920.984" timestamp="1597749514852" />
     <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.986@0.23.1920.986" timestamp="1596440513613" />
-    <state x="656" y="399" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.989@0.23.1920.989" timestamp="1591128617585" />
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.992@0.23.1920.992" timestamp="1595488621503" />
     <state x="342" y="23" key="CommitChangelistDialog2" timestamp="1591687531992">
       <screen x="0" y="23" width="1440" height="827" />
@@ -149,8 +147,8 @@
     </state>
     <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
     <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state x="380" y="265" key="com.intellij.ide.util.TipDialog" timestamp="1599493409318">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state x="507" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1599807615481">
+      <screen x="0" y="23" width="1920" height="1108" />
     </state>
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.986@0.23.1920.986" timestamp="1591170896778" />
@@ -159,7 +157,6 @@
     <state x="-1060" y="931" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.991@-1440.670.1440.877" timestamp="1594201577734" />
     <state x="380" y="265" key="com.intellij.ide.util.TipDialog/0.23.1440.816@0.23.1440.816" timestamp="1599493409318" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.825@0.23.1440.825" timestamp="1596474521879" />
-    <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.826@0.23.1440.826" timestamp="1591085958510" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1596804828134" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.828@0.23.1440.828" timestamp="1595581118164" />
     <state x="507" y="313" key="com.intellij.ide.util.TipDialog/0.23.1920.980@0.23.1920.980" timestamp="1591188947492" />
@@ -168,6 +165,7 @@
     <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.986@0.23.1920.986" timestamp="1597742880118" />
     <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.989@0.23.1920.989" timestamp="1595337375952" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.992@0.23.1920.992" timestamp="1595436070436" />
+    <state x="507" y="352" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1108@0.23.1920.1108" timestamp="1599807615481" />
     <state x="572" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1597838265723">
       <screen x="0" y="23" width="1440" height="828" />
     </state>

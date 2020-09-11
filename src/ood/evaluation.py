@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 from .t_test import t_statistic, evaluate_array_t_statistic
 
@@ -51,10 +52,7 @@ def plot_t_test_over(x, directory):
     file_dict = load_all_in_dir(directory)
 
     x_axis_vals = []
-    means_t_outlier = []
-    means_p_outlier = []
-    means_t_inlier = []
-    means_p_inlier = []
+    result_df = []
 
     for key in file_dict:
         params = parse_filename(key)
@@ -66,16 +64,10 @@ def plot_t_test_over(x, directory):
             shift = float(params["shift"])
             affected_dims = float(params["subspace_frac"])*float(params["dims"])
             avg_dist_from_mean = np.sqrt(affected_dims*(shift**2))
-            print(avg_dist_from_mean)
             x_axis_vals.append(avg_dist_from_mean)
         else:
             print("No valid x-identifier provided")
         f = file_dict[key]
-        mean_results_p_outlier = []
-        mean_results_t_outlier = []
-        mean_results_p_inlier = []
-        mean_results_t_inlier = []
-        print(f.shape)
         for rep in f:
             scores = rep[0]
             labels = rep[1]
@@ -84,33 +76,18 @@ def plot_t_test_over(x, directory):
             labels = labels.reshape(distributed_shape)
             labels = np.any(labels, axis=-1)
             results = evaluate_array_t_statistic(scores)
-            t_values_outlier = results.T[0][labels]
-            p_values_outlier = results.T[1][labels]
-            t_values_inlier = results.T[0][np.invert(labels)]
-            p_values_inlier = results.T[1][np.invert(labels)]
-            mean_results_t_outlier.append(np.mean(t_values_outlier))
-            mean_results_p_outlier.append(np.mean(p_values_outlier))
-            mean_results_t_inlier.append(np.mean(t_values_inlier))
-            mean_results_p_inlier.append(np.mean(p_values_inlier))
-        means_t_outlier.append(np.mean(mean_results_t_outlier))
-        means_p_outlier.append(np.mean(mean_results_p_outlier))
-        means_t_inlier.append(np.mean(mean_results_t_inlier))
-        means_p_inlier.append(np.mean(mean_results_p_inlier))
+            for i, res in enumerate(results):
+                result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
     sorted_indices = np.argsort(x_axis_vals)
     x_axis_vals = np.sort(x_axis_vals)
-    means_t_outlier = np.array(means_t_outlier)[sorted_indices]
-    means_p_outlier = np.array(means_p_outlier)[sorted_indices]
-    means_t_inlier = np.array(means_t_inlier)[sorted_indices]
-    means_p_inlier = np.array(means_p_inlier)[sorted_indices]
+    result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier"])
     fig, axes = plt.subplots(1, 2)
     ax1 = axes[0]
     ax2 = axes[1]
-    ax1.plot(x_axis_vals, means_t_inlier, label="inliers")
-    ax1.plot(x_axis_vals, means_t_outlier, linestyle="--", label="outliers")
-    ax2.plot(x_axis_vals, means_p_inlier, label="inliers")
-    ax2.plot(x_axis_vals, means_p_outlier, linestyle="--", label="outliers")
+    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1)
+    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2)
 
-    ax2.set_yscale("log")
+    # ax2.set_yscale("log")
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
         ax2.set_xlabel("Subspace fraction")
@@ -118,14 +95,14 @@ def plot_t_test_over(x, directory):
         ax1.set_xlabel("Total number of devices")
         ax2.set_xlabel("Total number of devices")
     elif x == "shift":
-        ax1.set_xlabel("Deviation of outlying partition")
-        ax2.set_xlabel("Deviation of outlying partition")
+        ax1.set_xlabel("$dist(mean(X_{out})-mean(X^G))\ [Std]$")
+        ax2.set_xlabel("$dist(mean(X_{out})-mean(X^G))\ [Std]$")
     ax1.set_ylabel("$t$-value")
     ax1.legend()
     ax2.set_ylabel("$p$-value")
 
     ax_alpha = ax2.twinx()
-    ax_alpha.set_yscale("log")
+    # ax_alpha.set_yscale("log")
     ax_alpha.set_ylim(ax2.get_ylim())
     alpha_vals = [0.001, 0.01, 0.05]
     for val in alpha_vals:
