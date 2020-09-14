@@ -1,9 +1,11 @@
 import os
 import numpy as np
+from scipy.stats import tmean
 import pandas as pd
 import seaborn as sns
 
 from .t_test import t_statistic, evaluate_array_t_statistic
+from src.utils import load_all_in_dir
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -13,18 +15,7 @@ mpl.rc('font', family='serif')
 
 
 ensemble_suffix = "_aa_bb.npy"
-
-
-def load_all_in_dir(directory):
-    all_files = {}
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".npy"):
-                filepath = os.path.join(directory, file)
-                result_file = np.load(filepath)
-                all_files[file[:-(len(ensemble_suffix))]] = result_file
-    print(all_files.keys())
-    return all_files
+qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
 
 
 def plot_os_star_hist(from_dir):
@@ -48,7 +39,7 @@ def plot_os_star_hist(from_dir):
 
 
 def plot_t_test_over(x, directory):
-
+    sns.set_palette(sns.color_palette(qualitative_cp))
     file_dict = load_all_in_dir(directory)
 
     x_axis_vals = []
@@ -80,13 +71,18 @@ def plot_t_test_over(x, directory):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
     result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier"])
     result_df = result_df
-    fig, axes = plt.subplots(1, 2)
+    fig, axes = plt.subplots(2, 1, sharex="all")
     ax1 = axes[0]
     ax2 = axes[1]
-    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1)
-    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2)
 
-    # ax2.set_yscale("log")
+    def estimator(x):
+        low = np.quantile(x, 0.2)
+        high = np.quantile(x, 0.8)
+        return tmean(x, [low, high])
+
+    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1, ci=100, estimator=estimator)
+    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2, legend=False, ci=100, estimator=estimator)
+
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
         ax2.set_xlabel("Subspace fraction")
@@ -94,22 +90,23 @@ def plot_t_test_over(x, directory):
         ax1.set_xlabel("Total number of devices")
         ax2.set_xlabel("Total number of devices")
     elif x == "shift":
-        ax1.set_xlabel("$dist(mean(X_{out})-mean(X^G))\ [Std]$")
-        ax2.set_xlabel("$dist(mean(X_{out})-mean(X^G))\ [Std]$")
+        ax1.set_xlabel("Shift [Std]")
+        ax2.set_xlabel("Shift [Std]")
     ax1.set_ylabel("$t$-value")
     ax1.legend()
     ax2.set_ylabel("$p$-value")
 
     ax_alpha = ax2.twinx()
-    # ax_alpha.set_yscale("log")
     ax_alpha.set_ylim(ax2.get_ylim())
-    alpha_vals = [0.001, 0.01, 0.05]
+    alpha_vals = [0.05]
     for val in alpha_vals:
         ax_alpha.axhline(val, c="black", lw=0.7, ls="dotted")
     ax_alpha.set_yticks(alpha_vals)
     ax_alpha.set_yticklabels([r"$\alpha={}$".format(val) for val in alpha_vals])
 
-    ax2.legend()
+    # ax_alpha.set_yscale("log")
+    # ax2.set_yscale("log")
+
     plt.show()
 
 

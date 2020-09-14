@@ -1,5 +1,6 @@
 import os
 from sklearn.metrics import precision_recall_curve, auc
+import pandas as pd
 
 import numpy as np
 from src.data.synthetic_data import create_raw_data, add_global_outliers, add_local_outliers, add_deviation
@@ -45,7 +46,7 @@ def get_rank_distance(os_c, os_l, labels, beta):
     return dist
 
 
-def prc_ranks(os_c, os_l, labels, pos_label, beta=0.01, dist=None):
+def prc_ranks(os_c, os_l, labels, pos_label, beta=0.05, dist=None):
     if dist is None:
         dist = get_rank_distance(os_c, os_l, labels, beta)
     precisions = []
@@ -128,10 +129,11 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
 
 def evaluate_vary_ratio(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.1, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
 
     file_keys = np.array(list(files.keys()))
-    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    contamination_fracs = [float(parse_filename(key)["frac_local"])/float(parse_filename(key)["frac_global"])
+                           for key in files]
     sorted_key_indices = np.argsort(contamination_fracs)
 
     for i, file in enumerate(file_keys[sorted_key_indices]):
@@ -172,8 +174,9 @@ def evaluate_vary_ratio(from_dir):
 
 
 def plot_vary_ratio(from_dir):
+    sns.set_palette(sns.diverging_palette(220, 20, n=6))
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
@@ -230,11 +233,17 @@ def plot_vary_ratio(from_dir):
 
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
-        p1 = axs[row, 0].plot(beta_range, final_pr1)
-        p2 = axs[row, 1].plot(beta_range, final_pr2,
-                              label=r"$cont_g={}, cont_l={}$".format(round(fg/fl, 1)))
-        axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
-        axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
+
+        if round(fg/fl, 1) == 0.2:
+            continue
+        if round(fg/fl, 1) == 0.1:
+            continue
+
+        p1 = axs[row, 0].plot(beta_range, np.delete(final_pr1, 2))
+        p2 = axs[row, 1].plot(beta_range, np.delete(final_pr2, 2),
+                              label=r"$\frac{{cont_g}}{{cont_l}}={}$".format(round(fg/fl, 1)))
+        # axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
+        # axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
@@ -386,7 +395,7 @@ def evaluate_results(from_dir):
                 # plt.annotate('$f_1={0:0.1f}$'.format(f_score), xy=(x[45] + 0.02, 0.2), fontsize=6)
             return l
 
-        def average_result(result):
+        def get_result(result, key):
             p_c1_arr = []
             p_l1_arr = []
             r_c1_arr = []
@@ -400,7 +409,6 @@ def evaluate_results(from_dir):
             p_comb2_arr = []
             r_comb2_arr = []
             for rep in result:
-                rep = result[0]
                 os_c = rep[0]
                 os_l = rep[1]
                 labels = rep[2].astype(int).flatten()
@@ -467,89 +475,48 @@ def evaluate_results(from_dir):
                 p_comb2_arr[r] = np.delete(p_comb2_arr[r], excluded_indices)
                 r_comb2_arr[r] = np.delete(r_comb2_arr[r], excluded_indices)
 
-            res1 = (np.mean(p_c1_arr, axis=0), np.mean(r_c1_arr, axis=0))
-            res2 = (np.mean(p_c2_arr, axis=0), np.mean(r_c2_arr, axis=0))
-            res3 = (np.mean(p_l1_arr, axis=0), np.mean(r_l1_arr, axis=0))
-            res4 = (np.mean(p_l2_arr, axis=0), np.mean(r_l2_arr, axis=0))
-            res5 = (np.mean(p_comb1_arr, axis=0), np.mean(r_comb1_arr, axis=0))
-            res6 = (np.mean(p_comb2_arr, axis=0), np.mean(r_comb2_arr, axis=0))
+            results = []
+            for pcs, rcs in zip(p_c1_arr, r_c1_arr):
+                for p, r in zip(pcs, rcs):
+                    results.append([p, r, "local", "$C$", key])
+            for pcs, rcs in zip(p_c2_arr, r_c2_arr):
+                for p, r in zip(pcs, rcs):
+                    results.append([p, r, "global", "$C$", key])
+            for pcs, rcs in zip(p_l1_arr, r_l1_arr):
+                for p, r in zip(pcs, rcs):
+                    results.append([p, r, "local", "$L$", key])
+            for pcs, rcs in zip(p_l2_arr, r_l2_arr):
+                for p, r in zip(pcs, rcs):
+                    results.append([p, r, "global", "$L$", key])
+            for pcs, rcs in zip(p_comb1_arr, r_comb1_arr):
+                for p, r in zip(pcs, rcs):
+                    results.append([p, r, "local", "$C+L$", key])
+            for pcs, rcs in zip(p_comb2_arr, r_comb2_arr):
+                for p, r in zip(pcs, rcs):
+                    results.append([p, r, "global", "$C+L$", key])
 
-            return res1, res2, res3, res4, res5, res6
+            return results
 
-        mainlegend_labels = []
+        evaluation = False
+        result_dir = os.path.exists(os.path.join("results", "numpy", "vary_cont", "result.csv"))
+        if result_dir:
+            evaluation = pd.read_csv(result_dir)
+        else:
+            for i, key in enumerate(sorted(results)):
+                result = results[key]
+                params = parse_filename(key)
+                if not params["l_name"].startswith("ae"):
+                    continue
+                key = r"{}".format(float(params["frac_local"]) + float(params["frac_global"]))
+                if not evaluation:
+                    evaluation = get_result(result, key)
+                else:
+                    evaluation = evaluation + get_result(result, key)
+            evaluation = pd.DataFrame(evaluation, columns=["Precision", "Recall", "Type", "Detector", "$cont$"])
+            evaluation.to_csv(result_dir)
 
-        for i, key in enumerate(sorted(results)):
-            result = results[key]
-            _, frac, _, _ = parse_filename(key)
-            res_1, res_2, res_3, res_4, res_5, res_6 = average_result(result)
-
-            mainlegend_labels.append("sf={}".format(frac))
-
-            ax1 = plt.subplot(2, 3, 1)
-            ax1.get_xaxis().set_visible(False)
-            plot_roc(res_1[0], res_1[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, 0), loc="upper center", frameon=False, ncol=2)
-            plt.title('$C$ identifies LO')
-
-            if i == 0:
-                plt.ylim((0, 1))
-                f1_legend = add_f1_iso_curve()
-
-            ax2 = plt.subplot(2, 3, 4, sharey=ax1, sharex=ax1)
-            plot_roc(res_2[0], res_2[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, -0.25), loc="upper center", frameon=False, ncol=2)
-            plt.title('$C$ identifies GO')
-
-            if i == 0:
-                plt.ylim((0, 1))
-                add_f1_iso_curve()
-
-            ax3 = plt.subplot(2, 3, 2, sharex=ax1, sharey=ax1)
-            ax3.get_yaxis().set_visible(False)
-            ax3.get_xaxis().set_visible(False)
-            plot_roc(res_3[0], res_3[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, 0), loc="upper center", frameon=False, ncol=2)
-            plt.title('$L$ identifies LO')
-
-            if i == 0:
-                plt.ylim((0, 1))
-                add_f1_iso_curve()
-
-            ax4 = plt.subplot(2, 3, 5, sharey=ax1, sharex=ax1)
-            ax4.get_yaxis().set_visible(False)
-            plot_roc(res_4[0], res_4[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, -0.25), loc="upper center", frameon=False, ncol=2)
-            plt.title('$L$ identifies GO')
-
-            if i == 0:
-                plt.ylim((0, 1))
-                add_f1_iso_curve()
-
-            ax5 = plt.subplot(2, 3, 3, sharey=ax1, sharex=ax1)
-            ax5.get_yaxis().set_visible(False)
-            ax5.get_xaxis().set_visible(False)
-            plot_roc(res_5[0], res_5[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, 0), loc="upper center", frameon=False, ncol=2)
-            plt.title('$L + C$ identify LO')
-
-            if i == 0:
-                plt.ylim((0, 1))
-                add_f1_iso_curve()
-
-            ax6 = plt.subplot(2, 3, 6, sharey=ax1, sharex=ax1)
-            ax6.get_yaxis().set_visible(False)
-            plot_roc(res_6[0], res_6[1], label="sf={}".format(frac), hline_y=0.005)
-            plt.legend(bbox_to_anchor=(0.5, -0.25), loc="upper center", frameon=False, ncol=2)
-            plt.title('$L + C$ identify GO')
-
-            if i == 0:
-                plt.ylim((0, 1))
-                add_f1_iso_curve()
-
-        handles, labels = ax1.get_legend_handles_labels()
-        handles.append(f1_legend)
-        mainlegend_labels.append("$f_1 = [0.2, 0.4, 0.6, 0.8]$")
-        plt.figlegend(handles, mainlegend_labels, loc='lower center', frameon=False, ncol=len(handles))
+        g = sns.FacetGrid(evaluation, row="Type", col="Detector", hue="$cont$")
+        g.map(sns.lineplot, x="Recall", y="Precision")
 
     files = load_all_in_dir(from_dir)
     create_subplots(files)
@@ -671,5 +638,7 @@ def parse_filename(file):
     assert len(components) == len(keys)
     parsed_args = {}
     for i in range(len(keys)):
+        if components[i].endswith(".npy"):
+            components[i] = components[i][:-4]
         parsed_args[keys[i]] = components[i]
     return parsed_args

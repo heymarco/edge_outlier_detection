@@ -23,6 +23,7 @@ def evaluate_array_t_statistic(arr):
     std = np.std(os_star, ddof=1)
     results = []
     dof = os_star.shape[-1]-1
+    print(dof)
     for value in os_star:
         t_val = t_statistic(value, mean, std, os_star.shape[-1])
         p_val = t.sf(t_val, df=dof)  # survival function
