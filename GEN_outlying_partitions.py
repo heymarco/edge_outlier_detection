@@ -42,7 +42,7 @@ labels = np.zeros(shape=data.shape).astype(bool)
 
 for dev in device_indices:
     point_on_circle = np.random.normal(size=subspace_size)
-    shift = np.sqrt(dims) * point_on_circle / np.linalg.norm(point_on_circle)
+    shift = np.sqrt(dims) * point_on_circle / np.linalg.norm(point_on_circle) * args.shift
     labels[dev].fill(True)
     subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
     point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)

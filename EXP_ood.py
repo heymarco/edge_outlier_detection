@@ -25,9 +25,9 @@ def create_datasets(args):
             data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -cont {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "shift":
-        frac_range = np.arange(30+1) / 100
-        for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -dir {}".format(frac, args.data))
+        shift = np.arange(30+1) / 100
+        for val in shift:
+            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -dir {}".format(val, args.data))
             os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
