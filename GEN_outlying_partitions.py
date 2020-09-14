@@ -32,7 +32,6 @@ data = create_raw_data(num_devices, num_data, dims)
 # data, labels_global = add_global_outliers(data, subspace_size, frac_outlying=args.frac_global, sigma=sigma_g)
 data = add_deviation(data, sigma_l)
 # data, labels_local = add_local_outliers(data, subspace_size, args.frac_local)
-data = add_random_correlation(data)
 
 device_indices = np.random.choice(np.arange(num_devices), int(frac_outlying_devices * num_devices), replace=False)
 subspace_size = int(subspace_frac * dims)
@@ -49,6 +48,8 @@ for dev in device_indices:
     for p in point_indices:
         for i, s in enumerate(subspace):
             data[dev, p, s] = data[dev, p, s] + shift[i]
+
+data = add_random_correlation(data)
 
 # write to file
 params_str = "{}_{}_{}_{}_{}_{}_{}_ood".format(num_devices,
