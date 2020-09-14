@@ -78,9 +78,8 @@ def plot_t_test_over(x, directory):
             results = evaluate_array_t_statistic(scores)
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
-    sorted_indices = np.argsort(x_axis_vals)
-    x_axis_vals = np.sort(x_axis_vals)
     result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier"])
+    result_df = result_df
     fig, axes = plt.subplots(1, 2)
     ax1 = axes[0]
     ax2 = axes[1]

@@ -41,7 +41,8 @@ absolute_contamination = int(frac_outlying_data * num_data)
 labels = np.zeros(shape=data.shape).astype(bool)
 
 for dev in device_indices:
-    shift = np.random.choice([-args.shift, args.shift], size=subspace_size)
+    point_on_circle = np.random.normal(size=subspace_size)
+    shift = np.sqrt(dims) * point_on_circle / np.linalg.norm(point_on_circle)
     labels[dev].fill(True)
     subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
     point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)

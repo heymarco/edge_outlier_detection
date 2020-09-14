@@ -44,7 +44,6 @@ def create_datasets(args):
                     ground_truth[file[:-6]] = f
                 del f
     print("Finished data loading")
-    print(data)
     return data, ground_truth
 
 
@@ -57,10 +56,13 @@ if __name__ == '__main__':
     parser.add_argument("-gpu", type=int)
 
     logging.getLogger().setLevel(logging.INFO)
-    tf.compat.v1.enable_eager_execution()
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
+
+    # fighting memory leak
+    tf.config.threading.set_inter_op_parallelism_threads(1)
+    tf.compat.v1.enable_eager_execution()
 
     # select GPU
     setup_machine(cuda_device=args.gpu)
