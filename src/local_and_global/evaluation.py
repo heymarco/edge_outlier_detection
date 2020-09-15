@@ -174,7 +174,7 @@ def evaluate_vary_ratio(from_dir):
 
 
 def plot_vary_ratio(from_dir):
-    sns.set_palette(sns.diverging_palette(220, 20, n=6))
+    sns.set_palette(sns.diverging_palette(162, 26, n=8))
     files = load_all_in_dir(from_dir)
     beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
 
@@ -182,7 +182,7 @@ def plot_vary_ratio(from_dir):
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
     sorted_key_indices = np.argsort(contamination_fracs)
 
-    fig, axs = plt.subplots(4, 2)
+    fig, axs = plt.subplots(4, 2, sharex="all", sharey="col")
     pad = 5
     rows = ["AE / AE", "AE / LOF", "AE / IF", "AE / xStream"]
     for ax, row in zip(axs[:, 0], rows):
@@ -194,17 +194,17 @@ def plot_vary_ratio(from_dir):
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
     axs[0, 1].set_title("Global")
-    for ax in axs[:-1, 1:].flatten():
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
-        ax.set_xticks([])
-        ax.set_yticks([])
-    for ax in axs[:-1, 0]:
-        ax.set_xticklabels([])
-        ax.set_xticks([])
-    for ax in axs[-1, 1:]:
-        ax.set_yticklabels([])
-        ax.set_yticks([])
+    # for ax in axs[:-1, 1:].flatten():
+    #     ax.set_xticklabels([])
+    #     ax.set_yticklabels([])
+    #     ax.set_xticks([])
+    #     ax.set_yticks([])
+    # for ax in axs[:-1, 0]:
+    #     ax.set_xticklabels([])
+    #     ax.set_xticks([])
+    # for ax in axs[-1, 1:]:
+    #     ax.set_yticklabels([])
+    #     ax.set_yticks([])
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
@@ -234,14 +234,14 @@ def plot_vary_ratio(from_dir):
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
 
-        if round(fg/fl, 1) == 0.2:
-            continue
-        if round(fg/fl, 1) == 0.1:
-            continue
+        # if round(fg/fl, 1) == 0.2:
+        #    continue
+        # if round(fg/fl, 1) == 0.1:
+        #     continue
 
-        p1 = axs[row, 0].plot(beta_range, np.delete(final_pr1, 2))
-        p2 = axs[row, 1].plot(beta_range, np.delete(final_pr2, 2),
-                              label=r"$\frac{{cont_g}}{{cont_l}}={}$".format(round(fg/fl, 1)))
+        p1 = axs[row, 0].plot(beta_range, final_pr1)
+        p2 = axs[row, 1].plot(beta_range, final_pr2,
+                              label=r"$ratio = {}$".format(round(fg/fl, 1)))
         # axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
         # axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
 
@@ -384,7 +384,6 @@ def evaluate_results(from_dir):
         # plt.axhline(hline_y, color='navy', linestyle='--')
 
     def create_subplots(results):
-        sns.set_palette(sns.color_palette("PuBuGn_d"))
 
         def add_f1_iso_curve():
             f_scores = np.linspace(0.2, 0.8, num=4)
@@ -478,28 +477,28 @@ def evaluate_results(from_dir):
             results = []
             for pcs, rcs in zip(p_c1_arr, r_c1_arr):
                 for p, r in zip(pcs, rcs):
-                    results.append([p, r, "local", "$C$", key])
+                    results.append([p, r, "local", "$C$", str(key)])
             for pcs, rcs in zip(p_c2_arr, r_c2_arr):
                 for p, r in zip(pcs, rcs):
-                    results.append([p, r, "global", "$C$", key])
+                    results.append([p, r, "global", "$C$", str(key)])
             for pcs, rcs in zip(p_l1_arr, r_l1_arr):
                 for p, r in zip(pcs, rcs):
-                    results.append([p, r, "local", "$L$", key])
+                    results.append([p, r, "local", "$L$", str(key)])
             for pcs, rcs in zip(p_l2_arr, r_l2_arr):
                 for p, r in zip(pcs, rcs):
-                    results.append([p, r, "global", "$L$", key])
+                    results.append([p, r, "global", "$L$", str(key)])
             for pcs, rcs in zip(p_comb1_arr, r_comb1_arr):
                 for p, r in zip(pcs, rcs):
-                    results.append([p, r, "local", "$C+L$", key])
+                    results.append([p, r, "local", "$C+L$", str(key)])
             for pcs, rcs in zip(p_comb2_arr, r_comb2_arr):
                 for p, r in zip(pcs, rcs):
-                    results.append([p, r, "global", "$C+L$", key])
+                    results.append([p, r, "global", "$C+L$", str(key)])
 
             return results
 
         evaluation = False
-        result_dir = os.path.exists(os.path.join("results", "numpy", "vary_cont", "result.csv"))
-        if result_dir:
+        result_dir = os.path.join(os.getcwd(), "results", "numpy", "vary_cont", "csv", "result.csv")
+        if os.path.exists(result_dir):
             evaluation = pd.read_csv(result_dir)
         else:
             for i, key in enumerate(sorted(results)):
@@ -513,10 +512,12 @@ def evaluate_results(from_dir):
                 else:
                     evaluation = evaluation + get_result(result, key)
             evaluation = pd.DataFrame(evaluation, columns=["Precision", "Recall", "Type", "Detector", "$cont$"])
-            evaluation.to_csv(result_dir)
+            evaluation.to_csv(result_dir, index=False)
 
-        g = sns.FacetGrid(evaluation, row="Type", col="Detector", hue="$cont$")
-        g.map(sns.lineplot, x="Recall", y="Precision")
+        evaluation.sort_values(by=["Recall"], inplace=True)
+        print(evaluation)
+        g = sns.FacetGrid(evaluation, row="Type", col="Detector")
+        g.map_dataframe(sns.lineplot, x="Recall", y="Precision", hue="$cont$")
 
     files = load_all_in_dir(from_dir)
     create_subplots(files)

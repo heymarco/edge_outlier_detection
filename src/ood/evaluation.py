@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from scipy.stats import tmean
+from scipy.stats import tmean, gmean
 import pandas as pd
 import seaborn as sns
 
@@ -80,8 +80,8 @@ def plot_t_test_over(x, directory):
         high = np.quantile(x, 0.8)
         return tmean(x, [low, high])
 
-    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1, ci=100, estimator=estimator)
-    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2, legend=False, ci=100, estimator=estimator)
+    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1, ci=90, estimator=estimator)
+    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2, legend=False, ci=90, estimator=estimator)
 
     if x == "frac":
         ax1.set_xlabel("Subspace fraction")
