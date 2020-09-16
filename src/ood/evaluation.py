@@ -48,7 +48,10 @@ def plot_t_test_over(x, directory):
     for key in file_dict:
         params = parse_filename(key)
         if x == "frac":
-            x_axis_vals.append(float(params["subspace_frac"]))
+            frac = float(params["subspace_frac"])
+            if (round(frac, 2) * 100) % 10 != 0:
+                continue
+            x_axis_vals.append(frac)
         elif x == "devices":
             x_axis_vals.append(float(params["num_devices"]))
         elif x == "shift":
@@ -69,8 +72,8 @@ def plot_t_test_over(x, directory):
             results = evaluate_array_t_statistic(scores)
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
+
     result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier"])
-    result_df = result_df
     fig, axes = plt.subplots(2, 1, sharex="all")
     ax1 = axes[0]
     ax2 = axes[1]
@@ -80,11 +83,13 @@ def plot_t_test_over(x, directory):
         high = np.quantile(x, 0.8)
         return tmean(x, [low, high])
 
-    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1, ci=90, estimator=estimator)
-    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2, legend=False, ci=90, estimator=estimator)
+    sns.violinplot(data=result_df, split=True, x="x", y="t", hue="outlier", ax=ax1, scale="width",
+                   palette="Set2")
+    sns.violinplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2,
+                   cut=0, palette="Set2", split=True, scale="width")
 
     if x == "frac":
-        ax1.set_xlabel("Subspace fraction")
+        ax1.set_xlabel("")
         ax2.set_xlabel("Subspace fraction")
     elif x == "devices":
         ax1.set_xlabel("Total number of devices")
@@ -104,8 +109,11 @@ def plot_t_test_over(x, directory):
     ax_alpha.set_yticks(alpha_vals)
     ax_alpha.set_yticklabels([r"$\alpha={}$".format(val) for val in alpha_vals])
 
-    # ax_alpha.set_yscale("log")
-    # ax2.set_yscale("log")
+    handles, labels = ax1.get_legend_handles_labels()
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles), title="Outlier")
+
+    for ax in [ax1, ax2]:
+        ax.get_legend().remove()
 
     plt.show()
 

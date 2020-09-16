@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GEN_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_outlying_partitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_ood.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ood/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/t_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/t_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +148,7 @@
     </state>
     <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
     <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state x="380" y="267" key="com.intellij.ide.util.TipDialog" timestamp="1600066492113">
+    <state x="380" y="267" key="com.intellij.ide.util.TipDialog" timestamp="1600240647612">
       <screen x="0" y="23" width="1440" height="823" />
     </state>
     <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
@@ -157,7 +158,7 @@
     <state x="380" y="265" key="com.intellij.ide.util.TipDialog/0.23.1440.816@0.23.1440.816" timestamp="1599493409318" />
     <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.821@0.23.1440.821" timestamp="1600013183399" />
     <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1600035513670" />
-    <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1600066492113" />
+    <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1600240647612" />
     <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.825@0.23.1440.825" timestamp="1596474521879" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1596804828134" />
     <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.828@0.23.1440.828" timestamp="1595581118164" />
