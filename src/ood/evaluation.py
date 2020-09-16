@@ -38,6 +38,124 @@ def plot_os_star_hist(from_dir):
     create_plots(file_dict=fs)
 
 
+def plot_t_test_shift(directory):
+    sns.set_palette(sns.color_palette(qualitative_cp))
+    file_dict = load_all_in_dir(directory)
+
+    x_axis_vals = []
+    result_df = []
+
+    for key in file_dict:
+        params = parse_filename(key)
+        shift = float(params["shift"])
+        affected_dims = float(params["subspace_frac"]) * float(params["dims"])
+        avg_dist_from_mean = np.sqrt(affected_dims * (shift ** 2))
+        x_axis_vals.append(avg_dist_from_mean)
+        f = file_dict[key]
+        for rep in f:
+            scores = rep[0]
+            labels = rep[1]
+            distributed_shape = (int(params["num_devices"]), int(params["num_data"]))
+            scores = scores.reshape(distributed_shape)
+            labels = labels.reshape(distributed_shape)
+            labels = np.any(labels, axis=-1)
+            results = evaluate_array_t_statistic(scores)
+            for i, res in enumerate(results):
+                result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
+
+    result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier"])
+    fig, axes = plt.subplots(2, 1, sharex="all")
+    ax1 = axes[0]
+    ax2 = axes[1]
+
+    def estimator(x):
+        low = np.quantile(x, 0.2)
+        high = np.quantile(x, 0.8)
+        return tmean(x, [low, high])
+
+    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1, ci=90, estimator=estimator)
+    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2, ci=90, estimator=estimator)
+
+    ax1.set_xlabel("Shift [Std]")
+    ax2.set_xlabel("Shift [Std]")
+    ax1.set_ylabel("$t$-value")
+    ax1.legend()
+    ax2.set_ylabel("$p$-value")
+
+    ax_alpha = ax2.twinx()
+    ax_alpha.set_ylim(ax2.get_ylim())
+    alpha_vals = [0.05]
+    for val in alpha_vals:
+        ax_alpha.axhline(val, c="black", lw=0.7, ls="dotted")
+    ax_alpha.set_yticks(alpha_vals)
+    ax_alpha.set_yticklabels([r"$\alpha={}$".format(val) for val in alpha_vals])
+
+    handles, labels = ax1.get_legend_handles_labels()
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles), title="Outlier")
+
+    for ax in [ax1, ax2]:
+        ax.get_legend().remove()
+
+    plt.show()
+
+
+def plot_t_test_frac(directory):
+    sns.set_palette(sns.color_palette(qualitative_cp))
+    file_dict = load_all_in_dir(directory)
+
+    x_axis_vals = []
+    result_df = []
+
+    for key in file_dict:
+        params = parse_filename(key)
+        frac = float(params["subspace_frac"])
+        x_axis_vals.append(frac)
+        f = file_dict[key]
+        for rep in f:
+            scores = rep[0]
+            labels = rep[1]
+            distributed_shape = (int(params["num_devices"]), int(params["num_data"]))
+            scores = scores.reshape(distributed_shape)
+            labels = labels.reshape(distributed_shape)
+            labels = np.any(labels, axis=-1)
+            results = evaluate_array_t_statistic(scores)
+            for i, res in enumerate(results):
+                result_df.append([x_axis_vals[-1], res[0], res[1], labels[i], params["shift"], params["subspace_frac"]])
+
+    result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier", "shift", "sf"])
+    tested_shift = np.unique(result_df["shift"])
+
+    fig, axs = plt.subplots(len(tested_shift), sharex="all", sharey="all")
+
+    axs[0].set_xlabel("Subspace fraction")
+    axs[0].set_ylabel("$p$-value")
+
+    for ax, shift in zip(axs, tested_shift):
+        selection = result_df["shift"] == shift
+        sns.violinplot(data=result_df[selection], x="x", y="p", hue="outlier",
+                       ax=ax, cut=0, split=True, scale="width")
+
+    for ax in axs:
+        ax_alpha = ax.twinx()
+        ax_alpha.set_ylim(ax.get_ylim())
+        alpha_vals = [0.05]
+        for val in alpha_vals:
+            ax_alpha.axhline(val, c="black", lw=0.7, ls="dotted")
+        ax_alpha.set_yticks(alpha_vals)
+        ax_alpha.set_yticklabels([r"$\alpha={}$".format(val) for val in alpha_vals])
+
+    handles, labels = axs[0].get_legend_handles_labels()
+    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles), title="Outlier")
+
+    pad = 5
+    for ax, shift in zip(axs, tested_shift):
+        ax.set_ylabel("AUPR")
+        ax.annotate(shift, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
+                    xycoords=ax.yaxis.label, textcoords='offset points',
+                    size='large', ha='right', va='center', rotation=90)
+
+    plt.show()
+
 def plot_t_test_over(x, directory):
     sns.set_palette(sns.color_palette(qualitative_cp))
     file_dict = load_all_in_dir(directory)

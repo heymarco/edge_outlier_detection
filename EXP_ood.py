@@ -22,7 +22,7 @@ def create_datasets(args):
             for sf in tested_sf:
                 combos.append([shift, sf])
         for combo in combos:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -shift {} -dir {}"
+            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -sf {} -dir {}"
                                           .format(combo[0], combo[1], args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "cont":
