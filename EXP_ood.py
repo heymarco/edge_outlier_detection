@@ -15,9 +15,15 @@ def create_datasets(args):
         if entry.endswith(".npy"):
             os.remove(os.path.join(directory, entry))
     if args.vary == "frac":
-        frac_range = np.arange(20+1) / 20
-        for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -dir {}".format(frac, args.data))
+        tested_shift = [0.1, 0.5, 1.0, 2.0]
+        tested_sf = [0.1, 0.3, 0.6, 1.0]
+        combos = []
+        for shift in tested_shift:
+            for sf in tested_sf:
+                combos.append([shift, sf])
+        for combo in combos:
+            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -shift {} -dir {}"
+                                          .format(combo[0], combo[1], args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "cont":
         frac_range = [0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]

@@ -17,6 +17,8 @@ mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
 qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
+
+
 # sns.set_palette(sns.cubehelix_palette(8, start=.5, rot=-.75))
 
 
@@ -70,8 +72,8 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.05, dist=None):
         if not np.isnan(recall) and not np.isnan(precision):
             recalls.append(recall)
             precisions.append(precision)
-    recalls.append(1.0)
-    precisions.append(np.sum(labels > 0)/len(labels))
+    recalls.append(1.0)  # left end
+    precisions.append(np.sum(labels > 0) / len(labels))  # right end
     return sorted(precisions, reverse=True), sorted(recalls)
 
 
@@ -132,7 +134,7 @@ def evaluate_vary_ratio(from_dir):
     beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
 
     file_keys = np.array(list(files.keys()))
-    contamination_fracs = [float(parse_filename(key)["frac_local"])/float(parse_filename(key)["frac_global"])
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) / float(parse_filename(key)["frac_global"])
                            for key in files]
     sorted_key_indices = np.argsort(contamination_fracs)
 
@@ -194,6 +196,7 @@ def plot_vary_ratio(from_dir):
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
     axs[0, 1].set_title("Global")
+
     # for ax in axs[:-1, 1:].flatten():
     #     ax.set_xticklabels([])
     #     ax.set_yticklabels([])
@@ -241,7 +244,7 @@ def plot_vary_ratio(from_dir):
 
         p1 = axs[row, 0].plot(beta_range, final_pr1)
         p2 = axs[row, 1].plot(beta_range, final_pr2,
-                              label=r"$ratio = {}$".format(round(fg/fl, 1)))
+                              label=r"$ratio = {}$".format(round(fg / fl, 1)))
         # axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
         # axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
 
@@ -316,6 +319,7 @@ def plot_vary_cont(from_dir):
     axs[0, 1].set_title("Global")
     for ax in axs[:-1, 1:].flatten():
         ax.set_xlim(0.0, 0.2)
+
     #     ax.set_xticklabels([])
     #     ax.set_yticklabels([])
     #     ax.set_xticks([])
@@ -366,7 +370,7 @@ def plot_vary_cont(from_dir):
         print("max for global: {}".format(np.max(final_pr2)))
         axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
         axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
-                         label=r"$cont={}$".format(fl+fg))
+                         label=r"$cont={}$".format(fl + fg))
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
@@ -374,27 +378,27 @@ def plot_vary_cont(from_dir):
 
 
 def evaluate_results(from_dir):
+    sns.set_palette(sns.color_palette(qualitative_cp))
 
-    def plot_roc(precision, recall, label, hline_y):
+    def plot_roc(precision, recall, label, hline_y, axis):
+        styles = ["solid", "dotted", "dashed", "dashdot"]
         roc_auc = auc(recall, precision)
-        plt.plot(recall, precision, label='$PR_{auc} = %0.2f)$' % roc_auc)
-        plt.xlim((0, 1))
-        plt.xlabel('Recall')
-        plt.ylabel('Precision')
-        # plt.axhline(hline_y, color='navy', linestyle='--')
+        num_lines = len(axis.get_lines())
+        print(num_lines)
+        axis.plot(recall, precision, label='$PR_{auc} = %0.2f)$' % roc_auc, ls=styles[num_lines])
 
     def create_subplots(results):
 
-        def add_f1_iso_curve():
+        def add_f1_iso_curve(axis):
             f_scores = np.linspace(0.2, 0.8, num=4)
             for f_score in f_scores:
                 x = np.linspace(0.01, 1)
                 y = f_score * x / (2 * x - f_score)
-                l, = plt.plot(x[y >= 0], y[y >= 0], color='gray', alpha=0.2)
+                l, = axis.plot(x[y >= 0], y[y >= 0], color='gray', alpha=0.2)
                 # plt.annotate('$f_1={0:0.1f}$'.format(f_score), xy=(x[45] + 0.02, 0.2), fontsize=6)
             return l
 
-        def get_result(result, key):
+        def average_result(result):
             p_c1_arr = []
             p_l1_arr = []
             r_c1_arr = []
@@ -474,50 +478,59 @@ def evaluate_results(from_dir):
                 p_comb2_arr[r] = np.delete(p_comb2_arr[r], excluded_indices)
                 r_comb2_arr[r] = np.delete(r_comb2_arr[r], excluded_indices)
 
-            results = []
-            for pcs, rcs in zip(p_c1_arr, r_c1_arr):
-                for p, r in zip(pcs, rcs):
-                    results.append([p, r, "local", "$C$", str(key)])
-            for pcs, rcs in zip(p_c2_arr, r_c2_arr):
-                for p, r in zip(pcs, rcs):
-                    results.append([p, r, "global", "$C$", str(key)])
-            for pcs, rcs in zip(p_l1_arr, r_l1_arr):
-                for p, r in zip(pcs, rcs):
-                    results.append([p, r, "local", "$L$", str(key)])
-            for pcs, rcs in zip(p_l2_arr, r_l2_arr):
-                for p, r in zip(pcs, rcs):
-                    results.append([p, r, "global", "$L$", str(key)])
-            for pcs, rcs in zip(p_comb1_arr, r_comb1_arr):
-                for p, r in zip(pcs, rcs):
-                    results.append([p, r, "local", "$C+L$", str(key)])
-            for pcs, rcs in zip(p_comb2_arr, r_comb2_arr):
-                for p, r in zip(pcs, rcs):
-                    results.append([p, r, "global", "$C+L$", str(key)])
+            res1 = (np.mean(p_c1_arr, axis=0), np.mean(r_c1_arr, axis=0))
+            res2 = (np.mean(p_c2_arr, axis=0), np.mean(r_c2_arr, axis=0))
+            res3 = (np.mean(p_l1_arr, axis=0), np.mean(r_l1_arr, axis=0))
+            res4 = (np.mean(p_l2_arr, axis=0), np.mean(r_l2_arr, axis=0))
+            res5 = (np.mean(p_comb1_arr, axis=0), np.mean(r_comb1_arr, axis=0))
+            res6 = (np.mean(p_comb2_arr, axis=0), np.mean(r_comb2_arr, axis=0))
 
-            return results
+            return res1, res2, res3, res4, res5, res6
 
-        evaluation = False
-        result_dir = os.path.join(os.getcwd(), "results", "numpy", "vary_cont", "csv", "result.csv")
-        if os.path.exists(result_dir):
-            evaluation = pd.read_csv(result_dir)
-        else:
-            for i, key in enumerate(sorted(results)):
-                result = results[key]
-                params = parse_filename(key)
-                if not params["l_name"].startswith("ae"):
-                    continue
-                key = r"{}".format(float(params["frac_local"]) + float(params["frac_global"]))
-                if not evaluation:
-                    evaluation = get_result(result, key)
-                else:
-                    evaluation = evaluation + get_result(result, key)
-            evaluation = pd.DataFrame(evaluation, columns=["Precision", "Recall", "Type", "Detector", "$cont$"])
-            evaluation.to_csv(result_dir, index=False)
+        mainlegend_labels = []
 
-        evaluation.sort_values(by=["Recall"], inplace=True)
-        print(evaluation)
-        g = sns.FacetGrid(evaluation, row="Type", col="Detector")
-        g.map_dataframe(sns.lineplot, x="Recall", y="Precision", hue="$cont$")
+        fig, axs = plt.subplots(2, 3, sharey="all", sharex="all")
+
+        for i, key in enumerate(sorted(results)):
+            result = results[key]
+            params = parse_filename(key)
+            frac = params["subspace_frac"]
+            l_name = params["l_name"]
+            if l_name != "ae":
+                print(l_name)
+                continue
+            res_1, res_2, res_3, res_4, res_5, res_6 = average_result(result)
+
+            mainlegend_labels.append("sf={}".format(frac))
+
+            plot_roc(res_1[0], res_1[1], label="sf={}".format(frac), hline_y=0.005, axis=axs[0, 0])
+            plot_roc(res_3[0], res_3[1], label="sf={}".format(frac), hline_y=0.005, axis=axs[0, 1])
+            plot_roc(res_5[0], res_5[1], label="sf={}".format(frac), hline_y=0.005, axis=axs[0, 2])
+            plot_roc(res_2[0], res_2[1], label="sf={}".format(frac), hline_y=0.005, axis=axs[1, 0])
+            plot_roc(res_4[0], res_4[1], label="sf={}".format(frac), hline_y=0.005, axis=axs[1, 1])
+            plot_roc(res_6[0], res_6[1], label="sf={}".format(frac), hline_y=0.005, axis=axs[1, 2])
+
+        f1_legend = None
+        for ax in axs.flatten():
+            f1_legend = add_f1_iso_curve(ax)
+
+        handles, labels = axs[0, 0].get_legend_handles_labels()
+        handles.append(f1_legend)
+        mainlegend_labels.append("$f_1 = [0.2, 0.4, 0.6, 0.8]$")
+        plt.figlegend(handles, mainlegend_labels, loc='lower center', frameon=False, ncol=len(handles))
+
+        pad = 5
+        rows = ["Local outlier", "Global Outlier"]
+        for ax in axs.flatten():
+            ax.set_ylabel("Precision")
+            ax.set_xlabel("Recall")
+        for ax, row in zip(axs[:, 0], rows):
+            ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
+                        xycoords=ax.yaxis.label, textcoords='offset points',
+                        size='large', ha='right', va='center', rotation=90)
+
+        axs[0, 0].set_xlim([0, 1])
+        axs[0, 0].set_ylim([0, 1])
 
     files = load_all_in_dir(from_dir)
     create_subplots(files)
@@ -549,6 +562,7 @@ def plot_outlier_scores(file_dir):
 def plot_2d_dataset(dev):
     palette = sns.color_palette()
     alpha = 0.3
+
     def remove_ticks(ax):
         ax.set_xticks([])
         ax.set_yticks([])
@@ -568,7 +582,8 @@ def plot_2d_dataset(dev):
     plt.title("$(2)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".", color=palette[i], alpha=alpha)
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".",
+                    color=palette[i], alpha=alpha)
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color=palette[i], marker="x", zorder=2)
 
     data = add_deviation(data, dev, 0)
@@ -576,7 +591,8 @@ def plot_2d_dataset(dev):
     plt.title("$(3)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".", color=palette[i], alpha=alpha)
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".",
+                    color=palette[i], alpha=alpha)
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i])
 
     data = add_2d_correlation(data)
@@ -584,7 +600,8 @@ def plot_2d_dataset(dev):
     plt.title("$(4)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".", color=palette[i], alpha=alpha)
+        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".",
+                    color=palette[i], alpha=alpha)
         plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i])
 
     data, labels_local = add_local_outliers(data, 2, 0.02)
@@ -594,9 +611,12 @@ def plot_2d_dataset(dev):
     plt.title("$(5)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".", label="$db_{}$".format(i+1), color=palette[i], alpha=alpha)
-        plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3, label="$o^L_{}$".format(i+1), color=palette[i])
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, label="$o^C_{}$".format(i+1), color=palette[i])
+        plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".", label="$db_{}$".format(i + 1),
+                    color=palette[i], alpha=alpha)
+        plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3,
+                    label="$o^L_{}$".format(i + 1), color=palette[i])
+        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2,
+                    label="$o^C_{}$".format(i + 1), color=palette[i])
 
     handles, labels = ax.get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
