@@ -57,7 +57,7 @@ def add_random_correlation(data):
 def add_deviation(data, sigma):
 
     shift_direction = np.random.normal(size=data.shape[-1])
-    shift_direction = shift_direction / np.linalg.norm(shift_direction)  # hypersphere
+    shift_direction = np.sqrt(data.shape[-1]) * shift_direction / np.linalg.norm(shift_direction)  # hypersphere
 
     half_number_of_devices = int(len(data) / 2)
 
