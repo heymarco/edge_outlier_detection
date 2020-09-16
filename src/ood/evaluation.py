@@ -156,6 +156,9 @@ def plot_t_test_frac(directory):
     for ax in axs:
         ax.get_legend().remove()
 
+    for ax in axs[:-1]:
+        ax.set_xlabel("")
+
     plt.show()
 
 
