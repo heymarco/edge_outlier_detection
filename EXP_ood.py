@@ -15,7 +15,7 @@ def create_datasets(args):
         if entry.endswith(".npy"):
             os.remove(os.path.join(directory, entry))
     if args.vary == "frac":
-        frac_range = np.arange(20+1) / 20
+        frac_range = np.arange(10+1) / 10
         for frac in frac_range:
             data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -sf {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
