@@ -38,18 +38,31 @@ def add_random_correlation(data):
     return data
 
 
+# def add_deviation(data, sigma):
+#
+#     def create_deviation(size, dev):
+#         deviation = zscore(np.random.uniform(low=-1, high=1, size=size))
+#         sign = np.random.choice([-1, 1], size=size)
+#         deviation = deviation * sign
+#         return deviation * dev
+#
+#     std = np.std(data, axis=1)
+#     for i in range(len(data)):
+#         deviation = create_deviation(data.shape[-1], sigma)
+#         data[i] = data[i] + deviation * std[i]
+#
+#     return data
+
+
 def add_deviation(data, sigma):
 
-    def create_deviation(size, dev):
-        deviation = zscore(np.random.uniform(low=-1, high=1, size=size))
-        sign = np.random.choice([-1, 1], size=size)
-        deviation = deviation * sign
-        return deviation * dev
+    shift_direction = np.random.normal(size=data.shape[-1])
+    shift_direction = shift_direction / np.linalg.norm(shift_direction)  # hypersphere
 
-    std = np.std(data, axis=1)
-    for i in range(len(data)):
-        deviation = create_deviation(data.shape[-1], sigma)
-        data[i] = data[i] + deviation * std[i]
+    half_number_of_devices = int(len(data) / 2)
+
+    for i in range(half_number_of_devices):
+        data[i] = data[i] + shift_direction*sigma
 
     return data
 
