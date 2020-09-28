@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from scipy.stats import tmean, gmean
+from scipy.stats import tmean, gmean, norm
 import pandas as pd
 import seaborn as sns
 
@@ -48,9 +48,7 @@ def plot_t_test_shift(directory):
     for key in file_dict:
         params = parse_filename(key)
         shift = float(params["shift"])
-        affected_dims = float(params["subspace_frac"]) * float(params["dims"])
-        avg_dist_from_mean = np.sqrt(affected_dims * (shift ** 2))
-        x_axis_vals.append(avg_dist_from_mean)
+        x_axis_vals.append(round(shift, 2))
         f = file_dict[key]
         for rep in f:
             scores = rep[0]
@@ -63,22 +61,37 @@ def plot_t_test_shift(directory):
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
 
-    result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "outlier"])
+    result_df = pd.DataFrame(result_df, columns=["x", "t", "p", "Outlier"])
     fig, axes = plt.subplots(2, 1, sharex="all")
     ax1 = axes[0]
     ax2 = axes[1]
 
     def estimator(x):
-        low = np.quantile(x, 0.2)
-        high = np.quantile(x, 0.8)
+        low = np.quantile(x, 0)
+        high = np.quantile(x, 1)
+        return np.median(x)
         return tmean(x, [low, high])
 
-    sns.lineplot(data=result_df, x="x", y="t", hue="outlier", ax=ax1, ci=90, estimator=estimator)
-    sns.lineplot(data=result_df, x="x", y="p", hue="outlier", ax=ax2, ci=90, estimator=estimator)
+    is_outlier = result_df[result_df["Outlier"]]
+    summary = result_df.groupby(["x", "Outlier"]).describe()
+    p_low = summary["p", "25%"]
+    p_high = summary["p", "75%"]
+    os_low = summary["t", "25%"]
+    os_high = summary["t", "75%"]
+    sns.lineplot(data=result_df, x="x", y="t", hue="Outlier", ax=ax1, ci=None, estimator=estimator, style="Outlier")
+    sns.lineplot(data=result_df, x="x", y="p", hue="Outlier", ax=ax2, ci=None, estimator=estimator, style="Outlier")
+    is_outlier = np.array(summary.index.get_level_values(1), dtype=bool)
+    is_inlier = np.invert(is_outlier)
+    print(is_outlier)
+    x = np.unique(summary.index.get_level_values(0))
+    ax1.fill_between(x, os_low[is_inlier], os_high[is_inlier], color=qualitative_cp[0], alpha=0.3)
+    ax2.fill_between(x, p_low[is_inlier], p_high[is_inlier], color=qualitative_cp[0], alpha=0.3)
+    ax1.fill_between(x, os_low[is_outlier], os_high[is_outlier], color=qualitative_cp[1], alpha=0.3)
+    ax2.fill_between(x, p_low[is_outlier], p_high[is_outlier], color=qualitative_cp[1], alpha=0.3)
 
-    ax1.set_xlabel("Shift [Std]")
-    ax2.set_xlabel("Shift [Std]")
-    ax1.set_ylabel("$t$-value")
+    ax1.set_xlabel("$\sigma_p$")
+    ax2.set_xlabel("$\sigma_p$")
+    ax1.set_ylabel("median $os^*_i$")
     ax1.legend()
     ax2.set_ylabel("$p$-value")
 
@@ -100,7 +113,7 @@ def plot_t_test_shift(directory):
 
 
 def plot_t_test_frac(directory):
-    sns.set_palette(sns.color_palette(qualitative_cp))
+    sns.set_palette(sns.color_palette(["#1b9e77", "#fda968"]))
     file_dict = load_all_in_dir(directory)
 
     x_axis_vals = []
@@ -122,20 +135,30 @@ def plot_t_test_frac(directory):
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i], params["shift"], params["subspace_frac"]])
 
-    result_df = pd.DataFrame(result_df, columns=["Subspace fraction", "t", "$p$-value", "Outlier", "shift", "sf"])
+    result_df = pd.DataFrame(result_df, columns=["Subspace fraction", "$os^*_i$", "$p$-value", "Outlier", "shift", "sf"])
     tested_shift = np.unique(result_df["shift"])
 
-    fig, axs = plt.subplots(len(tested_shift), sharex="all", sharey="all")
+    fig, axs = plt.subplots(len(tested_shift), 2, sharex="col", sharey="col")
 
-    axs[0].set_xlabel("Subspace fraction")
-    axs[0].set_ylabel("$p$-value")
+    axs[0, 0].set_xlabel("Subspace fraction")
+    axs[0, 0].set_ylabel("Outlier score")
 
-    for ax, shift in zip(axs, tested_shift):
+    axs[0, 1].set_xlabel("Subspace fraction")
+    axs[0, 1].set_ylabel("$p$-value")
+
+    print(axs)
+
+    for ax, shift in zip(axs[:, -1], tested_shift):
         selection = result_df["shift"] == shift
         sns.violinplot(data=result_df[selection], x="Subspace fraction", y="$p$-value", hue="Outlier",
-                       ax=ax, cut=0, split=True, scale="width")
+                       ax=ax, cut=0, split=True, scale="width", saturation=0.8)
 
-    for ax in axs:
+    for ax, shift in zip(axs[:, 0], tested_shift):
+        selection = result_df["shift"] == shift
+        sns.violinplot(data=result_df[selection], x="Subspace fraction", y="$os^*_i$", hue="Outlier",
+                       ax=ax, cut=0, split=True, scale="width", saturation=0.8)
+
+    for ax in axs[:, -1]:
         ax_alpha = ax.twinx()
         ax_alpha.set_ylim(ax.get_ylim())
         alpha_vals = [0.05]
@@ -144,22 +167,114 @@ def plot_t_test_frac(directory):
         ax_alpha.set_yticks(alpha_vals)
         ax_alpha.set_yticklabels([r"$\alpha={}$".format(val) for val in alpha_vals])
 
-    handles, labels = axs[0].get_legend_handles_labels()
+    handles, labels = axs[0, 0].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles), title="Outlier")
 
     pad = 5
-    for ax, shift in zip(axs, tested_shift):
+    for ax, shift in zip(axs[:, 0], tested_shift):
         ax.annotate("$\sigma_p={}$".format(shift), xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
                     xycoords=ax.yaxis.label, textcoords='offset points',
                     size='large', ha='right', va='center', rotation=90)
 
-    for ax in axs:
+    for ax in axs.flatten():
         ax.get_legend().remove()
 
-    for ax in axs[:-1]:
+    for ax in axs[:-1, :].flatten():
         ax.set_xlabel("")
 
     plt.show()
+
+
+def get_scores(directory):
+    file_dict = load_all_in_dir(directory)
+
+    x_axis_vals = []
+    result_df = []
+
+    for key in file_dict:
+        params = parse_filename(key)
+        frac = float(params["subspace_frac"])
+        x_axis_vals.append(frac)
+        f = file_dict[key]
+        for rep in f:
+            scores = rep[0]
+            labels = rep[1]
+            distributed_shape = (int(params["num_devices"]), int(params["num_data"]))
+            scores = scores.reshape(distributed_shape)
+            labels = labels.reshape(distributed_shape)
+            labels = np.any(labels, axis=-1)
+            results = evaluate_array_t_statistic(scores)
+            for i, res in enumerate(results):
+                result_df.append([x_axis_vals[-1], res[0], res[1], labels[i], params["shift"], params["subspace_frac"]])
+
+    result_df = pd.DataFrame(result_df, columns=["Subspace fraction", "t", "p", "Outlier", "shift", "sf"])
+    tested_shift = np.unique(result_df["shift"])
+    tested_sf = np.unique(result_df["sf"])
+
+    alpha = 0.05
+    scores = []
+    i = 0
+    for shift in tested_shift:
+        for sf in tested_sf:
+            i += 1
+            selection = np.logical_and(result_df["shift"] == shift, result_df["sf"] == sf)
+            is_outlier = np.logical_and(selection, result_df["Outlier"])
+            is_inlier = np.logical_and(selection, np.invert(result_df["Outlier"]))
+            tp = result_df[np.logical_and(is_outlier, result_df["p"] < alpha)]
+            precision = len(tp) / np.sum((result_df[selection]["p"] < alpha))
+            recall = len(tp) / len(result_df[is_outlier])
+            f1 = 2*(precision*recall)/(precision+recall)
+            scores.append([shift, sf, round(precision, 2), round(recall, 2), round(f1, 2)])
+
+    scores = pd.DataFrame(scores, columns=["Shift", "Subspace fraction", "Precision", "Recall", "F1-Score"])\
+        .sort_values(by=["Shift", "Subspace fraction"])
+    print(scores)
+    print(scores.to_latex(index=False))
+
+
+def get_scores_cont(directory):
+    file_dict = load_all_in_dir(directory)
+
+    x_axis_vals = []
+    result_df = []
+
+    for key in file_dict:
+        params = parse_filename(key)
+        sigma = float(params["shift"])
+        x_axis_vals.append(sigma)
+        f = file_dict[key]
+        for rep in f:
+            scores = rep[0]
+            labels = rep[1]
+            distributed_shape = (int(params["num_devices"]), int(params["num_data"]))
+            scores = scores.reshape(distributed_shape)
+            labels = labels.reshape(distributed_shape)
+            labels = np.any(labels, axis=-1)
+            results = evaluate_array_t_statistic(scores)
+            for i, res in enumerate(results):
+                result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
+
+    result_df = pd.DataFrame(result_df, columns=["shift", "t", "p", "Outlier"])
+    tested_shift = np.unique(result_df["shift"])
+
+    alpha = 0.05
+    scores = []
+    i = 0
+    for shift in tested_shift:
+        i += 1
+        selection = result_df["shift"] == shift
+        is_outlier = np.logical_and(selection, result_df["Outlier"])
+        is_inlier = np.logical_and(selection, np.invert(result_df["Outlier"]))
+        tp = result_df[np.logical_and(is_outlier, result_df["p"] < alpha)]
+        precision = len(tp) / np.sum((result_df[selection]["p"] < alpha))
+        recall = len(tp) / len(result_df[is_outlier])
+        f1 = 2*(precision*recall)/(precision+recall)
+        if i % 3 == 1:
+            scores.append([shift, round(precision, 2), round(recall, 2), round(f1, 2)])
+
+    scores = pd.DataFrame(scores, columns=["$\sigma_p$", "Precision", "Recall", "F1-Score"])\
+        .sort_values(by=["$\sigma_p$"])
+    print(scores.to_latex(index=False, escape=False))
 
 
 def parse_filename(file):
@@ -177,3 +292,17 @@ def parse_filename(file):
     for i in range(len(keys)):
         parsed_args[keys[i]] = components[i]
     return parsed_args
+
+
+def test_rademacher():
+    data = np.random.choice([-1, 1], 100)
+    std = np.std(data, ddof=1)
+    for p in data:
+        print(t_statistic(p, 0, std, 100))
+
+
+def test_normal():
+    data = np.random.normal(size=1000)
+    res = [norm(0, 1).sf(val) for val in data]
+    plt.hist(res, bins=39)
+    plt.show()

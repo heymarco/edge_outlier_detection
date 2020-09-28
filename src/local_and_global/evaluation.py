@@ -16,7 +16,8 @@ mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
 
-qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
+qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"]
+sequential_cp = ["#000000", "#0b4131", "#168362", "#1eae83", "#3bdead", "#7ce9c8", "#bef4e4"]
 
 
 # sns.set_palette(sns.cubehelix_palette(8, start=.5, rot=-.75))
@@ -58,6 +59,7 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.05, dist=None):
     sorted_labels = labels[val_range]
     val_range = np.array([i for i in range(len(val_range)) if sorted_labels[i] > 0])
     val_range = val_range / len(labels)
+    print(labels.shape)
 
     is_pos_label = labels == pos_label
 
@@ -131,7 +133,7 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
 
 def evaluate_vary_ratio(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.007, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.05]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) / float(parse_filename(key)["frac_global"])
@@ -178,13 +180,13 @@ def evaluate_vary_ratio(from_dir):
 def plot_vary_ratio(from_dir):
     sns.set_palette(sns.diverging_palette(162, 26, n=8))
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.007, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.05]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
     sorted_key_indices = np.argsort(contamination_fracs)
 
-    fig, axs = plt.subplots(4, 2, sharex="all", sharey="col")
+    fig, axs = plt.subplots(4, 2, sharex="all", sharey="all")
     pad = 5
     rows = ["AE / AE", "AE / LOF", "AE / IF", "AE / xStream"]
     for ax, row in zip(axs[:, 0], rows):
@@ -196,33 +198,14 @@ def plot_vary_ratio(from_dir):
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
     axs[0, 1].set_title("Global")
-
-    # for ax in axs[:-1, 1:].flatten():
-    #     ax.set_xticklabels([])
-    #     ax.set_yticklabels([])
-    #     ax.set_xticks([])
-    #     ax.set_yticks([])
-    # for ax in axs[:-1, 0]:
-    #     ax.set_xticklabels([])
-    #     ax.set_xticks([])
-    # for ax in axs[-1, 1:]:
-    #     ax.set_yticklabels([])
-    #     ax.set_yticks([])
+    for ax in axs[:-1, 1:].flatten():
+        ax.set_xlim(0.0, 0.04)
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
         if l_name.startswith("lof"): return 1
         if l_name.startswith("if"): return 2
         if l_name.startswith("xstream"): return 3
-
-    def get_linestyle(frac_local):
-        line_styles = ["solid", "dotted", "dashed", "dashdot"]
-        if frac_local == "0.005": return line_styles[0]
-        if frac_local == "0.025": return line_styles[1]
-        if frac_local == "0.05":
-            return line_styles[2]
-        else:
-            return line_styles[0]
 
     for i, file in enumerate(file_keys[sorted_key_indices]):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
@@ -237,20 +220,66 @@ def plot_vary_ratio(from_dir):
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
 
-        # if round(fg/fl, 1) == 0.2:
-        #    continue
-        # if round(fg/fl, 1) == 0.1:
-        #     continue
+        print(cached_filename_pr1)
+        print(len(final_pr1))
 
         p1 = axs[row, 0].plot(beta_range, final_pr1)
         p2 = axs[row, 1].plot(beta_range, final_pr2,
                               label=r"$ratio = {}$".format(round(fg / fl, 1)))
-        # axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), ls="dotted")
-        # axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), ls="dotted")
+
+        axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], zorder=0, c=p1[-1].get_color(), alpha=0.9, lw=0.5)
+        axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], zorder=0, c=p2[-1].get_color(), alpha=0.9, lw=0.5)
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
     plt.show()
+
+
+def get_scores_vary_ratio(from_dir):
+    sns.set_palette(sns.diverging_palette(162, 26, n=8))
+    files = load_all_in_dir(from_dir)
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
+
+    file_keys = np.array(list(files.keys()))
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    sorted_key_indices = np.argsort(contamination_fracs)
+
+    def get_row(l_name):
+        if l_name.startswith("ae"): return 0
+        if l_name.startswith("lof"): return 1
+        if l_name.startswith("if"): return 2
+        if l_name.startswith("xstream"): return 3
+
+    result = []
+
+
+    for i, file in enumerate(file_keys[sorted_key_indices]):
+        cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
+        cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+        params = parse_filename(file)
+        row = get_row(params["l_name"])
+
+        if os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+            final_pr1 = np.load(cached_filename_pr1)
+            final_pr2 = np.load(cached_filename_pr2)
+
+        fl = round(float(params["frac_local"]), 3)
+        fg = round(float(params["frac_global"]), 3)
+
+        max_index_pr1 = np.argmax(final_pr1)
+        max_index_pr2 = np.argmax(final_pr2)
+        ratio = round(fg/fl, 2)
+        beta_pr1 = beta_range[max_index_pr1]
+        beta_pr2 = beta_range[max_index_pr2]
+        aupr1 = final_pr1[max_index_pr1]
+        aupr2 = final_pr2[max_index_pr2]
+        result.append(["{}/{}".format(params["c_name"], params["l_name"]).upper(),
+                       ratio, beta_pr2, aupr2, beta_pr1, aupr1])
+
+    result = pd.DataFrame(result, columns=["Ensemble", "Ratio", "$\beta_{opt} (global)$", "$AUPR (global)$",
+                                           "$\beta_{opt} (local)$", "$AUPR (local)$"])
+
+    print(result.groupby("Ensemble").to_latex(index=False))
 
 
 def evaluate_vary_cont(from_dir):
@@ -301,40 +330,26 @@ def evaluate_vary_cont(from_dir):
 def plot_vary_cont(from_dir):
     sns.set_palette(sns.color_palette(qualitative_cp))
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.01, 0.013, 0.021, 0.034, 0.055]
     line_styles = ["solid", "dotted", "dashed", "dashdot"]
+    line_styles = ["solid", (0, (3, 1, 1, 1, 1, 1)), "dashed", "dashdot", (0, (3, 1, 1, 1, 1, 1)), "dotted"]
 
-    fig, axs = plt.subplots(4, 2, sharex="all")
+    fig, axs = plt.subplots(4, 2, sharex="all", sharey="all")
     pad = 5
     rows = ["AE / AE", "AE / LOF", "AE / IF", "AE / xStream"]
     for ax, row in zip(axs[:, 0], rows):
         ax.set_ylabel("AUPR")
-        ax.set_ylim(top=1)
         ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
                     xycoords=ax.yaxis.label, textcoords='offset points',
                     size='large', ha='right', va='center', rotation=90)
+    # for ax in axs.flatten():
+        # ax.set_ylim(bottom=0.6, top=1.0)
     for ax in axs[-1, :]:
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
     axs[0, 1].set_title("Global")
     for ax in axs[:-1, 1:].flatten():
-        ax.set_xlim(0.0, 0.2)
-
-    #     ax.set_xticklabels([])
-    #     ax.set_yticklabels([])
-    #     ax.set_xticks([])
-    #     ax.set_yticks([])
-    # for ax in axs[:-1, 0]:
-    #     ax.set_xticklabels([])
-    #     ax.set_xticks([])
-    # for ax in axs[-1, 1:]:
-    #     ax.set_yticklabels([])
-    #     ax.set_yticks([])
-    # for ax in axs.flatten():
-    #     ax.axvline(0.005, ls=line_styles[0], color="gray")
-    #     ax.axvline(0.015, ls=line_styles[1], color="gray")
-    #     ax.axvline(0.01, ls=line_styles[2], color="gray")
-    #     ax.axvline(0.025, ls=line_styles[3], color="gray")
+        ax.set_xlim(0.0, 0.03)
 
     def get_row(l_name):
         if l_name.startswith("ae"): return 0
@@ -368,20 +383,64 @@ def plot_vary_cont(from_dir):
         fg = round(float(params["frac_global"]), 3)
         print("max for local: {}".format(np.max(final_pr1)))
         print("max for global: {}".format(np.max(final_pr2)))
-        axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
-        axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
+        lines1 = axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
+        lines2 = axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
                          label=r"$cont={}$".format(fl + fg))
+
+        axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], color=lines1[0].get_color(), lw=0.5, alpha=0.7)
+        axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], color=lines2[0].get_color(), lw=0.5, alpha=0.7)
+
+
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
     plt.show()
 
 
+def get_scores_vary_cont(from_dir):
+    sns.set_palette(sns.diverging_palette(162, 26, n=8))
+    files = load_all_in_dir(from_dir)
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.01, 0.013, 0.021, 0.034, 0.055]
+
+    file_keys = np.array(list(files.keys()))
+    contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
+    sorted_key_indices = np.argsort(contamination_fracs)
+
+    result = []
+
+    for i, file in enumerate(file_keys[sorted_key_indices]):
+        cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
+        cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+        params = parse_filename(file)
+
+        if os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2):
+            final_pr1 = np.load(cached_filename_pr1)
+            final_pr2 = np.load(cached_filename_pr2)
+
+        fl = round(float(params["frac_local"]), 3)
+        fg = round(float(params["frac_global"]), 3)
+
+        max_index_pr1 = np.argmax(final_pr1)
+        max_index_pr2 = np.argmax(final_pr2)
+        ratio = round(fg/fl, 2)
+        beta_pr1 = beta_range[max_index_pr1]
+        beta_pr2 = beta_range[max_index_pr2]
+        aupr1 = round(final_pr1[max_index_pr1], 2)
+        aupr2 = round(final_pr2[max_index_pr2], 2)
+        result.append(["{}/{}".format(params["c_name"], params["l_name"]).upper(),
+                       round(fg+fl, 2), beta_pr2, aupr2, beta_pr1, aupr1])
+
+    result = pd.DataFrame(result, columns=["Ensemble", "$cont$", r"$\beta_{opt}$ (global)", "$AUPR$ (global)",
+                                           r"$\beta_{opt}$ (local)", "$AUPR$ (local)"])
+
+    print(result.sort_values(by=["Ensemble", "$cont$"]).to_latex(index=False, escape=False))
+
+
 def evaluate_results(from_dir):
     sns.set_palette(sns.color_palette(qualitative_cp))
 
     def plot_roc(precision, recall, label, hline_y, axis):
-        styles = ["solid", "dotted", "dashed", "dashdot"]
+        styles = ["solid", "dotted", "dashed", "dashdot", (0, (3, 1, 1, 1, 1, 1)), (0, (3, 1, 1, 1, 1, 1))]
         roc_auc = auc(recall, precision)
         num_lines = len(axis.get_lines())
         print(num_lines)
@@ -421,8 +480,10 @@ def evaluate_results(from_dir):
                 p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
                 p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
                 p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
-                p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1)
-                p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2)
+                beta_opt = 0.5*np.sum(labels == 2)/len(labels)
+                print(beta_opt)
+                p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta_opt)
+                p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta_opt)
                 p_c1_arr.append(p_c1)
                 p_l1_arr.append(p_l1)
                 p_c2_arr.append(p_c2)
@@ -496,7 +557,7 @@ def evaluate_results(from_dir):
             params = parse_filename(key)
             frac = params["subspace_frac"]
             l_name = params["l_name"]
-            if l_name != "ae":
+            if not l_name.startswith("ae"):
                 print(l_name)
                 continue
             res_1, res_2, res_3, res_4, res_5, res_6 = average_result(result)
@@ -520,10 +581,15 @@ def evaluate_results(from_dir):
         plt.figlegend(handles, mainlegend_labels, loc='lower center', frameon=False, ncol=len(handles))
 
         pad = 5
-        rows = ["Local outlier", "Global Outlier"]
-        for ax in axs.flatten():
-            ax.set_ylabel("Precision")
+        rows = ["Local outliers", "Global outliers"]
+        for ax in axs[-1, :]:
             ax.set_xlabel("Recall")
+        for ax in axs[:, 0]:
+            ax.set_ylabel("Precision")
+        axs[0, 0].set_title("$C$")
+        axs[0, 1].set_title("$L$")
+        axs[0, 2].set_title("$C+L$")
+
         for ax, row in zip(axs[:, 0], rows):
             ax.annotate(row, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - pad, 0),
                         xycoords=ax.yaxis.label, textcoords='offset points',
@@ -561,7 +627,12 @@ def plot_outlier_scores(file_dir):
 
 def plot_2d_dataset(dev):
     palette = sns.color_palette()
-    alpha = 0.3
+    alpha = 1.0
+
+    point_marker = "."
+    marker_size = 0.25
+
+    num_outliers = 1
 
     def remove_ticks(ax):
         ax.set_xticks([])
@@ -569,57 +640,100 @@ def plot_2d_dataset(dev):
         ax.set_xticklabels([""])
         ax.set_yticklabels([""])
 
-    data = create_raw_data(2, 50, 2)
-    ax = plt.subplot(151)
-    plt.title("$(1)$")
-    remove_ticks(ax)
-    for i, d in enumerate(data):
-        plt.scatter(d.T[0], d.T[1], marker=".", color=palette[i], alpha=1.0)
+    fig, axs = plt.subplots(1, 5, sharex="all", sharey="all")
+    current_ax = 0
 
-    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.02)
+    for ax in axs:
+        remove_ticks(ax)
+
+    data = create_raw_data(4, 200, 2)
+    axs[current_ax].set_title("$(1)$")
+    for i, d in enumerate(data):
+        axs[current_ax].scatter(d.T[0], d.T[1], marker=point_marker, s=3 * marker_size, color=palette[i], alpha=1.0)
+        axs[current_ax].autoscale(enable=False)
+        axs[current_ax].autoscale()
+
+    current_ax += 1
+
+    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.005, sigma=3)
     labels_global = np.any(labels_global, axis=-1)
-    ax = plt.subplot(152)
-    plt.title("$(2)$")
-    remove_ticks(ax)
+    axs[current_ax].set_title("$(2)$")
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".",
-                    color=palette[i], alpha=alpha)
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color=palette[i], marker="x", zorder=2)
+        axs[current_ax].scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1],
+                                marker=point_marker,
+                                s=marker_size, color=palette[i], alpha=alpha)
+        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color=palette[i], marker="x",
+                                zorder=2, alpha=0.5)
+        axs[current_ax].autoscale(enable=False)
+        axs[current_ax].autoscale()
 
-    data = add_deviation(data, dev, 0)
-    ax = plt.subplot(153)
-    plt.title("$(3)$")
-    remove_ticks(ax)
+    current_ax += 1
+
+    data = add_deviation(data, dev)
+    axs[current_ax].set_title("$(3)$")
     for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".",
-                    color=palette[i], alpha=alpha)
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i])
+        axs[current_ax].scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=point_marker,
+                       s=marker_size, color=palette[i], alpha=alpha)
+        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i], alpha=0.5)
+        axs[current_ax].autoscale(enable=False)
+        axs[current_ax].autoscale()
+    mean3 = np.mean(data, axis=(0, 1))
 
-    data = add_2d_correlation(data)
-    ax = plt.subplot(154)
-    plt.title("$(4)$")
-    remove_ticks(ax)
-    for i, d in enumerate(data):
-        plt.scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=".",
-                    color=palette[i], alpha=alpha)
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i])
+    current_ax += 1
 
-    data, labels_local = add_local_outliers(data, 2, 0.02)
+    data, labels_local = add_local_outliers(data, 2, 0.005001)
     labels_local = np.any(labels_local, axis=-1)
     is_inlier = np.invert(np.logical_or(labels_local, labels_global))
-    ax = plt.subplot(155)
-    plt.title("$(5)$")
+    axs[current_ax].set_title("$(4)$")
     remove_ticks(ax)
     for i, d in enumerate(data):
-        plt.scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=".", label="$db_{}$".format(i + 1),
-                    color=palette[i], alpha=alpha)
-        plt.scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3,
-                    label="$o^L_{}$".format(i + 1), color=palette[i])
-        plt.scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2,
-                    label="$o^C_{}$".format(i + 1), color=palette[i])
+        axs[current_ax].scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=point_marker,
+                                label="$db_{}$".format(i + 1),
+                                s=marker_size, color=palette[i], alpha=alpha)
+        axs[current_ax].scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3,
+                                label="$o^L_{}$".format(i + 1), color=palette[i])
+        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2,
+                                label="$o^C_{}$".format(i + 1), color=palette[i])
+        axs[current_ax].autoscale(enable=False)
+        axs[current_ax].autoscale()
 
-    handles, labels = ax.get_legend_handles_labels()
+    mean4 = np.mean(data, axis=(0, 1))
+
+    current_ax += 1
+
+    data = add_2d_correlation(data)
+    axs[current_ax].set_title("$(5)$")
+    remove_ticks(ax)
+    for i, d in enumerate(data):
+        axs[current_ax].scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1],
+                                marker=point_marker,
+                                s=marker_size, color=palette[i], alpha=alpha)
+        axs[current_ax].scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3,
+                                label="$o^L_{}$".format(i + 1), color=palette[i])
+        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2,
+                                color=palette[i],
+                                label="$o^C_{}$")
+        axs[current_ax].autoscale(enable=False)
+        axs[current_ax].autoscale()
+
+    handles, labels = axs[-1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
+
+    mean5 = np.mean(data, axis=(0, 1))
+    deviation = 20
+    for i, ax in enumerate(axs):
+        if i == 2:
+            ax.set_xlim([mean3[0]-deviation, mean3[0]+deviation])
+            ax.set_ylim([mean3[1]-deviation, mean3[1]+deviation])
+        if i == 3:
+            ax.set_xlim([mean4[0]-deviation, mean4[0]+deviation])
+            ax.set_ylim([mean4[1]-deviation, mean4[1]+deviation])
+        if i == 4:
+            ax.set_xlim([mean5[0]-deviation, mean5[0]+deviation])
+            ax.set_ylim([mean5[1]-deviation, mean5[1]+deviation])
+        else:
+            ax.set_xlim([-deviation, deviation])
+            ax.set_ylim([-deviation, deviation])
     plt.show()
 
 

@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_ood.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/synthetic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/t_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ood/t_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,10 +125,6 @@
     <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.984@0.23.1920.984" timestamp="1597749514852" />
     <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.986@0.23.1920.986" timestamp="1596440513613" />
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.992@0.23.1920.992" timestamp="1595488621503" />
-    <state x="342" y="23" key="CommitChangelistDialog2" timestamp="1591687531992">
-      <screen x="0" y="23" width="1440" height="827" />
-    </state>
-    <state x="342" y="23" key="CommitChangelistDialog2/0.23.1440.827@0.23.1440.827" timestamp="1591687531992" />
     <state width="1899" height="249" key="GridCell.Tab.0.bottom" timestamp="1595284284240">
       <screen x="0" y="23" width="1440" height="827" />
     </state>
@@ -145,10 +145,9 @@
     </state>
     <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
     <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state x="380" y="267" key="com.intellij.ide.util.TipDialog" timestamp="1600240647612">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state x="507" y="354" key="com.intellij.ide.util.TipDialog" timestamp="1601302185269">
+      <screen x="0" y="23" width="1920" height="1116" />
     </state>
-    <state x="507" y="314" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.984@0.23.1920.984" timestamp="1591612160622" />
     <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.988@0.23.1920.988" timestamp="1593070672319" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595262946947" />
     <state x="-1060" y="931" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.991@-1440.670.1440.877" timestamp="1594201577734" />
@@ -163,14 +162,16 @@
     <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.986@0.23.1920.986" timestamp="1597742880118" />
     <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.989@0.23.1920.989" timestamp="1595337375952" />
     <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.992@0.23.1920.992" timestamp="1595436070436" />
-    <state x="507" y="352" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1108@0.23.1920.1108" timestamp="1599807615481" />
-    <state x="572" y="364" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600096161151">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state x="507" y="352" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1108@0.23.1920.1108" timestamp="1600351527360" />
+    <state x="507" y="354" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1116@0.23.1920.1116" timestamp="1601302185269" />
+    <state x="763" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600289424186">
+      <screen x="0" y="23" width="1920" height="986" />
     </state>
     <state x="572" y="364" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.816@0.23.1440.816" timestamp="1600096161151" />
     <state x="572" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.828@0.23.1440.828" timestamp="1597838265723" />
     <state x="572" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.829@0.23.1440.829" timestamp="1597836417294" />
     <state x="763" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.980@0.23.1920.980" timestamp="1595854357131" />
+    <state x="763" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.986@0.23.1920.986" timestamp="1600289424186" />
     <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.989@0.23.1920.989" timestamp="1595344340225" />
     <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey" timestamp="1595265424213">
       <screen x="0" y="23" width="1920" height="989" />

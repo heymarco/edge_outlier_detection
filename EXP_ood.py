@@ -91,7 +91,7 @@ if __name__ == '__main__':
                 tf.keras.backend.clear_session()
                 tf.compat.v1.reset_default_graph()
                 models = create_models(d.shape[0], d.shape[-1], compression_factor=0.4)
-                result = train_global_detectors(d, models, global_epochs=1)
+                result = train_global_detectors(d, models, global_epochs=20)
                 fname = "{}_{}_{}".format(key, c_name, l_name)
                 if fname not in results:
                     results[fname] = []
