@@ -3,11 +3,9 @@ from sklearn.metrics import precision_recall_curve, auc
 import pandas as pd
 
 import numpy as np
-from src.data.synthetic_data import create_raw_data, add_global_outliers, add_local_outliers, add_deviation
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
 import seaborn as sns
 
 from src.utils import load_all_in_dir
@@ -77,58 +75,6 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.05, dist=None):
     recalls.append(1.0)  # left end
     precisions.append(np.sum(labels > 0) / len(labels))  # right end
     return sorted(precisions, reverse=True), sorted(recalls)
-
-
-def roc_ranks(os_c, os_l, labels, pos_label, beta=0.01, dist=None):
-    if dist is None:
-        dist = get_rank_distance(os_c, os_l, labels, beta)
-    tprs = []
-    fprs = []
-
-    val_range = np.argsort(os_l)
-    sorted_labels = labels[val_range]
-    val_range = np.array([i for i in range(len(val_range)) if sorted_labels[i] > 0])
-    val_range = val_range / len(labels)
-
-    is_pos_label = labels == pos_label
-
-    for p in val_range:
-        l_thresh = np.quantile(os_l, p)
-        classification = np.zeros(labels.shape)
-        classification[os_l > l_thresh] = 1
-        classification[np.logical_and(os_l > l_thresh, dist <= 0)] = 2
-        true_positives = np.logical_and(classification == labels, is_pos_label)
-        false_positives = np.logical_and(classification == pos_label, labels != pos_label)
-        tpr = np.sum(true_positives) / np.sum(is_pos_label)
-        fpr = np.sum(false_positives) / np.sum(labels != pos_label)
-        if not np.isnan(tpr) and not np.isnan(fpr):
-            tprs.append(tpr)
-            fprs.append(fpr)
-    # fprs.append(0.0)
-    # tprs.append(np.sum(labels > 0)/len(labels))
-    return sorted(tprs, reverse=True), sorted(fprs)
-
-
-def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
-    if dist is None:
-        dist = get_rank_distance(os_c, os_l, labels, beta)
-    kappas = []
-
-    val_range = np.argsort(os_l)
-    sorted_labels = labels[val_range]
-    val_range = np.array([i for i in range(len(val_range)) if sorted_labels[i] > 0])
-    val_range = val_range / len(labels)
-
-    for p in val_range:
-        l_thresh = np.quantile(os_l, p)
-        classification = np.zeros(labels.shape)
-        classification[os_l > l_thresh] = 1
-        classification[np.logical_and(os_l > l_thresh, dist <= 0)] = 2
-        accuracy = np.sum(classification == labels) / len(labels)
-        majority_chance = np.sum(labels == 0) / len(labels)
-        kappa_m = (accuracy - majority_chance) / (1 - majority_chance)
-        kappas.append(kappa_m)
-    return kappas
 
 
 def evaluate_vary_ratio(from_dir):
@@ -439,7 +385,7 @@ def get_scores_vary_cont(from_dir):
     print(result.sort_values(by=["Ensemble", "$cont$"]).to_latex(index=False, escape=False))
 
 
-def evaluate_results(from_dir):
+def eval_plot_comparison_separate_approaches(from_dir):
     sns.set_palette(sns.color_palette(qualitative_cp))
 
     def plot_roc(precision, recall, label, hline_y, axis):
@@ -605,156 +551,6 @@ def evaluate_results(from_dir):
     create_subplots(files)
     # plt.tight_layout()
     plt.show()
-
-
-def plot_outlier_scores(file_dir):
-    file = np.load(file_dir)
-    osc = file[0][0].flatten()
-    osl = file[0][1].flatten()
-    labels = file[0][2].flatten()
-    print(labels.shape)
-    indices = np.arange(len(osc))
-    plt.subplot(121)
-    plt.scatter(indices[labels == 0], osc[labels == 0], alpha=0.05, label="inlier")
-    plt.scatter(indices[labels == 1], osc[labels == 1], label="local outlier")
-    plt.scatter(indices[labels == 2], osc[labels == 2], label="global outlier")
-    plt.title("$os_c$")
-    plt.subplot(122)
-    plt.scatter(indices[labels == 0], osl[labels == 0], alpha=0.05, label="inlier")
-    plt.scatter(indices[labels == 1], osl[labels == 1], label="local outlier")
-    plt.scatter(indices[labels == 2], osl[labels == 2], label="global outlier")
-    plt.title("$os_l$")
-    plt.legend()
-    plt.show()
-
-
-def plot_2d_dataset(dev):
-    palette = sns.color_palette()
-    alpha = 1.0
-
-    point_marker = "."
-    marker_size = 0.25
-
-    num_outliers = 1
-
-    def remove_ticks(ax):
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ax.set_xticklabels([""])
-        ax.set_yticklabels([""])
-
-    fig, axs = plt.subplots(1, 5, sharex="all", sharey="all")
-    current_ax = 0
-
-    for ax in axs:
-        remove_ticks(ax)
-
-    data = create_raw_data(4, 200, 2)
-    axs[current_ax].set_title("$(1)$")
-    for i, d in enumerate(data):
-        axs[current_ax].scatter(d.T[0], d.T[1], marker=point_marker, s=3 * marker_size, color=palette[i], alpha=1.0)
-        axs[current_ax].autoscale(enable=False)
-        axs[current_ax].autoscale()
-
-    current_ax += 1
-
-    data, labels_global = add_global_outliers(data, 2, frac_outlying=0.005, sigma=3)
-    labels_global = np.any(labels_global, axis=-1)
-    axs[current_ax].set_title("$(2)$")
-    for i, d in enumerate(data):
-        axs[current_ax].scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1],
-                                marker=point_marker,
-                                s=marker_size, color=palette[i], alpha=alpha)
-        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], color=palette[i], marker="x",
-                                zorder=2, alpha=0.5)
-        axs[current_ax].autoscale(enable=False)
-        axs[current_ax].autoscale()
-
-    current_ax += 1
-
-    data = add_deviation(data, dev)
-    axs[current_ax].set_title("$(3)$")
-    for i, d in enumerate(data):
-        axs[current_ax].scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1], marker=point_marker,
-                       s=marker_size, color=palette[i], alpha=alpha)
-        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2, color=palette[i], alpha=0.5)
-        axs[current_ax].autoscale(enable=False)
-        axs[current_ax].autoscale()
-    mean3 = np.mean(data, axis=(0, 1))
-
-    current_ax += 1
-
-    data, labels_local = add_local_outliers(data, 2, 0.005001)
-    labels_local = np.any(labels_local, axis=-1)
-    is_inlier = np.invert(np.logical_or(labels_local, labels_global))
-    axs[current_ax].set_title("$(4)$")
-    remove_ticks(ax)
-    for i, d in enumerate(data):
-        axs[current_ax].scatter(d[is_inlier[i]].T[0], d[is_inlier[i]].T[1], marker=point_marker,
-                                label="$db_{}$".format(i + 1),
-                                s=marker_size, color=palette[i], alpha=alpha)
-        axs[current_ax].scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3,
-                                label="$o^L_{}$".format(i + 1), color=palette[i])
-        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2,
-                                label="$o^C_{}$".format(i + 1), color=palette[i])
-        axs[current_ax].autoscale(enable=False)
-        axs[current_ax].autoscale()
-
-    mean4 = np.mean(data, axis=(0, 1))
-
-    current_ax += 1
-
-    data = add_2d_correlation(data)
-    axs[current_ax].set_title("$(5)$")
-    remove_ticks(ax)
-    for i, d in enumerate(data):
-        axs[current_ax].scatter(d[np.invert(labels_global[i])].T[0], d[np.invert(labels_global[i])].T[1],
-                                marker=point_marker,
-                                s=marker_size, color=palette[i], alpha=alpha)
-        axs[current_ax].scatter(d[labels_local[i]].T[0], d[labels_local[i]].T[1], marker="d", zorder=3,
-                                label="$o^L_{}$".format(i + 1), color=palette[i])
-        axs[current_ax].scatter(d[labels_global[i]].T[0], d[labels_global[i]].T[1], marker="x", zorder=2,
-                                color=palette[i],
-                                label="$o^C_{}$")
-        axs[current_ax].autoscale(enable=False)
-        axs[current_ax].autoscale()
-
-    handles, labels = axs[-1].get_legend_handles_labels()
-    plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=len(handles))
-
-    mean5 = np.mean(data, axis=(0, 1))
-    deviation = 20
-    for i, ax in enumerate(axs):
-        if i == 2:
-            ax.set_xlim([mean3[0]-deviation, mean3[0]+deviation])
-            ax.set_ylim([mean3[1]-deviation, mean3[1]+deviation])
-        if i == 3:
-            ax.set_xlim([mean4[0]-deviation, mean4[0]+deviation])
-            ax.set_ylim([mean4[1]-deviation, mean4[1]+deviation])
-        if i == 4:
-            ax.set_xlim([mean5[0]-deviation, mean5[0]+deviation])
-            ax.set_ylim([mean5[1]-deviation, mean5[1]+deviation])
-        else:
-            ax.set_xlim([-deviation, deviation])
-            ax.set_ylim([-deviation, deviation])
-    plt.show()
-
-
-def add_2d_correlation(data):
-    dims = data.shape[-1]
-    evs = np.random.uniform(0.01, 1, size=dims)
-    evs = evs / np.sum(evs) * dims
-    random_corr_matrix = np.array([[1, 0.8],
-                                   [0.8, 1]])
-    cholesky_transform = np.linalg.cholesky(random_corr_matrix)
-    for i in range(data.shape[0]):
-        normal_eq_mean = cholesky_transform.dot(data[i].T)  # Generating random MVN (0, cov_matrix)
-        normal_eq_mean = normal_eq_mean.transpose()
-        normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
-        data[i] = normal_eq_mean.T
-    # plt.scatter(data[0].T[0], data[0].T[1])
-    # plt.show()
-    return data
 
 
 def parse_filename(file):

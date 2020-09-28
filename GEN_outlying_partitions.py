@@ -22,11 +22,8 @@ subspace_frac = args.sf
 frac_outlying_devices = args.device_frac
 frac_outlying_data = args.cont
 
-# create local outliers
-sigma_l = 0
-
 data = create_raw_data(num_devices, num_data, dims)
-data = add_deviation(data, sigma_l)
+data = add_deviation(data, sigma=0)
 data, labels = add_outlying_partitions(data,
                                        frac_outlying_data=frac_outlying_data,
                                        frac_outlying_devices=frac_outlying_devices,
