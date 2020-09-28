@@ -15,7 +15,7 @@ def create_datasets(args):
         if entry.endswith(".npy"):
             os.remove(os.path.join(directory, entry))
     if args.vary == "frac":
-        tested_shift = [0.1, 0.5, 1.0, 2.0]
+        tested_shift = [0.1, 0.15, 0.2, 0.25]
         tested_sf = [0.1, 0.3, 0.6, 1.0]
         combos = []
         for shift in tested_shift:

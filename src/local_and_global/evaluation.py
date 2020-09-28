@@ -284,7 +284,7 @@ def get_scores_vary_ratio(from_dir):
 
 def evaluate_vary_cont(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.01, 0.013, 0.021, 0.034, 0.055]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
@@ -293,6 +293,9 @@ def evaluate_vary_cont(from_dir):
     for i, file in enumerate(file_keys[sorted_key_indices]):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
         cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+
+        print(cached_filename_pr1)
+        print(os.path.exists(cached_filename_pr1))
 
         if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]

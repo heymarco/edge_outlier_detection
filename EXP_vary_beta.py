@@ -25,10 +25,18 @@ def create_datasets(args):
             cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
             data_generator = os.path.join(os.getcwd(), cmd_string)
             os.system("{} {}".format("python", data_generator))
+    elif args.vary == "sf":
+        logging.info("Varying subspace fraction")
+        sfs = [0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
+        for sf in sfs:
+            cmd_string = "GEN_mixed_data.py -sf {} -dir {}".format(sf, args.data)
+            data_generator = os.path.join(os.getcwd(), cmd_string)
+            os.system("{} {}".format("python", data_generator))
     elif args.vary == "ratio":
         logging.info("Varying ratio between local and global outliers")
         frac_local = [0.01]
-        [frac_local.append(frac_local[-1] + 0.005) for _ in range(8)]
+        [frac_local.append(frac_local[-1] + 0.005) for _ in range(6)]
+        print(frac_local)
         for fl in frac_local:
             cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05-fl,
                                                                                            args.data)
@@ -58,7 +66,7 @@ if __name__ == '__main__':
     parser.add_argument("-data", type=str)
     parser.add_argument("-reps", type=int, default=1)
     parser.add_argument("-gpu", type=int)
-    parser.add_argument("-vary", type=str, choices=["cont", "ratio"])
+    parser.add_argument("-vary", type=str, choices=["cont", "ratio", "sf"])
 
     logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
@@ -73,9 +81,9 @@ if __name__ == '__main__':
     setup_machine(cuda_device=args.gpu)
 
     # create ensembles
-    combinations = [("ae", "ae"),
+    combinations = [# ("ae", "ae"),
                     # ("ae", "lof8"),
-                    # ("ae", "if"),
+                    ("ae", "if"),
                     # ("ae", "xstream")
     ]
     logging.info("Executing combinations {}".format(combinations))

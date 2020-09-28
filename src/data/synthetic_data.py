@@ -10,9 +10,9 @@ def create_raw_data(num_devices, n, dims):
 def add_global_outliers(data, subspace_size, frac_outlying=0.03, sigma=2.8):
     num_outliers = int(data.shape[1]*frac_outlying)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
-    mean_norm = np.linalg.norm(np.ones(subspace_size))  # we have data which is normally distributed
+    mean_norm_in_subspace = np.linalg.norm(np.ones(subspace_size))  # we have data which is normally distributed
     dist = np.random.uniform(sigma, sigma+1, size=(data.shape[0], num_outliers, subspace_size))
-    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_norm
+    outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_norm_in_subspace
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
         point_indices = np.random.choice(range(data.shape[1]), num_outliers, replace=False)
@@ -38,24 +38,7 @@ def add_random_correlation(data):
     return data
 
 
-# def add_deviation(data, sigma):
-#
-#     def create_deviation(size, dev):
-#         deviation = zscore(np.random.uniform(low=-1, high=1, size=size))
-#         sign = np.random.choice([-1, 1], size=size)
-#         deviation = deviation * sign
-#         return deviation * dev
-#
-#     std = np.std(data, axis=1)
-#     for i in range(len(data)):
-#         deviation = create_deviation(data.shape[-1], sigma)
-#         data[i] = data[i] + deviation * std[i]
-#
-#     return data
-
-
 def add_deviation(data, sigma):
-
     shift_direction = np.ones(size=data.shape[-1])
     half_number_of_devices = int(len(data) / 2)
 

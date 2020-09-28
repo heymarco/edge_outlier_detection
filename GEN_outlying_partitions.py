@@ -11,7 +11,7 @@ parser.add_argument("-device_frac", type=float, default=0.05)
 parser.add_argument("-cont", type=float, default=1.0)
 parser.add_argument("-dims", type=int, default=100)
 parser.add_argument("-dev", type=int, default=100)
-parser.add_argument("-shift", type=float, default=0.2)
+parser.add_argument("-shift", type=float, default=1)
 parser.add_argument("-dir", type=str, default="synth")
 args = parser.parse_args()
 
@@ -41,7 +41,8 @@ labels = np.zeros(shape=data.shape).astype(bool)
 
 for dev in device_indices:
     point_on_circle = np.random.normal(size=subspace_size)
-    shift = point_on_circle / np.linalg.norm(point_on_circle) * args.shift
+    point_on_circle / np.linalg.norm(point_on_circle)
+    shift = point_on_circle * args.shift
     labels[dev].fill(True)
     subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
     point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)
