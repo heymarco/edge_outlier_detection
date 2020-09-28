@@ -3,15 +3,14 @@ from scipy.stats import zscore, random_correlation
 
 
 def create_raw_data(num_devices, n, dims):
-    mat = np.random.normal(size=(num_devices, n, dims))
-    return mat
+    return np.random.normal(size=(num_devices, n, dims))
 
 
 def add_global_outliers(data, subspace_size, frac_outlying=0.03, sigma=2.8):
-    num_outliers = int(data.shape[1]*frac_outlying)
+    num_outliers = int(data.shape[1] * frac_outlying)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
     mean_norm_in_subspace = np.linalg.norm(np.ones(subspace_size))  # we have data which is normally distributed
-    dist = np.random.uniform(sigma, sigma+1, size=(data.shape[0], num_outliers, subspace_size))
+    dist = np.random.uniform(sigma, sigma + 1, size=(data.shape[0], num_outliers, subspace_size))
     outliers = outliers / np.linalg.norm(outliers, axis=-1, keepdims=True) * dist * mean_norm_in_subspace
     mask = np.zeros(data.shape)
     for i in range(len(mask)):
@@ -43,7 +42,7 @@ def add_deviation(data, sigma):
     half_number_of_devices = int(len(data) / 2)
 
     for i in range(half_number_of_devices):
-        data[i] = data[i] + shift_direction*sigma
+        data[i] = data[i] + shift_direction * sigma
 
     return data
 
@@ -69,7 +68,7 @@ def add_local_outliers(data, subspace_size, frac_outlying=0.03):
         for device in np.arange(data.shape[0]):
             mean_this_device = np.mean(data[device_index][subspace], axis=-2)
             mean_other_device = np.mean(data[device][subspace], axis=-2)
-            dist = np.linalg.norm(mean_this_device-mean_other_device)
+            dist = np.linalg.norm(mean_this_device - mean_other_device)
             distances.append(dist)
         other_device = np.argmax(distances)
         random_point_index = np.random.choice(np.arange(data.shape[1]))
@@ -91,34 +90,26 @@ def add_local_outliers(data, subspace_size, frac_outlying=0.03):
     return data, outliers
 
 
-def add_abnormal_devices(data, indices, subspace_size, frac_outlying=0.9, mean_deviation=1.5):
-    def to_outlier(p, deviation, subspace):
-        p[subspace] = p[subspace] + deviation
-        o = np.empty(shape=p.shape, dtype=bool)
-        o.fill(False)
-        o[subspace] = True
-        return p, o
+def add_outlying_partitions(data, frac_outlying_data, frac_outlying_devices, subspace_frac, sigma_p):
+    num_devices = data.shape[0]
+    num_data = data.shape[1]
+    dims = data.shape[-1]
+    device_indices = np.random.choice(np.arange(num_devices), int(frac_outlying_devices * num_devices), replace=False)
+    subspace_size = int(subspace_frac * dims)
+    absolute_contamination = int(frac_outlying_data * num_data)
+    labels = np.zeros(shape=data.shape).astype(bool)
+    for dev in device_indices:
+        point_on_circle = np.random.normal(size=subspace_size)
+        point_on_circle / np.linalg.norm(point_on_circle)
+        shift = point_on_circle * sigma_p
+        labels[dev].fill(True)
+        subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
+        point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)
+        for p in point_indices:
+            for i, s in enumerate(subspace):
+                data[dev, p, s] = data[dev, p, s] + shift[i]
 
-    outliers = np.empty(shape=data.shape, dtype=bool)
-    outliers.fill(False)
-
-    std = np.mean(np.std(data, axis=(0, 1)))
-
-    relevant_data = data[indices]
-    relevant_outliers = outliers[indices]
-    for i, points in enumerate(relevant_data):
-        num_out = int(len(points) * frac_outlying)
-        subspace = np.random.choice(range(points.shape[-1]), subspace_size, replace=False)
-        o_indices = np.random.choice(range(len(points)), num_out, replace=False)
-        sign = np.random.choice([-1, 1], size=len(subspace), replace=True)
-        outlier_mean = sign * (mean_deviation * std[subspace])
-        for j in o_indices:
-            point, o = to_outlier(points[j], outlier_mean, subspace)
-            points[j] = point
-            relevant_outliers[i][j] = o
-    data[indices] = relevant_data
-    outliers[indices] = relevant_outliers
-    return data, outliers
+    return data, labels
 
 
 def normalize_along_axis(data, axis, minimum=0.2, maximum=0.8):
@@ -126,11 +117,4 @@ def normalize_along_axis(data, axis, minimum=0.2, maximum=0.8):
     minval = data.min(axis=axis, keepdims=True)
     data = (data - minval) / (maxval - minval)
     data = data * (maximum - minimum) + minimum
-    return data
-
-
-def trim_data(data, max_length=10000):
-    min_length = min([len(d) for d in data])
-    max_length = min(min_length, max_length)
-    data = np.array([d[:max_length] for d in data])
     return data

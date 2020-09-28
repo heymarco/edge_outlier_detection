@@ -2,8 +2,7 @@ import os
 import argparse
 
 import numpy as np
-from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers, \
-    add_deviation
+from src.data.synthetic_data import create_raw_data, add_random_correlation, add_deviation, add_outlying_partitions
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-sf", type=float, default=1.0)
@@ -26,30 +25,13 @@ frac_outlying_data = args.cont
 # create local outliers
 sigma_l = 0
 
-subspace_size = int(subspace_frac * dims)
-
 data = create_raw_data(num_devices, num_data, dims)
-# data, labels_global = add_global_outliers(data, subspace_size, frac_outlying=args.frac_global, sigma=sigma_g)
 data = add_deviation(data, sigma_l)
-# data, labels_local = add_local_outliers(data, subspace_size, args.frac_local)
-
-device_indices = np.random.choice(np.arange(num_devices), int(frac_outlying_devices * num_devices), replace=False)
-subspace_size = int(subspace_frac * dims)
-absolute_contamination = int(frac_outlying_data * num_data)
-
-labels = np.zeros(shape=data.shape).astype(bool)
-
-for dev in device_indices:
-    point_on_circle = np.random.normal(size=subspace_size)
-    point_on_circle / np.linalg.norm(point_on_circle)
-    shift = point_on_circle * args.shift
-    labels[dev].fill(True)
-    subspace = np.random.choice(np.arange(dims), subspace_size, replace=False)
-    point_indices = np.random.choice(np.arange(num_data), absolute_contamination, replace=False)
-    for p in point_indices:
-        for i, s in enumerate(subspace):
-            data[dev, p, s] = data[dev, p, s] + shift[i]
-
+data, labels = add_outlying_partitions(data,
+                                       frac_outlying_data=frac_outlying_data,
+                                       frac_outlying_devices=frac_outlying_devices,
+                                       subspace_frac=subspace_frac,
+                                       sigma_p=args.shift)
 data = add_random_correlation(data)
 
 # write to file

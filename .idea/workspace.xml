@@ -3,13 +3,52 @@
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_images.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_ood.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_outlier_distinction.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/EXP_vary_beta.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_vary_beta.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GEN_mixed_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_mixed_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GEN_outlying_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_outlying_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/mhealth/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xdk/F3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xdk/F4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/constant_abnormal_behavior.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/data_different_params.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/data_distribution_rug.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/data_distribution_scatter.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/hidden_outliers.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/cloud_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/cloud_global.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/cloud_local.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/fedstream_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/fedstream_global.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/fedstream_local.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/separate_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/separate_global.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/separate_local.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/xstream_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/xstream_global.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results Kopie/xstream_local.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/cloud_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/cloud_global.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/comparison_outliers_xstream.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/eMotor_comparison_local_central_xstream.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/fedstream_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/fedstream_global.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/mhealth_comparison_local_central_lof.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/separate_abnormal.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/separate_local.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/results/xdk_comparison_local_central_ae.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_images.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_quick_check.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/TOOL_mvtec_images_parser.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/image_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/synthetic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/synthetic_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/results/numpy/.gitkeep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/functions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partition/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partition/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partition/functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ood/t_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partition/t_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,17 +148,18 @@
     </state>
     <state x="430" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.822@0.23.1440.822" timestamp="1596203941498" />
     <state x="573" y="276" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1920.986@0.23.1920.986" timestamp="1596440485613" />
-    <state x="524" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1596203960901">
-      <screen x="0" y="23" width="1440" height="822" />
+    <state x="699" y="302" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601302924543">
+      <screen x="0" y="23" width="1920" height="1115" />
     </state>
     <state x="698" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416722519" />
     <state x="524" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.822@0.23.1440.822" timestamp="1596203960901" />
+    <state x="699" y="302" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.-460.1200.1897/0.23.1920.1115@0.23.1920.1115" timestamp="1601302924543" />
     <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog" timestamp="1595265422681">
       <screen x="0" y="23" width="1920" height="989" />
     </state>
     <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265422681" />
-    <state x="492" y="74" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1599490334836">
-      <screen x="0" y="23" width="1440" height="814" />
+    <state x="656" y="93" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1601304870734">
+      <screen x="0" y="23" width="1920" height="1115" />
     </state>
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416787958" />
     <state x="492" y="74" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.814@0.23.1440.814" timestamp="1599490334836" />
@@ -127,6 +167,7 @@
     <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.984@0.23.1920.984" timestamp="1597749514852" />
     <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.986@0.23.1920.986" timestamp="1596440513613" />
     <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.992@0.23.1920.992" timestamp="1595488621503" />
+    <state x="656" y="93" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/1920.-460.1200.1897/0.23.1920.1115@0.23.1920.1115" timestamp="1601304870734" />
     <state width="1899" height="249" key="GridCell.Tab.0.bottom" timestamp="1595284284240">
       <screen x="0" y="23" width="1440" height="827" />
     </state>

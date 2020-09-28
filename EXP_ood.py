@@ -1,10 +1,9 @@
 import argparse
-import gc
 import logging
 import tensorflow as tf
 
 from src.utils import setup_machine
-from src.ood.functions import *
+from src.outlying_partition.functions import *
 from src.data.synthetic_data import normalize_along_axis
 
 
@@ -56,24 +55,26 @@ def create_datasets(args):
 if __name__ == '__main__':
     # create data parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-vary", type=str, choices=["frac", "cont", "shift"])
-    parser.add_argument("-data", type=str, default="out_part")
-    parser.add_argument("-reps", type=int, default=1)
-    parser.add_argument("-gpu", type=int)
+    parser.add_argument("-data", type=str, default="out_part")  # todo: remove!
+    parser.add_argument("-reps", type=int, default=1,
+                        help="The number of experiment repetitions")
+    parser.add_argument("-gpu", type=int,
+                        help="The cuda visible device")
+    parser.add_argument("-vary", type=str, choices=["frac", "cont", "shift"],
+                        help="The parameter to vary (each choice corresponds to one of three experiments in the paper)")
 
     logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
     dirname = args.data
     reps = args.reps
 
-    # fighting memory leak
     tf.config.threading.set_inter_op_parallelism_threads(1)
     tf.compat.v1.enable_eager_execution()
 
     # select GPU
     setup_machine(cuda_device=args.gpu)
 
-    # create ensembles
+    # We only need C, so we do not need to evaluate all local detectors
     combinations = [("ae", "ae"),]
 
     logging.info("Executing combinations {}".format(combinations))
@@ -98,12 +99,13 @@ if __name__ == '__main__':
                 results[fname].append([result.flatten(), gt])
                 del models
                 del result
-                for _ in range(10):
-                    gc.collect()
         del data
         del ground_truth
-        for _ in range(10):
-            gc.collect()
+
+    target_dir = os.path.join(os.getcwd(), "results", "numpy", args.data)
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+        os.makedirs(os.path.join(target_dir, "cache"))  # For caching the evaluation as .npy files
 
     for key in results:
         np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]).astype(float))
