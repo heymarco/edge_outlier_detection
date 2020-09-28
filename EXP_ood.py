@@ -2,9 +2,8 @@ import argparse
 import logging
 import tensorflow as tf
 
-from src.utils import setup_machine
+from src.utils import setup_machine, normalize_along_axis
 from src.outlying_partition.functions import *
-from src.data.synthetic_data import normalize_along_axis
 
 
 def create_datasets(args):

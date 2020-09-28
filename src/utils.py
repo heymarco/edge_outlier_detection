@@ -40,3 +40,11 @@ def load_all_in_dir(directory):
             result_file = np.load(filepath)
             all_files[file] = result_file
     return all_files
+
+
+def normalize_along_axis(data, axis, minimum=0.2, maximum=0.8):
+    maxval = data.max(axis=axis, keepdims=True)
+    minval = data.min(axis=axis, keepdims=True)
+    data = (data - minval) / (maxval - minval)
+    data = data * (maximum - minimum) + minimum
+    return data

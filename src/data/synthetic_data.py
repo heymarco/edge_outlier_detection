@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.stats import zscore, random_correlation
+from scipy.stats import random_correlation
 
 
 def create_raw_data(num_devices, n, dims):
@@ -110,11 +110,3 @@ def add_outlying_partitions(data, frac_outlying_data, frac_outlying_devices, sub
                 data[dev, p, s] = data[dev, p, s] + shift[i]
 
     return data, labels
-
-
-def normalize_along_axis(data, axis, minimum=0.2, maximum=0.8):
-    maxval = data.max(axis=axis, keepdims=True)
-    minval = data.min(axis=axis, keepdims=True)
-    data = (data - minval) / (maxval - minval)
-    data = data * (maximum - minimum) + minimum
-    return data

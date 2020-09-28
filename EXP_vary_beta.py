@@ -4,10 +4,9 @@ import logging
 import os
 import tensorflow as tf
 
-from src.data.synthetic_data import normalize_along_axis
 from src.local_and_global.functions import *
 from src.training import train_ensembles
-from src.utils import setup_machine
+from src.utils import setup_machine, normalize_along_axis
 
 
 def create_datasets(args):
