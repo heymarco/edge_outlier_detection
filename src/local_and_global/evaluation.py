@@ -131,7 +131,7 @@ def kappa_ranks(os_c, os_l, labels, beta=0.01, dist=None):
 
 def evaluate_vary_ratio(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.013, 0.021, 0.034, 0.055, 0.089, 0.144, 0.233, 0.377]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.007, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.05]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) / float(parse_filename(key)["frac_global"])
@@ -255,7 +255,7 @@ def plot_vary_ratio(from_dir):
 
 def evaluate_vary_cont(from_dir):
     files = load_all_in_dir(from_dir)
-    beta_range = [0.0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.05, 0.1, 0.2, 0.25]
+    beta_range = [0.0, 0.001, 0.002, 0.003, 0.005, 0.008, 0.01, 0.013, 0.021, 0.034, 0.055]
 
     file_keys = np.array(list(files.keys()))
     contamination_fracs = [float(parse_filename(key)["frac_local"]) for key in files]
@@ -264,6 +264,9 @@ def evaluate_vary_cont(from_dir):
     for i, file in enumerate(file_keys[sorted_key_indices]):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
         cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
+
+        print(cached_filename_pr1)
+        print(os.path.exists(cached_filename_pr1))
 
         if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
