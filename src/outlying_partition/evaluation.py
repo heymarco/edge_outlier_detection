@@ -1,10 +1,7 @@
-import os
 import numpy as np
-from scipy.stats import tmean, gmean, norm
 import pandas as pd
 import seaborn as sns
 
-from .t_test import t_statistic, evaluate_array_t_statistic
 from src.utils import load_all_in_dir
 
 import matplotlib as mpl
@@ -18,27 +15,7 @@ ensemble_suffix = "_aa_bb.npy"
 qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
 
 
-def plot_os_star_hist(from_dir):
-
-    def create_plots(file_dict):
-        def get_os_star(f):
-            return np.mean(f[0], axis=-1)
-
-        def create_hist(os_stars, label):
-            plt.hist(os_stars, label=label, bins=7)
-
-        for i, key in enumerate(file_dict):
-            file = file_dict[key]
-            os_star = get_os_star(file[0])
-            ax = plt.subplot(3, 2, i+1)
-            create_hist(os_star, "$sf=$")
-        plt.show()
-
-    fs = load_all_in_dir(from_dir)
-    create_plots(file_dict=fs)
-
-
-def plot_t_test_shift(directory):
+def plot_evaluation_shift(directory):
     sns.set_palette(sns.color_palette(qualitative_cp))
     file_dict = load_all_in_dir(directory)
 
@@ -57,7 +34,7 @@ def plot_t_test_shift(directory):
             scores = scores.reshape(distributed_shape)
             labels = labels.reshape(distributed_shape)
             labels = np.any(labels, axis=-1)
-            results = evaluate_array_t_statistic(scores)
+            results = get_probabilities(scores)
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
 
@@ -67,12 +44,8 @@ def plot_t_test_shift(directory):
     ax2 = axes[1]
 
     def estimator(x):
-        low = np.quantile(x, 0)
-        high = np.quantile(x, 1)
         return np.median(x)
-        return tmean(x, [low, high])
 
-    is_outlier = result_df[result_df["Outlier"]]
     summary = result_df.groupby(["x", "Outlier"]).describe()
     p_low = summary["p", "25%"]
     p_high = summary["p", "75%"]
@@ -112,7 +85,7 @@ def plot_t_test_shift(directory):
     plt.show()
 
 
-def plot_t_test_frac(directory):
+def plot_evaluation_frac(directory):
     sns.set_palette(sns.color_palette(["#1b9e77", "#fda968"]))
     file_dict = load_all_in_dir(directory)
 
@@ -131,7 +104,7 @@ def plot_t_test_frac(directory):
             scores = scores.reshape(distributed_shape)
             labels = labels.reshape(distributed_shape)
             labels = np.any(labels, axis=-1)
-            results = evaluate_array_t_statistic(scores)
+            results = get_probabilities(scores)
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i], params["shift"], params["subspace_frac"]])
 
@@ -145,8 +118,6 @@ def plot_t_test_frac(directory):
 
     axs[0, 1].set_xlabel("Subspace fraction")
     axs[0, 1].set_ylabel("$p$-value")
-
-    print(axs)
 
     for ax, shift in zip(axs[:, -1], tested_shift):
         selection = result_df["shift"] == shift
@@ -203,7 +174,7 @@ def get_scores(directory):
             scores = scores.reshape(distributed_shape)
             labels = labels.reshape(distributed_shape)
             labels = np.any(labels, axis=-1)
-            results = evaluate_array_t_statistic(scores)
+            results = get_probabilities(scores)
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i], params["shift"], params["subspace_frac"]])
 
@@ -219,7 +190,6 @@ def get_scores(directory):
             i += 1
             selection = np.logical_and(result_df["shift"] == shift, result_df["sf"] == sf)
             is_outlier = np.logical_and(selection, result_df["Outlier"])
-            is_inlier = np.logical_and(selection, np.invert(result_df["Outlier"]))
             tp = result_df[np.logical_and(is_outlier, result_df["p"] < alpha)]
             precision = len(tp) / np.sum((result_df[selection]["p"] < alpha))
             recall = len(tp) / len(result_df[is_outlier])
@@ -228,7 +198,6 @@ def get_scores(directory):
 
     scores = pd.DataFrame(scores, columns=["Shift", "Subspace fraction", "Precision", "Recall", "F1-Score"])\
         .sort_values(by=["Shift", "Subspace fraction"])
-    print(scores)
     print(scores.to_latex(index=False))
 
 
@@ -250,7 +219,7 @@ def get_scores_cont(directory):
             scores = scores.reshape(distributed_shape)
             labels = labels.reshape(distributed_shape)
             labels = np.any(labels, axis=-1)
-            results = evaluate_array_t_statistic(scores)
+            results = get_probabilities(scores)
             for i, res in enumerate(results):
                 result_df.append([x_axis_vals[-1], res[0], res[1], labels[i]])
 
@@ -264,7 +233,6 @@ def get_scores_cont(directory):
         i += 1
         selection = result_df["shift"] == shift
         is_outlier = np.logical_and(selection, result_df["Outlier"])
-        is_inlier = np.logical_and(selection, np.invert(result_df["Outlier"]))
         tp = result_df[np.logical_and(is_outlier, result_df["p"] < alpha)]
         precision = len(tp) / np.sum((result_df[selection]["p"] < alpha))
         recall = len(tp) / len(result_df[is_outlier])
@@ -294,15 +262,11 @@ def parse_filename(file):
     return parsed_args
 
 
-def test_rademacher():
-    data = np.random.choice([-1, 1], 100)
-    std = np.std(data, ddof=1)
-    for p in data:
-        print(t_statistic(p, 0, std, 100))
-
-
-def test_normal():
-    data = np.random.normal(size=1000)
-    res = [norm(0, 1).sf(val) for val in data]
-    plt.hist(res, bins=39)
-    plt.show()
+def get_probabilities(arr):
+    os_star = np.mean(arr, axis=-1)
+    os_star = zscore(os_star)
+    mean = np.mean(os_star)
+    std = np.std(os_star)
+    props = [norm(mean, std).sf(val) for val in os_star]
+    results = [os_star, props]
+    return np.array(results).T

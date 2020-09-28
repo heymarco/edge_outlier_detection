@@ -31,7 +31,7 @@ def create_ensembles(shape, l_name, contamination=0.01):
     if l_name == "lof100":
         l = [LocalOutlierFactor(n_neighbors=100, contamination=contamination, novelty=True) for _ in range(num_clients)]
     if l_name == "xstream":
-        l = [Chains(k=50, nchains=50, depth=10) for _ in range(num_clients)]
+        l = [Chains(k=100, nchains=100, depth=15) for _ in range(num_clients)]
     if l_name == "ae":
         l = [create_model(shape[-1], compression_factor=0.4) for _ in range(num_clients)]
     if l_name == "if":

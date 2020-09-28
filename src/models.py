@@ -26,25 +26,6 @@ def create_model(dims, compression_factor):
     return autoencoder
 
 
-def create_deep_model(dims=(28, 28, 1)):
-    input_img = Input(shape=dims)
-
-    x = Conv2D(8, (3, 3), activation='relu', padding='same', 
-               kernel_regularizer=tf.keras.regularizers.l2())(input_img)
-    encoded = MaxPooling2D((2, 2), padding='same')(x)
-
-    # at this point the representation is (128, 128, 8)
-
-    x = Conv2D(8, (3, 3), activation='relu', padding='same', 
-               kernel_regularizer=tf.keras.regularizers.l2())(encoded)
-    x = UpSampling2D((2, 2))(x)
-    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
-
-    autoencoder = Model(input_img, decoded)
-    autoencoder.compile(optimizer='adam', loss="binary_crossentropy")
-    return autoencoder
-
-
 def create_models(num_devices, dims, compression_factor):
     models = []
     for _ in range(num_devices):
@@ -58,16 +39,3 @@ def create_models(num_devices, dims, compression_factor):
 
     return models
 
-
-def create_deep_models(num_devices, dims, compression_factor):
-    models = []
-    for _ in range(num_devices):
-        ae = create_deep_model(dims)
-        models.append(ae)
-    models = np.array(models)
-
-    # SAME WEIGHT INITIALIZATION FOR ALL MODELS
-    initial_weights = models[0].get_weights()
-    [model.set_weights(initial_weights) for model in models]
-
-    return models

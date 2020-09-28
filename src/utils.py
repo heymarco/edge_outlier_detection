@@ -1,25 +1,6 @@
-import json
 import os
-
 import tensorflow as tf
-import seaborn as sns
-
 import numpy as np
-
-
-color_palette = sns.color_palette("cubehelix", 4)
-
-
-def load_json(filepath):
-    with open(filepath) as file:
-
-        return json.load(file)
-
-
-def normalize(array_like):
-    min_val = array_like.min()
-    max_val = array_like.max()
-    return (array_like - min_val) / (max_val - min_val)
 
 
 def setup_machine(cuda_device, ram=False):
