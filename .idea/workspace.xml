@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/EXP_ood.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_outlying_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EXP_vary_beta.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_local_global.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_local_global.py" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_local_global.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GEN_mixed_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/GEN_local_global.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

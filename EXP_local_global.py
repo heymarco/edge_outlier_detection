@@ -19,14 +19,14 @@ def create_datasets(args):
         logging.info("Varying contamination with outliers")
         contaminations = [0.01, 0.02, 0.03, 0.05]
         for cont in contaminations:
-            cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
+            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
             data_generator = os.path.join(os.getcwd(), cmd_string)
             os.system("{} {}".format("python", data_generator))
     elif args.vary == "sf":
         logging.info("Varying subspace fraction")
         sfs = [0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
         for sf in sfs:
-            cmd_string = "GEN_mixed_data.py -sf {} -dir {}".format(sf, args.data)
+            cmd_string = "GEN_local_global.py -sf {} -dir {}".format(sf, args.data)
             data_generator = os.path.join(os.getcwd(), cmd_string)
             os.system("{} {}".format("python", data_generator))
     elif args.vary == "ratio":
@@ -35,7 +35,7 @@ def create_datasets(args):
         [frac_local.append(frac_local[-1] + 0.005) for _ in range(6)]
         print(frac_local)
         for fl in frac_local:
-            cmd_string = "GEN_mixed_data.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05-fl,
+            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05-fl,
                                                                                            args.data)
             data_generator = os.path.join(os.getcwd(), cmd_string)
             os.system("{} {}".format("python", data_generator))
