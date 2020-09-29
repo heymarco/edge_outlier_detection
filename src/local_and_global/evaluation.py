@@ -1,15 +1,14 @@
 import os
-from sklearn.metrics import precision_recall_curve, auc
-import pandas as pd
 
 import numpy as np
+import pandas as pd
+from sklearn.metrics import precision_recall_curve, auc
+
+from src.utils import load_all_in_dir
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-from src.utils import load_all_in_dir
-
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')
