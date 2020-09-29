@@ -38,7 +38,7 @@ def add_random_correlation(data):
 
 
 def add_deviation(data, sigma):
-    shift_direction = np.ones(size=data.shape[-1])
+    shift_direction = np.ones(shape=data.shape[-1])
     half_number_of_devices = int(len(data) / 2)
 
     for i in range(half_number_of_devices):

@@ -7,53 +7,46 @@ import tensorflow as tf
 from src.local_and_global.functions import *
 from src.training import train_ensembles
 from src.utils import setup_machine, normalize_along_axis
+from GEN_local_global import create_data
 
 
 def create_datasets(args):
-    directory = os.path.join(os.getcwd(), "data", args.data)
-    entries = os.listdir(directory)
-    for entry in entries:
-        if entry.endswith(".npy"):
-            os.remove(os.path.join(directory, entry))
+    data = {}
+    ground_truth = {}
+
     if args.vary == "cont":
         logging.info("Varying contamination with outliers")
         contaminations = [0.01, 0.02, 0.03, 0.05]
         for cont in contaminations:
-            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(cont / 2.0, cont / 2.0,
-                                                                                             args.data)
-            data_generator = os.path.join(os.getcwd(), cmd_string)
-            os.system("{} {}".format("python", data_generator))
+            frac_local = cont / 2.0
+            frac_global = frac_local
+            dataset, labels, params = create_data(frac_local=frac_local,
+                                               frac_global=frac_global)
+            data[params] = dataset
+            ground_truth[params] = labels
+
     elif args.vary == "sf":
         logging.info("Varying subspace fraction")
         sfs = [0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
         for sf in sfs:
-            cmd_string = "GEN_local_global.py -sf {} -dir {}".format(sf, args.data)
-            data_generator = os.path.join(os.getcwd(), cmd_string)
-            os.system("{} {}".format("python", data_generator))
+            dataset, labels, params = create_data(subspace_frac=sf)
+            data[params] = dataset
+            ground_truth[params] = labels
+
     elif args.vary == "ratio":
         logging.info("Varying ratio between local and global outliers")
         frac_local = [0.01]
         [frac_local.append(frac_local[-1] + 0.005) for _ in range(6)]
-        print(frac_local)
         for fl in frac_local:
-            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05 - fl,
-                                                                                             args.data)
-            data_generator = os.path.join(os.getcwd(), cmd_string)
-            os.system("{} {}".format("python", data_generator))
+            dataset, labels, params = create_data(frac_local=fl,
+                                                  frac_global=0.05 - fl)
+            data[params] = dataset
+            ground_truth[params] = labels
 
-    # load, trim, normalize data
-    data = {}
-    ground_truth = {}
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith("d.npy") or file.endswith("o.npy"):
-                f = np.load(os.path.join(directory, file))
-                if file.endswith("d.npy"):
-                    f = normalize_along_axis(f, axis=(0, 1))
-                    data[file[:-6]] = f
-                if file.endswith("o.npy"):
-                    ground_truth[file[:-6]] = f
-                del f
+    # normalize data
+    for key in data.keys():
+        data[key] = normalize_along_axis(data[key], axis=(0, 1))
+
     logging.info("Finished data loading")
     return data, ground_truth
 
@@ -61,8 +54,8 @@ def create_datasets(args):
 if __name__ == '__main__':
     # create data parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-data", type=str,
-                        help="The data directory name")  # todo: remove!
+    parser.add_argument("-result_dir", type=str,
+                        help="The name of the result directory")
     parser.add_argument("-reps", type=int, default=10,
                         help="The number of experiment repetitions")
     parser.add_argument("-gpu", type=int,
@@ -72,7 +65,6 @@ if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
-    dirname = args.data
     reps = args.reps
 
     tf.config.threading.set_inter_op_parallelism_threads(1)
@@ -113,7 +105,7 @@ if __name__ == '__main__':
         del data
         del ground_truth
 
-    target_dir = os.path.join(os.getcwd(), "results", "numpy", args.data)
+    target_dir = os.path.join(os.getcwd(), "results", "numpy", args.result_dir)
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
         os.makedirs(os.path.join(target_dir, "cache"))  # For caching the evaluation as .npy files

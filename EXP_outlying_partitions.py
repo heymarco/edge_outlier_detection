@@ -4,14 +4,13 @@ import tensorflow as tf
 
 from src.utils import setup_machine, normalize_along_axis
 from src.outlying_partition.functions import *
+from GEN_outlying_partitions import create_dataset
 
 
 def create_datasets(args):
-    directory = os.path.join(os.getcwd(), "data", dirname)
-    entries = os.listdir(directory)
-    for entry in entries:
-        if entry.endswith(".npy"):
-            os.remove(os.path.join(directory, entry))
+    data = {}
+    ground_truth = {}
+
     if args.vary == "frac":
         tested_shift = [0.1, 0.15, 0.2, 0.25]
         tested_sf = [0.1, 0.3, 0.6, 1.0]
@@ -20,42 +19,31 @@ def create_datasets(args):
             for sf in tested_sf:
                 combos.append([shift, sf])
         for combo in combos:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -sf {} -dir {}"
-                                          .format(combo[0], combo[1], args.data))
-            os.system("{} {}".format("python", data_generator))
-    if args.vary == "cont":
-        frac_range = [0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-        for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(),
-                                          "GEN_outlying_partitions.py -cont {} -dir {}".format(frac, args.data))
-            os.system("{} {}".format("python", data_generator))
+            shift = combo[0]
+            sf = combo[1]
+            dataset, labels, params = create_dataset(sigma_p=shift, subspace_frac=sf)
+            data[params] = dataset
+            ground_truth[params] = dataset
+
     if args.vary == "shift":
         shift = np.arange(30 + 1) / 100
         for val in shift:
-            data_generator = os.path.join(os.getcwd(),
-                                          "GEN_outlying_partitions.py -shift {} -dir {}".format(val, args.data))
-            os.system("{} {}".format("python", data_generator))
+            dataset, labels, params = create_dataset(sigma_p=val)
+            data[params] = dataset
+            ground_truth[params] = dataset
 
-    # load, trim, normalize data
-    data = {}
-    ground_truth = {}
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith("d.npy") or file.endswith("o.npy"):
-                f = np.load(os.path.join(directory, file))
-                if file.endswith("d.npy"):
-                    f = normalize_along_axis(f, axis=(0, 1))
-                    data[file[:-6]] = f
-                if file.endswith("o.npy"):
-                    ground_truth[file[:-6]] = f
-                del f
+    # normalize data
+    for key in data:
+        data[key] = normalize_along_axis(data[key], axis=(0, 1))
+
     return data, ground_truth
 
 
 if __name__ == '__main__':
     # create data parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-data", type=str, default="out_part")  # todo: remove!
+    parser.add_argument("-result_dir", type=str,
+                        help="The name of the result directory")
     parser.add_argument("-reps", type=int, default=1,
                         help="The number of experiment repetitions")
     parser.add_argument("-gpu", type=int,
@@ -65,7 +53,7 @@ if __name__ == '__main__':
 
     logging.getLogger().setLevel(logging.INFO)
     args = parser.parse_args()
-    dirname = args.data
+    dirname = args.result_dir
     reps = args.reps
 
     tf.config.threading.set_inter_op_parallelism_threads(1)
@@ -102,7 +90,7 @@ if __name__ == '__main__':
         del data
         del ground_truth
 
-    target_dir = os.path.join(os.getcwd(), "results", "numpy", args.data)
+    target_dir = os.path.join(os.getcwd(), "results", "numpy", args.result_dir)
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
         os.makedirs(os.path.join(target_dir, "cache"))  # For caching the evaluation as .npy files
