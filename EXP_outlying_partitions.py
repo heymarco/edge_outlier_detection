@@ -49,7 +49,6 @@ def create_datasets(args):
                 if file.endswith("o.npy"):
                     ground_truth[file[:-6]] = f
                 del f
-    print("Finished data loading")
     return data, ground_truth
 
 
@@ -109,4 +108,4 @@ if __name__ == '__main__':
         os.makedirs(os.path.join(target_dir, "cache"))  # For caching the evaluation as .npy files
 
     for key in results:
-        np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]).astype(float))
+        np.save(os.path.join(target_dir, key), np.array(results[key]).astype(float))

@@ -119,5 +119,4 @@ if __name__ == '__main__':
         os.makedirs(os.path.join(target_dir, "cache"))  # For caching the evaluation as .npy files
 
     for key in results:
-        print(np.array(results[key]).shape)
-        np.save(os.path.join(os.getcwd(), "results", "numpy", args.data, key), np.array(results[key]))
+        np.save(os.path.join(target_dir, key), np.array(results[key]))
