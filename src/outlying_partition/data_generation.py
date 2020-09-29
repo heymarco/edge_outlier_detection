@@ -1,7 +1,5 @@
-import os
-import argparse
-
 import numpy as np
+
 from src.data.synthetic_data import create_raw_data, add_random_correlation, add_deviation, add_outlying_partitions
 
 
