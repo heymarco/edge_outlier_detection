@@ -10,12 +10,12 @@ def create_model(dims, compression_factor):
     initializer = tf.keras.initializers.GlorotUniform()
     bias_initializer = tf.keras.initializers.Zeros()
 
-    encoding_dim = int(dims*compression_factor)
+    encoding_dim = int(dims * compression_factor)
     input_img = Input(shape=(dims,))
     encoded = Dense(encoding_dim,
                     activation='relu',
                     kernel_regularizer=tf.keras.regularizers.l2(),
-                    kernel_initializer=initializer, 
+                    kernel_initializer=initializer,
                     bias_initializer=bias_initializer)(input_img)
     decoded = Dense(dims, activation='sigmoid',
                     kernel_regularizer=tf.keras.regularizers.l2(),
@@ -38,4 +38,3 @@ def create_models(num_devices, dims, compression_factor):
     [model.set_weights(initial_weights) for model in models]
 
     return models
-

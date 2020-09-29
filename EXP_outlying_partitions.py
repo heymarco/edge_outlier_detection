@@ -26,12 +26,14 @@ def create_datasets(args):
     if args.vary == "cont":
         frac_range = [0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         for frac in frac_range:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -cont {} -dir {}".format(frac, args.data))
+            data_generator = os.path.join(os.getcwd(),
+                                          "GEN_outlying_partitions.py -cont {} -dir {}".format(frac, args.data))
             os.system("{} {}".format("python", data_generator))
     if args.vary == "shift":
-        shift = np.arange(30+1) / 100
+        shift = np.arange(30 + 1) / 100
         for val in shift:
-            data_generator = os.path.join(os.getcwd(), "GEN_outlying_partitions.py -shift {} -dir {}".format(val, args.data))
+            data_generator = os.path.join(os.getcwd(),
+                                          "GEN_outlying_partitions.py -shift {} -dir {}".format(val, args.data))
             os.system("{} {}".format("python", data_generator))
 
     # load, trim, normalize data
@@ -74,7 +76,7 @@ if __name__ == '__main__':
     setup_machine(cuda_device=args.gpu)
 
     # We only need C, so we do not need to evaluate all local detectors
-    combinations = [("ae", "ae"),]
+    combinations = [("ae", "ae"), ]
 
     logging.info("Executing combinations {}".format(combinations))
     logging.info("Repeating {} times".format(reps))

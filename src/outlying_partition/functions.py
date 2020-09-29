@@ -12,6 +12,7 @@ from src.training import train_federated
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
 mpl.rc('font', family='serif')

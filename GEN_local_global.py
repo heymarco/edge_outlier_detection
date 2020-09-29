@@ -4,7 +4,8 @@ import logging
 
 import numpy as np
 
-from src.data.synthetic_data import create_raw_data, add_random_correlation, add_global_outliers, add_local_outliers, add_deviation
+from src.data.synthetic_data import create_raw_data, add_random_correlation
+from src.data.synthetic_data import add_global_outliers, add_local_outliers, add_deviation
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-sf", type=float, default=0.2)

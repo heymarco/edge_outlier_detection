@@ -198,7 +198,6 @@ def get_scores_vary_ratio(from_dir):
 
     result = []
 
-
     for i, file in enumerate(file_keys[sorted_key_indices]):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
         cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
@@ -214,7 +213,7 @@ def get_scores_vary_ratio(from_dir):
 
         max_index_pr1 = np.argmax(final_pr1)
         max_index_pr2 = np.argmax(final_pr2)
-        ratio = round(fg/fl, 2)
+        ratio = round(fg / fl, 2)
         beta_pr1 = beta_range[max_index_pr1]
         beta_pr2 = beta_range[max_index_pr2]
         aupr1 = final_pr1[max_index_pr1]
@@ -292,7 +291,7 @@ def plot_vary_cont(from_dir):
                     xycoords=ax.yaxis.label, textcoords='offset points',
                     size='large', ha='right', va='center', rotation=90)
     # for ax in axs.flatten():
-        # ax.set_ylim(bottom=0.6, top=1.0)
+    # ax.set_ylim(bottom=0.6, top=1.0)
     for ax in axs[-1, :]:
         ax.set_xlabel(r"$\beta$")
     axs[0, 0].set_title("Local")
@@ -334,12 +333,10 @@ def plot_vary_cont(from_dir):
         print("max for global: {}".format(np.max(final_pr2)))
         lines1 = axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
         lines2 = axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
-                         label=r"$cont={}$".format(fl + fg))
+                                  label=r"$cont={}$".format(fl + fg))
 
         axs[row, 0].axvline(beta_range[np.argmax(final_pr1)], color=lines1[0].get_color(), lw=0.5, alpha=0.7)
         axs[row, 1].axvline(beta_range[np.argmax(final_pr2)], color=lines2[0].get_color(), lw=0.5, alpha=0.7)
-
-
 
     handles, labels = axs[0, -1].get_legend_handles_labels()
     plt.figlegend(handles, labels, loc='lower center', frameon=False, ncol=2)
@@ -371,13 +368,13 @@ def get_scores_vary_cont(from_dir):
 
         max_index_pr1 = np.argmax(final_pr1)
         max_index_pr2 = np.argmax(final_pr2)
-        ratio = round(fg/fl, 2)
+        ratio = round(fg / fl, 2)
         beta_pr1 = beta_range[max_index_pr1]
         beta_pr2 = beta_range[max_index_pr2]
         aupr1 = round(final_pr1[max_index_pr1], 2)
         aupr2 = round(final_pr2[max_index_pr2], 2)
         result.append(["{}/{}".format(params["c_name"], params["l_name"]).upper(),
-                       round(fg+fl, 2), beta_pr2, aupr2, beta_pr1, aupr1])
+                       round(fg + fl, 2), beta_pr2, aupr2, beta_pr1, aupr1])
 
     result = pd.DataFrame(result, columns=["Ensemble", "$cont$", r"$\beta_{opt}$ (global)", "$AUPR$ (global)",
                                            r"$\beta_{opt}$ (local)", "$AUPR$ (local)"])
@@ -429,7 +426,7 @@ def eval_plot_comparison_separate_approaches(from_dir):
                 p_l1, r_l1, _ = precision_recall_curve(labels, os_l, pos_label=1)
                 p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
                 p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
-                beta_opt = 0.5*np.sum(labels == 2)/len(labels)
+                beta_opt = 0.5 * np.sum(labels == 2) / len(labels)
                 print(beta_opt)
                 p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta_opt)
                 p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta_opt)

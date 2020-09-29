@@ -19,7 +19,8 @@ def create_datasets(args):
         logging.info("Varying contamination with outliers")
         contaminations = [0.01, 0.02, 0.03, 0.05]
         for cont in contaminations:
-            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(cont/2.0, cont/2.0, args.data)
+            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(cont / 2.0, cont / 2.0,
+                                                                                             args.data)
             data_generator = os.path.join(os.getcwd(), cmd_string)
             os.system("{} {}".format("python", data_generator))
     elif args.vary == "sf":
@@ -35,8 +36,8 @@ def create_datasets(args):
         [frac_local.append(frac_local[-1] + 0.005) for _ in range(6)]
         print(frac_local)
         for fl in frac_local:
-            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05-fl,
-                                                                                           args.data)
+            cmd_string = "GEN_local_global.py -frac_local {} -frac_global {} -dir {}".format(fl, 0.05 - fl,
+                                                                                             args.data)
             data_generator = os.path.join(os.getcwd(), cmd_string)
             os.system("{} {}".format("python", data_generator))
 
@@ -85,7 +86,7 @@ if __name__ == '__main__':
                     ("ae", "lof8"),
                     ("ae", "if"),
                     ("ae", "xstream")
-    ]
+                    ]
     logging.info("Executing combinations {}".format(combinations))
     logging.info("Repeating {} times".format(reps))
 

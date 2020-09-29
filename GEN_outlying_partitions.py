@@ -33,12 +33,12 @@ data = add_random_correlation(data)
 
 # write to file
 params_str = "{}_{}_{}_{}_{}_{}_{}_ood".format(num_devices,
-                                                        num_data,
-                                                        dims,
-                                                        subspace_frac,
-                                                        frac_outlying_devices,
-                                                        sigma_l,
-                                                        args.shift)
+                                               num_data,
+                                               dims,
+                                               subspace_frac,
+                                               frac_outlying_devices,
+                                               sigma_l,
+                                               args.shift)
 dataname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_d")
 outname = os.path.join(os.getcwd(), "data", args.dir, params_str + "_o")
 np.save(dataname, data)
