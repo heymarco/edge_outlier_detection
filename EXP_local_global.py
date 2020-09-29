@@ -1,5 +1,4 @@
 import argparse
-import gc
 import logging
 import os
 import tensorflow as tf
@@ -7,7 +6,7 @@ import tensorflow as tf
 from src.local_and_global.functions import *
 from src.training import train_ensembles
 from src.utils import setup_machine, normalize_along_axis
-from GEN_local_global import create_data
+from src.local_and_global.data_generation import create_data
 
 
 def create_datasets(args):

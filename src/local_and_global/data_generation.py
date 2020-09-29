@@ -1,7 +1,3 @@
-import argparse
-import os
-import logging
-
 import numpy as np
 
 from src.data.synthetic_data import create_raw_data, add_random_correlation

@@ -4,7 +4,7 @@ import tensorflow as tf
 
 from src.utils import setup_machine, normalize_along_axis
 from src.outlying_partition.functions import *
-from GEN_outlying_partitions import create_dataset
+from src.outlying_partition.data_generation import create_dataset
 
 
 def create_datasets(args):
