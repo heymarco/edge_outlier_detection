@@ -33,13 +33,13 @@ def create_data(num_devices: int = 100,
         labels[i] = labels[i][shuffled_indices]
 
     params_str = "{}_{}_{}_{}_{}_{}_{}_{}_{}".format(num_devices,
-                                                           num_data,
-                                                           dims,
-                                                           subspace_frac,
-                                                           0.0,
-                                                           frac_local,
-                                                           frac_global,
-                                                           sigma_l,
-                                                           sigma_g)
+                                                     num_data,
+                                                     dims,
+                                                     subspace_frac,
+                                                     0.0,
+                                                     frac_local,
+                                                     frac_global,
+                                                     sigma_l,
+                                                     sigma_g)
 
     return data, labels, params_str

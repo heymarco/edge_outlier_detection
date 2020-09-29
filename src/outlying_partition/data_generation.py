@@ -24,11 +24,11 @@ def create_dataset(num_devices: int = 100,
 
     # write to file
     params_str = "{}_{}_{}_{}_{}_{}_{}".format(num_devices,
-                                                   num_data,
-                                                   dims,
-                                                   subspace_frac,
-                                                   frac_outlying_devices,
-                                                   sigma_l,
-                                                   sigma_p)
+                                               num_data,
+                                               dims,
+                                               subspace_frac,
+                                               frac_outlying_devices,
+                                               sigma_l,
+                                               sigma_p)
 
     return data, labels, params_str
