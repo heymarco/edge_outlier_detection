@@ -4,4 +4,6 @@ Code for the paper "A Meta-Framework for Outlier Detection in Distributed Data" 
 
 ## Requirements
 
-Install the requirements using conda 
+Install the requirements using conda
+
+- `conda create --name <env> --file`
