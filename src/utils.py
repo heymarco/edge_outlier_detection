@@ -4,6 +4,11 @@ import numpy as np
 
 
 def setup_machine(cuda_device, ram=False):
+    """
+    If gpus exist, choose the gpu which is specified in 'cuda_device'
+    :param cuda_device: The chosen GPU
+    :param ram: The allocated ram. If not specified, memory growth is allowed.
+    """
     gpus = tf.config.experimental.list_physical_devices('GPU')
     CUDA_VISIBLE_DEVICE = cuda_device
     if gpus:

@@ -3,10 +3,16 @@ from scipy.stats import random_correlation
 
 
 def create_raw_data(num_devices, n, dims):
+    """
+    Step 1
+    """
     return np.random.normal(size=(num_devices, n, dims))
 
 
 def add_global_outliers(data, subspace_size, frac_outlying=0.03, sigma=2.8):
+    """
+    Step 2
+    """
     num_outliers = int(data.shape[1] * frac_outlying)
     outliers = np.random.normal(size=(data.shape[0], num_outliers, subspace_size))
     mean_norm_in_subspace = np.linalg.norm(np.ones(subspace_size))  # we have data which is normally distributed
@@ -23,21 +29,10 @@ def add_global_outliers(data, subspace_size, frac_outlying=0.03, sigma=2.8):
     return data, mask.astype(bool)
 
 
-def add_random_correlation(data):
-    dims = data.shape[-1]
-    evs = np.random.uniform(0.01, 1, size=dims)
-    evs = evs / np.sum(evs) * dims
-    random_corr_matrix = random_correlation.rvs(evs)
-    cholesky_transform = np.linalg.cholesky(random_corr_matrix)
-    for i in range(data.shape[0]):
-        normal_eq_mean = cholesky_transform.dot(data[i].T)  # Generating random MVN (0, cov_matrix)
-        normal_eq_mean = normal_eq_mean.transpose()
-        normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
-        data[i] = normal_eq_mean.T
-    return data
-
-
 def add_deviation(data, sigma):
+    """
+    Step 3
+    """
     shift_direction = np.ones(shape=data.shape[-1])
     half_number_of_devices = int(len(data) / 2)
 
@@ -48,6 +43,9 @@ def add_deviation(data, sigma):
 
 
 def add_local_outliers(data, subspace_size, frac_outlying=0.03):
+    """
+    Step 3
+    """
     outliers = np.empty(shape=data.shape, dtype=bool)
     outliers.fill(False)
 
@@ -91,6 +89,9 @@ def add_local_outliers(data, subspace_size, frac_outlying=0.03):
 
 
 def add_outlying_partitions(data, frac_outlying_data, frac_outlying_devices, subspace_frac, sigma_p):
+    """
+    Step 4
+    """
     num_devices = data.shape[0]
     num_data = data.shape[1]
     dims = data.shape[-1]
@@ -110,3 +111,20 @@ def add_outlying_partitions(data, frac_outlying_data, frac_outlying_devices, sub
                 data[dev, p, s] = data[dev, p, s] + shift[i]
 
     return data, labels
+
+
+def add_random_correlation(data):
+    """
+    Step 5
+    """
+    dims = data.shape[-1]
+    evs = np.random.uniform(0.01, 1, size=dims)
+    evs = evs / np.sum(evs) * dims
+    random_corr_matrix = random_correlation.rvs(evs)
+    cholesky_transform = np.linalg.cholesky(random_corr_matrix)
+    for i in range(data.shape[0]):
+        normal_eq_mean = cholesky_transform.dot(data[i].T)  # Generating random MVN (0, cov_matrix)
+        normal_eq_mean = normal_eq_mean.transpose()
+        normal_eq_mean = normal_eq_mean.transpose()  # Transposing back
+        data[i] = normal_eq_mean.T
+    return data

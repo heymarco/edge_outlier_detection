@@ -12,6 +12,18 @@ def create_data(num_devices: int = 100,
                 frac_global: float = 0.01,
                 sigma_l: float = 3.0,
                 sigma_g: float = 3.0):
+    """
+    Create a data set for the distinction between local and global outliers
+    :param num_devices: The number of clients in the network
+    :param num_data: The number of observations per client
+    :param dims: The dimensionality of the data
+    :param subspace_frac: The subspace fraction in which an outlier hides
+    :param frac_local: The fraction of local outliers
+    :param frac_global: the fraction of global outliers
+    :param sigma_l: The deviation of the clusters (See Step 3 in the paper)
+    :param sigma_g: The deviation of global outliers (See Step 2 in the paper)
+    :return: data, labels, parameter_string
+    """
     subspace_size = int(subspace_frac * dims)
     # create data
     data = create_raw_data(num_devices, num_data, dims)

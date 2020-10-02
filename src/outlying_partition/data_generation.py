@@ -10,6 +10,17 @@ def create_dataset(num_devices: int = 100,
                    frac_outlying_devices: float = 0.05,
                    cont: float = 1.0,
                    sigma_p: float = 0.25):
+    """
+    Create a data set for the identification of outlying data partitions
+    :param num_devices: The number of clients in the network
+    :param num_data: The number of observations per client
+    :param dims: The dimensionality of the data
+    :param subspace_frac: The subspace fraction in which the partition is outlying
+    :param frac_outlying_devices: The fraction of devices which are outlying
+    :param cont: The fraction of observations which are outlying
+    :param sigma_p: The deviation of an outlying data partition
+    :return: data, labels, parameter_string
+    """
     sigma_l = 0.0
 
     data = create_raw_data(num_devices, num_data, dims)

@@ -9,6 +9,7 @@ from src.training import train_ensembles
 from src.utils import setup_machine, normalize_along_axis
 
 
+# Create the data for this experiment
 def create_datasets(args):
     data = {}
     ground_truth = {}
@@ -82,6 +83,7 @@ if __name__ == '__main__':
     logging.info("Repeating {} times".format(reps))
 
     results = {}
+    # loop through reps, create data and run ensembles
     for i in range(reps):
         logging.info("Rep {}".format(i))
         data, ground_truth = create_datasets(args)

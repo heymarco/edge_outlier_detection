@@ -7,6 +7,12 @@ from tensorflow.keras.models import Model
 
 
 def create_model(dims, compression_factor):
+    """
+    Create an autoencoder with a single hidden layer
+    :param dims: The number of input dimensions
+    :param compression_factor: The compression factor
+    :return: The autoencoder model
+    """
     initializer = tf.keras.initializers.GlorotUniform()
     bias_initializer = tf.keras.initializers.Zeros()
 
@@ -27,6 +33,13 @@ def create_model(dims, compression_factor):
 
 
 def create_models(num_devices, dims, compression_factor):
+    """
+    Create one model per network participant
+    :param num_devices: The number of models to create
+    :param dims: The number of input dimensions
+    :param compression_factor: The compression factor of the autoencoder
+    :return: A list of identical models
+    """
     models = []
     for _ in range(num_devices):
         ae = create_model(dims, compression_factor)

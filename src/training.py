@@ -4,6 +4,14 @@ from src.utils import average_weights
 
 
 def train_ensembles(data, ensembles, l_name, global_epochs=10):
+    """
+    Train the ensembles across the network
+    :param data: The data
+    :param ensembles: A tupel of two arrays ([C], [L])
+    :param l_name: The identifier of the local ensemble.
+    :param global_epochs: The number of global epochs, also referred to as 'communication rounds'
+    :return: Global and local outlier scores
+    """
     collab_detectors = ensembles[0]
     local_detectors = ensembles[1]
 

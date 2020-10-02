@@ -19,6 +19,13 @@ mpl.rc('font', family='serif')
 
 
 def create_ensembles(shape, l_name, contamination=0.01):
+    """
+    Utility function for creating the ensembles
+    :param shape: The input shape
+    :param l_name: The idenfitier of the local outlier detector
+    :param contamination: The contamination (for some models this is a parameter)
+    :return: array(C), array(L)
+    """
     num_clients = shape[0]
     c = create_models(num_clients, shape[-1], compression_factor=0.4)
     l = None
