@@ -63,7 +63,6 @@ def prc_ranks(os_c, os_l, labels, pos_label, beta=0.05, dist=None):
     sorted_labels = labels[val_range]
     val_range = np.array([i for i in range(len(val_range)) if sorted_labels[i] > 0])
     val_range = val_range / len(labels)
-    print(labels.shape)
 
     is_pos_label = labels == pos_label
 
@@ -172,9 +171,6 @@ def plot_vary_ratio(from_dir):
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
 
-        print(cached_filename_pr1)
-        print(len(final_pr1))
-
         p1 = axs[row, 0].plot(beta_range, final_pr1)
         p2 = axs[row, 1].plot(beta_range, final_pr2,
                               label=r"$ratio = {}$".format(round(fg / fl, 1)))
@@ -244,9 +240,6 @@ def evaluate_vary_cont(from_dir):
     for i, file in enumerate(file_keys[sorted_key_indices]):
         cached_filename_pr1 = os.path.join(from_dir, "cache", file[:-4] + "pr1" + ".npy")
         cached_filename_pr2 = os.path.join(from_dir, "cache", file[:-4] + "pr2" + ".npy")
-
-        print(cached_filename_pr1)
-        print(os.path.exists(cached_filename_pr1))
 
         if not (os.path.exists(cached_filename_pr1) and os.path.exists(cached_filename_pr2)):
             result = files[file]
@@ -335,8 +328,7 @@ def plot_vary_cont(from_dir):
 
         fl = round(float(params["frac_local"]), 3)
         fg = round(float(params["frac_global"]), 3)
-        print("max for local: {}".format(np.max(final_pr1)))
-        print("max for global: {}".format(np.max(final_pr2)))
+
         lines1 = axs[row, 0].plot(beta_range, final_pr1, ls=get_linestyle(params["frac_local"]))
         lines2 = axs[row, 1].plot(beta_range, final_pr2, ls=get_linestyle(params["frac_local"]),
                                   label=r"$cont={}$".format(fl + fg))
@@ -395,7 +387,6 @@ def eval_plot_comparison_separate_approaches(from_dir):
         styles = ["solid", "dotted", "dashed", "dashdot", (0, (3, 1, 1, 1, 1, 1)), (0, (3, 1, 1, 1, 1, 1))]
         roc_auc = auc(recall, precision)
         num_lines = len(axis.get_lines())
-        print(num_lines)
         axis.plot(recall, precision, label='$PR_{auc} = %0.2f)$' % roc_auc, ls=styles[num_lines])
 
     def create_subplots(results):
@@ -433,7 +424,6 @@ def eval_plot_comparison_separate_approaches(from_dir):
                 p_c2, r_c2, _ = precision_recall_curve(labels, os_c, pos_label=2)
                 p_l2, r_l2, _ = precision_recall_curve(labels, os_l, pos_label=2)
                 beta_opt = 0.5 * np.sum(labels == 2) / len(labels)
-                print(beta_opt)
                 p_comb1, r_comb1 = prc_ranks(os_c, os_l, labels, pos_label=1, beta=beta_opt)
                 p_comb2, r_comb2 = prc_ranks(os_c, os_l, labels, pos_label=2, beta=beta_opt)
                 p_c1_arr.append(p_c1)
@@ -510,7 +500,6 @@ def eval_plot_comparison_separate_approaches(from_dir):
             frac = params["subspace_frac"]
             l_name = params["l_name"]
             if not l_name.startswith("ae"):
-                print(l_name)
                 continue
             res_1, res_2, res_3, res_4, res_5, res_6 = average_result(result)
 
