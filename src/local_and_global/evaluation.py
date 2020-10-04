@@ -21,6 +21,14 @@ sequential_cp = ["#000000", "#0b4131", "#168362", "#1eae83", "#3bdead", "#7ce9c8
 
 
 def get_rank_distance(os_c, os_l, labels, beta):
+    """
+    Get the distance between the ranks of local and global outliers
+    :param os_c: The global outlier scores
+    :param os_l: The local outlier scores
+    :param labels: The labels
+    :param beta: Parameter beta
+    :return: The rank difference
+    """
     os_c = os_c.flatten()
     os_l = os_l.flatten()
     labels = labels.flatten()
@@ -29,13 +37,12 @@ def get_rank_distance(os_c, os_l, labels, beta):
     # argsort osc
     si_osc = np.argsort(os_c)
     si_osl = np.argsort(os_l)
-    # Indices, die die thresholds sortieren
 
     # a = argsort prev_res_l
     # b = argsort prev_res_c
     sorted_indices_si_osc = np.argsort(si_osc)
     sorted_indices_si_osl = np.argsort(si_osl)
-    # --> Position der indices im Array
+    # --> Position of the indices in the array
 
     # diff = a - b
     diff = sorted_indices_si_osl - sorted_indices_si_osc
