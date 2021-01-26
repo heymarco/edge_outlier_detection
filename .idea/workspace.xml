@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EXP_cifar.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/fashion_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/outliers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/outliers.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,24 +16,31 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="Jupyter Notebook" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JupyterTrust" id="81fdfa86-1c3b-4c16-b2ca-72e9b40ba60b">
+    <option name="files">
+      <option value="EXP_cifar.ipynb" />
+    </option>
+  </component>
   <component name="ProjectId" id="1ZtpkP6Hg9OL4xlvvI1qhgcyfqx" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -57,6 +67,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EXP_images.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -66,19 +77,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="outliers" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -89,102 +111,56 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1585668387336</updated>
+      <workItem from="1602254205651" duration="54000" />
+      <workItem from="1605041449243" duration="668000" />
+      <workItem from="1606476993553" duration="1068000" />
+      <workItem from="1606734909059" duration="233000" />
+      <workItem from="1607431911885" duration="936000" />
+      <workItem from="1611588523350" duration="6584000" />
+      <workItem from="1611646701194" duration="5887000" />
+      <workItem from="1611658315602" duration="11785000" />
     </task>
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="245" y="114" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595265490972">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state x="677" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1611589648858">
+      <screen x="0" y="25" width="1920" height="987" />
     </state>
-    <state x="245" y="114" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265490972" />
-    <state x="573" y="276" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1596440485613">
-      <screen x="0" y="23" width="1920" height="986" />
+    <state x="677" y="320" key="#com.intellij.fileTypes.FileTypeChooser/1920.410.1440.875/0.25.1920.987@0.25.1920.987" timestamp="1611589648858" />
+    <state width="1878" height="118" key="GridCell.Tab.0.bottom" timestamp="1611674500240">
+      <screen x="0" y="25" width="1920" height="990" />
     </state>
-    <state x="430" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.822@0.23.1440.822" timestamp="1596203941498" />
-    <state x="573" y="276" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1920.986@0.23.1920.986" timestamp="1596440485613" />
-    <state x="699" y="302" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601302924543">
-      <screen x="0" y="23" width="1920" height="1115" />
+    <state width="1398" height="68" key="GridCell.Tab.0.bottom/0.25.1440.825@0.25.1440.825" timestamp="1611660444941" />
+    <state width="1400" height="66" key="GridCell.Tab.0.bottom/0.25.1920.987@0.25.1920.987" timestamp="1611649344513" />
+    <state width="1878" height="118" key="GridCell.Tab.0.bottom/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500240" />
+    <state width="1398" height="68" key="GridCell.Tab.0.bottom/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090357" />
+    <state width="1878" height="118" key="GridCell.Tab.0.center" timestamp="1611674500237">
+      <screen x="0" y="25" width="1920" height="990" />
     </state>
-    <state x="698" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416722519" />
-    <state x="524" y="229" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.822@0.23.1440.822" timestamp="1596203960901" />
-    <state x="699" y="302" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.-460.1200.1897/0.23.1920.1115@0.23.1920.1115" timestamp="1601302924543" />
-    <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog" timestamp="1595265422681">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state width="1398" height="68" key="GridCell.Tab.0.center/0.25.1440.825@0.25.1440.825" timestamp="1611660444940" />
+    <state width="1400" height="66" key="GridCell.Tab.0.center/0.25.1920.987@0.25.1920.987" timestamp="1611649344512" />
+    <state width="1878" height="118" key="GridCell.Tab.0.center/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500237" />
+    <state width="1398" height="68" key="GridCell.Tab.0.center/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090353" />
+    <state width="1878" height="118" key="GridCell.Tab.0.left" timestamp="1611674500235">
+      <screen x="0" y="25" width="1920" height="990" />
     </state>
-    <state x="545" y="288" key="#com.intellij.tools.ToolEditorDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265422681" />
-    <state x="656" y="93" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1601306577285">
-      <screen x="0" y="23" width="1920" height="1115" />
+    <state width="1398" height="68" key="GridCell.Tab.0.left/0.25.1440.825@0.25.1440.825" timestamp="1611660444939" />
+    <state width="1400" height="66" key="GridCell.Tab.0.left/0.25.1920.987@0.25.1920.987" timestamp="1611649344512" />
+    <state width="1878" height="118" key="GridCell.Tab.0.left/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500235" />
+    <state width="1398" height="68" key="GridCell.Tab.0.left/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090352" />
+    <state width="1878" height="118" key="GridCell.Tab.0.right" timestamp="1611674500238">
+      <screen x="0" y="25" width="1920" height="990" />
     </state>
-    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/-1440.670.1440.877/0.23.1920.992@0.23.1920.992" timestamp="1595416787958" />
-    <state x="492" y="74" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.814@0.23.1440.814" timestamp="1599490334836" />
-    <state x="492" y="82" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1440.822@0.23.1440.822" timestamp="1596203475276" />
-    <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.984@0.23.1920.984" timestamp="1597749514852" />
-    <state x="656" y="94" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.986@0.23.1920.986" timestamp="1596440513613" />
-    <state x="656" y="400" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1920.992@0.23.1920.992" timestamp="1595488621503" />
-    <state x="656" y="93" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/1920.-460.1200.1897/0.23.1920.1115@0.23.1920.1115" timestamp="1601306577285" />
-    <state width="1899" height="249" key="GridCell.Tab.0.bottom" timestamp="1595284284240">
-      <screen x="0" y="23" width="1440" height="827" />
+    <state width="1398" height="68" key="GridCell.Tab.0.right/0.25.1440.825@0.25.1440.825" timestamp="1611660444941" />
+    <state width="1400" height="66" key="GridCell.Tab.0.right/0.25.1920.987@0.25.1920.987" timestamp="1611649344512" />
+    <state width="1878" height="118" key="GridCell.Tab.0.right/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500238" />
+    <state width="1398" height="68" key="GridCell.Tab.0.right/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090355" />
+    <state x="469" y="154" key="SettingsEditor" timestamp="1611589539270">
+      <screen x="0" y="25" width="1920" height="987" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.bottom/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
-    <state width="1899" height="249" key="GridCell.Tab.0.bottom/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state width="1899" height="249" key="GridCell.Tab.0.center" timestamp="1595284284239">
-      <screen x="0" y="23" width="1440" height="827" />
-    </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.center/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
-    <state width="1899" height="249" key="GridCell.Tab.0.center/0.23.1440.827@0.23.1440.827" timestamp="1595284284239" />
-    <state width="1899" height="249" key="GridCell.Tab.0.left" timestamp="1595284284239">
-      <screen x="0" y="23" width="1440" height="827" />
-    </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.left/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623566" />
-    <state width="1899" height="249" key="GridCell.Tab.0.left/0.23.1440.827@0.23.1440.827" timestamp="1595284284239" />
-    <state width="1899" height="249" key="GridCell.Tab.0.right" timestamp="1595284284240">
-      <screen x="0" y="23" width="1440" height="827" />
-    </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.right/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265623567" />
-    <state width="1899" height="249" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1595284284240" />
-    <state x="507" y="320" key="com.intellij.ide.util.TipDialog" timestamp="1601650816046">
-      <screen x="0" y="23" width="1920" height="1002" />
-    </state>
-    <state x="507" y="315" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.988@0.23.1920.988" timestamp="1593070672319" />
-    <state x="507" y="317" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595262946947" />
-    <state x="-1060" y="931" key="com.intellij.ide.util.TipDialog/-1440.670.1440.877/0.23.1920.991@-1440.670.1440.877" timestamp="1594201577734" />
-    <state x="380" y="265" key="com.intellij.ide.util.TipDialog/0.23.1440.816@0.23.1440.816" timestamp="1599493409318" />
-    <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.821@0.23.1440.821" timestamp="1600013183399" />
-    <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.822@0.23.1440.822" timestamp="1600035513670" />
-    <state x="380" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1600240647612" />
-    <state x="380" y="268" key="com.intellij.ide.util.TipDialog/0.23.1440.825@0.23.1440.825" timestamp="1596474521879" />
-    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.827@0.23.1440.827" timestamp="1596804828134" />
-    <state x="380" y="269" key="com.intellij.ide.util.TipDialog/0.23.1440.828@0.23.1440.828" timestamp="1595581118164" />
-    <state x="507" y="315" key="com.intellij.ide.util.TipDialog/0.23.1920.982@0.23.1920.982" timestamp="1595837719340" />
-    <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.986@0.23.1920.986" timestamp="1597742880118" />
-    <state x="507" y="316" key="com.intellij.ide.util.TipDialog/0.23.1920.989@0.23.1920.989" timestamp="1595337375952" />
-    <state x="507" y="317" key="com.intellij.ide.util.TipDialog/0.23.1920.992@0.23.1920.992" timestamp="1595436070436" />
-    <state x="507" y="352" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1108@0.23.1920.1108" timestamp="1600351527360" />
-    <state x="507" y="353" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1114@0.23.1920.1114" timestamp="1601376297750" />
-    <state x="507" y="354" key="com.intellij.ide.util.TipDialog/1920.-460.1200.1897/0.23.1920.1116@0.23.1920.1116" timestamp="1601302185269" />
-    <state x="507" y="320" key="com.intellij.ide.util.TipDialog/1920.558.1440.877/0.23.1920.1002@0.23.1920.1002" timestamp="1601650816046" />
-    <state x="763" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600289424186">
-      <screen x="0" y="23" width="1920" height="986" />
-    </state>
-    <state x="572" y="364" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.816@0.23.1440.816" timestamp="1600096161151" />
-    <state x="572" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.828@0.23.1440.828" timestamp="1597838265723" />
-    <state x="572" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.829@0.23.1440.829" timestamp="1597836417294" />
-    <state x="763" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.980@0.23.1920.980" timestamp="1595854357131" />
-    <state x="763" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.986@0.23.1920.986" timestamp="1600289424186" />
-    <state x="763" y="436" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1920.989@0.23.1920.989" timestamp="1595344340225" />
-    <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey" timestamp="1595265424213">
-      <screen x="0" y="23" width="1920" height="989" />
-    </state>
-    <state x="681" y="113" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey/-1440.670.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1595265424213" />
-    <state x="745" y="131" width="671" height="676" key="search.everywhere.popup" timestamp="1600155092018">
-      <screen x="0" y="23" width="1440" height="821" />
-    </state>
-    <state x="745" y="131" width="671" height="676" key="search.everywhere.popup/0.23.1440.821@0.23.1440.821" timestamp="1600155092018" />
-    <state x="745" y="132" width="670" height="676" key="search.everywhere.popup/0.23.1440.822@0.23.1440.822" timestamp="1596204601912" />
-    <state x="993" y="153" width="894" height="810" key="search.everywhere.popup/0.23.1920.984@0.23.1920.984" timestamp="1597744521622" />
-    <state x="993" y="154" width="894" height="813" key="search.everywhere.popup/0.23.1920.988@0.23.1920.988" timestamp="1596437188709" />
-    <state x="993" y="155" width="894" height="816" key="search.everywhere.popup/0.23.1920.991@0.23.1920.991" timestamp="1595499734657" />
-    <state x="993" y="155" width="894" height="816" key="search.everywhere.popup/0.23.1920.992@0.23.1920.992" timestamp="1595354209677" />
-    <state x="993" y="155" width="894" height="818" key="search.everywhere.popup/0.23.1920.994@0.23.1920.994" timestamp="1595428151536" />
+    <state x="469" y="154" key="SettingsEditor/1920.410.1440.875/0.25.1920.987@0.25.1920.987" timestamp="1611589539270" />
   </component>
 </project>
