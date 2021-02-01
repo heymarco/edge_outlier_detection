@@ -6,3 +6,4 @@ cmuxstream-core-master/cpp/
 *.pyc
 *.csv
 *.pdf
+*.pth
