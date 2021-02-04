@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e38aa5a-3487-4f70-ad08-0f313a677490" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/EXP_cifar.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/fashion_mnist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/festool.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/outliers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/outliers.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXP_cifar.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/EXP_cifar.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/local_and_global/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/local_and_global/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/outlying_partition/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/outlying_partition/evaluation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,19 +17,26 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Jupyter Notebook" />
+        <option value="Python Script" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="JupyterTrust" id="81fdfa86-1c3b-4c16-b2ca-72e9b40ba60b">
-    <option name="files">
-      <option value="EXP_cifar.ipynb" />
-    </option>
-  </component>
+  <component name="JupyterTrust" id="81fdfa86-1c3b-4c16-b2ca-72e9b40ba60b" />
   <component name="ProjectId" id="1ZtpkP6Hg9OL4xlvvI1qhgcyfqx" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -40,35 +49,35 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.notebooks.jupyter.connections.configuration.JupyterServerConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data" />
       <recent name="$PROJECT_DIR$/src/outlying_partition" />
       <recent name="$PROJECT_DIR$/src/local_and_global" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/outlying_partitions" />
-      <recent name="$PROJECT_DIR$/src/data" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="EXP_images" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.festool-create-data">
+    <configuration name="EXP_cifar.ipynb" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="outliers" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="/usr/local/bin/python3.7" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EXP_images.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EXP_cifar.ipynb" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
@@ -99,6 +108,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="festool-create-data" type="PythonConfigurationType" factoryName="Python">
+      <module name="outliers" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="sftp://heyden@ipe-coati.fzi.de:22/home/heyden/miniconda2/envs/tf/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/data" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/data/festool.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.festool-create-data" />
+      <item itemvalue="Python.EXP_cifar.ipynb" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -119,6 +154,32 @@
       <workItem from="1611588523350" duration="6584000" />
       <workItem from="1611646701194" duration="5887000" />
       <workItem from="1611658315602" duration="11785000" />
+      <workItem from="1612200662446" duration="3136000" />
+      <workItem from="1612255737851" duration="3236000" />
+      <workItem from="1612260592896" duration="5276000" />
+      <workItem from="1612268890989" duration="14141000" />
+      <workItem from="1612339384047" duration="1980000" />
+      <workItem from="1612342073736" duration="3479000" />
+      <workItem from="1612348682791" duration="1525000" />
+      <workItem from="1612351494428" duration="87000" />
+      <workItem from="1612351585525" duration="27000" />
+      <workItem from="1612351833424" duration="23000" />
+      <workItem from="1612352200521" duration="67000" />
+      <workItem from="1612352272402" duration="81000" />
+      <workItem from="1612352356429" duration="149000" />
+      <workItem from="1612352510560" duration="139000" />
+      <workItem from="1612352679763" duration="140000" />
+      <workItem from="1612352910066" duration="4477000" />
+      <workItem from="1612357550539" duration="1144000" />
+      <workItem from="1612358701354" duration="1256000" />
+      <workItem from="1612370052304" duration="726000" />
+      <workItem from="1612425426897" duration="4361000" />
+      <workItem from="1612432644144" duration="466000" />
+      <workItem from="1612433185557" duration="3068000" />
+      <workItem from="1612439440343" duration="8102000" />
+      <workItem from="1612458164759" duration="724000" />
+      <workItem from="1612462841658" duration="635000" />
+      <workItem from="1612463496016" duration="177000" />
     </task>
     <servers />
   </component>
@@ -126,41 +187,77 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="318" y="149" width="1003" height="615" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612444333812">
+      <screen x="0" y="25" width="1440" height="819" />
+    </state>
+    <state x="318" y="149" width="1003" height="615" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.25.1440.819@0.25.1440.819" timestamp="1612444333812" />
+    <state x="424" y="173" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.25.1920.979@0.25.1920.979" timestamp="1612250750226" />
+    <state x="424" y="173" width="1071" height="706" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612202598984" />
     <state x="677" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1611589648858">
       <screen x="0" y="25" width="1920" height="987" />
     </state>
     <state x="677" y="320" key="#com.intellij.fileTypes.FileTypeChooser/1920.410.1440.875/0.25.1920.987@0.25.1920.987" timestamp="1611589648858" />
-    <state width="1878" height="118" key="GridCell.Tab.0.bottom" timestamp="1611674500240">
-      <screen x="0" y="25" width="1920" height="990" />
+    <state width="699" height="208" key="GridCell.Tab.0.bottom" timestamp="1612439352242">
+      <screen x="0" y="25" width="1440" height="817" />
     </state>
+    <state width="699" height="208" key="GridCell.Tab.0.bottom/0.25.1440.817@0.25.1440.817" timestamp="1612439352242" />
+    <state width="1398" height="61" key="GridCell.Tab.0.bottom/0.25.1440.818@0.25.1440.818" timestamp="1612435583341" />
     <state width="1398" height="68" key="GridCell.Tab.0.bottom/0.25.1440.825@0.25.1440.825" timestamp="1611660444941" />
     <state width="1400" height="66" key="GridCell.Tab.0.bottom/0.25.1920.987@0.25.1920.987" timestamp="1611649344513" />
+    <state width="1878" height="331" key="GridCell.Tab.0.bottom/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612260502597" />
     <state width="1878" height="118" key="GridCell.Tab.0.bottom/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500240" />
     <state width="1398" height="68" key="GridCell.Tab.0.bottom/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090357" />
-    <state width="1878" height="118" key="GridCell.Tab.0.center" timestamp="1611674500237">
-      <screen x="0" y="25" width="1920" height="990" />
+    <state width="699" height="208" key="GridCell.Tab.0.center" timestamp="1612439352241">
+      <screen x="0" y="25" width="1440" height="817" />
     </state>
+    <state width="699" height="208" key="GridCell.Tab.0.center/0.25.1440.817@0.25.1440.817" timestamp="1612439352241" />
+    <state width="1398" height="61" key="GridCell.Tab.0.center/0.25.1440.818@0.25.1440.818" timestamp="1612435583340" />
     <state width="1398" height="68" key="GridCell.Tab.0.center/0.25.1440.825@0.25.1440.825" timestamp="1611660444940" />
     <state width="1400" height="66" key="GridCell.Tab.0.center/0.25.1920.987@0.25.1920.987" timestamp="1611649344512" />
+    <state width="1878" height="331" key="GridCell.Tab.0.center/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612260502596" />
     <state width="1878" height="118" key="GridCell.Tab.0.center/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500237" />
     <state width="1398" height="68" key="GridCell.Tab.0.center/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090353" />
-    <state width="1878" height="118" key="GridCell.Tab.0.left" timestamp="1611674500235">
-      <screen x="0" y="25" width="1920" height="990" />
+    <state width="699" height="208" key="GridCell.Tab.0.left" timestamp="1612439352240">
+      <screen x="0" y="25" width="1440" height="817" />
     </state>
+    <state width="699" height="208" key="GridCell.Tab.0.left/0.25.1440.817@0.25.1440.817" timestamp="1612439352240" />
+    <state width="1398" height="61" key="GridCell.Tab.0.left/0.25.1440.818@0.25.1440.818" timestamp="1612435583339" />
     <state width="1398" height="68" key="GridCell.Tab.0.left/0.25.1440.825@0.25.1440.825" timestamp="1611660444939" />
     <state width="1400" height="66" key="GridCell.Tab.0.left/0.25.1920.987@0.25.1920.987" timestamp="1611649344512" />
+    <state width="1878" height="331" key="GridCell.Tab.0.left/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612260502595" />
     <state width="1878" height="118" key="GridCell.Tab.0.left/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500235" />
     <state width="1398" height="68" key="GridCell.Tab.0.left/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090352" />
-    <state width="1878" height="118" key="GridCell.Tab.0.right" timestamp="1611674500238">
-      <screen x="0" y="25" width="1920" height="990" />
+    <state width="699" height="208" key="GridCell.Tab.0.right" timestamp="1612439352242">
+      <screen x="0" y="25" width="1440" height="817" />
     </state>
+    <state width="699" height="208" key="GridCell.Tab.0.right/0.25.1440.817@0.25.1440.817" timestamp="1612439352242" />
+    <state width="1398" height="61" key="GridCell.Tab.0.right/0.25.1440.818@0.25.1440.818" timestamp="1612435583340" />
     <state width="1398" height="68" key="GridCell.Tab.0.right/0.25.1440.825@0.25.1440.825" timestamp="1611660444941" />
     <state width="1400" height="66" key="GridCell.Tab.0.right/0.25.1920.987@0.25.1920.987" timestamp="1611649344512" />
+    <state width="1878" height="331" key="GridCell.Tab.0.right/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612260502596" />
     <state width="1878" height="118" key="GridCell.Tab.0.right/1920.410.1440.875/0.25.1920.990@0.25.1920.990" timestamp="1611674500238" />
     <state width="1398" height="68" key="GridCell.Tab.0.right/1920.410.1440.875/0.25.1920.993@0.25.1920.993" timestamp="1611668090355" />
-    <state x="469" y="154" key="SettingsEditor" timestamp="1611589539270">
-      <screen x="0" y="25" width="1920" height="987" />
+    <state x="415" y="52" key="SettingsEditor" timestamp="1612463451919">
+      <screen x="0" y="25" width="1440" height="820" />
     </state>
+    <state x="415" y="52" key="SettingsEditor/0.25.1440.817@0.25.1440.817" timestamp="1612352930818" />
+    <state x="415" y="52" key="SettingsEditor/0.25.1440.818@0.25.1440.818" timestamp="1612433436672" />
+    <state x="415" y="52" key="SettingsEditor/0.25.1440.819@0.25.1440.819" timestamp="1612433172257" />
+    <state x="415" y="52" key="SettingsEditor/0.25.1440.820@0.25.1440.820" timestamp="1612463451919" />
+    <state x="469" y="153" key="SettingsEditor/0.25.1920.979@0.25.1920.979" timestamp="1612253652848" />
+    <state x="328" y="154" key="SettingsEditor/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612268930158" />
+    <state x="469" y="153" key="SettingsEditor/1920.410.1440.875/0.25.1920.981@0.25.1920.981" timestamp="1612201287402" />
     <state x="469" y="154" key="SettingsEditor/1920.410.1440.875/0.25.1920.987@0.25.1920.987" timestamp="1611589539270" />
+    <state x="866" y="169" key="ftp.server.browser" timestamp="1612200947826">
+      <screen x="0" y="25" width="1920" height="979" />
+    </state>
+    <state x="866" y="169" key="ftp.server.browser/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612200947826" />
+    <state x="625" y="240" width="670" height="676" key="search.everywhere.popup" timestamp="1612261843866">
+      <screen x="0" y="25" width="1920" height="979" />
+    </state>
+    <state x="625" y="240" width="670" height="676" key="search.everywhere.popup/1920.410.1440.875/0.25.1920.979@0.25.1920.979" timestamp="1612261843866" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/outliers$EXP_cifar_ipynb.coverage" NAME="EXP_cifar.ipynb Coverage Results" MODIFIED="1612202605400" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

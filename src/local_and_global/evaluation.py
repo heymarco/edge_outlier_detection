@@ -6,12 +6,12 @@ from sklearn.metrics import precision_recall_curve, auc
 
 from src.utils import load_all_in_dir
 
-import matplotlib as mpl
+# import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
-mpl.rcParams['text.usetex'] = True
-mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
-mpl.rc('font', family='serif')
+# mpl.rcParams['text.usetex'] = True
+# mpl.rcParams['text.latex.preamble'] = r'\usepackage{libertine}'
+# mpl.rc('font', family='serif')
 
 qualitative_cp = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"]
 sequential_cp = ["#000000", "#0b4131", "#168362", "#1eae83", "#3bdead", "#7ce9c8", "#bef4e4"]

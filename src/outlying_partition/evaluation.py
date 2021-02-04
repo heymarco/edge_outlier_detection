@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from scipy.stats import zscore, norm
 
 from src.utils import load_all_in_dir
 
